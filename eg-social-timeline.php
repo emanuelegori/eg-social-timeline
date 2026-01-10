@@ -17,24 +17,6 @@
  * Primary Branch: main
  */
 
-/*
-Copyright (C) 2025  Emanuele Gori
-
-Questo programma è software libero; puoi redistribuirlo e/o
-modificarlo secondo i termini della GNU General Public License
-come pubblicata dalla Free Software Foundation; versione 2 della
-Licenza, o (a tua scelta) qualsiasi versione successiva.
-
-Questo programma è distribuito nella speranza che sia utile,
-ma SENZA ALCUNA GARANZIA; senza neppure la garanzia implicita
-di COMMERCIABILITÀ o IDONEITÀ PER UN PARTICOLARE SCOPO.
-Vedi la Licenza Pubblica Generale GNU per maggiori dettagli.
-
-Dovresti aver ricevuto una copia della Licenza Pubblica Generale GNU
-insieme a questo programma; in caso contrario, visita:
-https://www.gnu.org/licenses/gpl-2.0.html
-*/
-
 if (!defined('ABSPATH')) exit;
 
 // Constants
@@ -42,9 +24,6 @@ define('EG_SOCIAL_TIMELINE_VERSION', '1.1.2');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
-
-// Load text domain
-add_action('plugins_loaded', 'eg_social_timeline_load_textdomain');
 
 function eg_social_timeline_load_textdomain() {
     load_plugin_textdomain('eg-social-timeline', false, dirname(plugin_basename(__FILE__)) . '/languages');
@@ -518,8 +497,9 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
         // Mastodon posts dont have titles - use full content only
         
         // Build post data
-        // Use reblog URL for boosts, status URL for original posts
-        $post_url = $is_boost ? $content_data['url'] : $status['url'];
+        // Use reblog URL for boosts to avoid /activity JSON endpoint
+        $post_url = $is_boost ? $content_data["url"] : $status["url"];
+
         $post = array(
             'platform' => 'mastodon',
             'date' => strtotime($status['created_at']),
