@@ -1,169 +1,176 @@
 # Changelog
 
-Tutte le modifiche importanti a questo progetto saranno documentate in questo file.
+## [1.1.0] - 2026-01-10
 
-Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/),
-e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/).
+### 🎨 Architettura Modulare Icone
+- **Nuova cartella `social-icons/`** con file SVG separati
+- Icone facilmente sostituibili senza modificare PHP
+- Struttura estendibile per nuove piattaforme
+- File SVG individuali:
+  - `mastodon.svg` - Logo ufficiale Mastodon
+  - `diggita.svg` - Icona personalizzata Diggita
+  - `lemmy.svg` - Icona personalizzata Lemmy
+  - `bluesky.svg` - Logo ufficiale Bluesky
+  - `generic.svg` - Fallback per piattaforme sconosciute
+- Documentazione completa in `social-icons/README.md`
 
----
 
-## [1.0.0] - 2025-01-10
+### 🚀 Nuove Funzionalità
 
-### Aggiunto - MVP Fase 1
+#### API Mastodon Integrata
+- **Sostituito feed RSS con API Mastodon nativa** per dati completi
+- Supporto completo per boost/reblog (finalmente funzionante!)
+- Conteggi in tempo reale: ❤️ like, 🔁 boost, 💬 risposte
+- Badge visivo per post boostati
+- Filtro boost/repost ora effettivo (API parameter: `exclude_reblogs`)
 
-#### Core Features
-- Sistema fetch feed RSS da Mastodon (istanze Fediverso)
-- Sistema fetch feed RSS da Diggita (Lemmy)
-- Timeline unificata con merge e sort cronologico
-- Caching intelligente con WordPress Transients API
-- Shortcode `[eg_social_timeline]` con parametro `limit`
+#### Statistiche Post
+- Nuova opzione admin: **"Mostra Statistiche"** per abilitare/disabilitare conteggi
+- Visualizzazione conteggi interazioni sotto ogni post
+- Colori specifici per tipo interazione:
+  - ❤️ Like: rosso (`#e0245e`)
+  - 🔁 Boost: verde (`#17bf63`)
+  - 💬 Risposte: blu (`#1da1f2`)
 
-#### Admin Panel
-- Pannello impostazioni completo in Impostazioni → EG Social Timeline
-- Campo URL profilo Mastodon
-- Campo username Diggita
-- Configurazione numero post (1-50)
-- Selezione durata cache (30min-24h)
-- Toggle mostra boost/repost
-- Bottone svuota cache manuale
-- Validazione configurazione obbligatoria
-- Banner avviso se nessun profilo configurato
+#### Icone SVG Migliorate
+- Icona Mastodon ufficiale (elefante stilizzato)
+- Icona Diggita moderna e pulita
+- Icona Bluesky (farfalla) pronta per Fase 2
+- Dimensioni uniformi 24x24px
 
-#### Frontend
-- Timeline responsive con design moderno
-- Card post con header, content, footer
-- Icone piattaforme colorate SVG inline
-- Gradient personalizzati per piattaforma
-- Date relative (es: "2 ore fa")
-- Troncamento intelligente testo (200 caratteri)
-- Link "Vedi post originale" con hover effect
-- Supporto dark mode automatico (`prefers-color-scheme`)
-- Design mobile-first responsive
+### 🔧 Miglioramenti
 
-#### Performance
-- Zero dipendenze JavaScript
-- CSS puro senza framework
-- Caching configurabile riduce carico server
-- Fetch RSS con timeout 15 secondi
-- Gestione errori connessione graceful
+#### Performance & Caching
+- Cache intelligente Account ID Mastodon (24h)
+- Riduzione chiamate API duplicate
+- Gestione errori più robusta con debug logging
 
-#### Developer Experience
-- Costanti plugin (VERSION, DIR, URL)
-- Debug mode attivabile via costante
-- Hook WordPress standard
-- Sanitization e validazione robusti
-- Text domain i18n pronto (traduzioni prossima versione)
-- Compatibilità Git Updater (Gitea Plugin URI)
+#### User Experience
+- Badge "🔁 Boost" per post riboostati (senza avatar, solo badge)
+- Bordo verde laterale su post boostati (visual indicator)
+- Tooltip su statistiche (hover mostra "Preferiti", "Boost", "Risposte")
+- Dark mode completo per nuove statistiche
 
-#### Documentazione
-- README.md completo con esempi
-- Inline code comments
-- Admin help text per ogni campo
-- Troubleshooting guide
+### 🐛 Bug Fix
+- **RISOLTO:** Filtro boost non funzionava (feed RSS non include boost)
+- **RISOLTO:** Opzione "Mostra Boost/Repost" era inutile con RSS
+- **RISOLTO:** Icone poco visibili e non uniformi
 
-### Note Tecniche
+### 📝 Modifiche Tecniche
 
-**Architettura MVP:**
-- File singolo PHP (eg-social-timeline.php)
-- CSS separato (eg-social-timeline.css)
-- Parsing RSS con SimpleXML nativo PHP
-- WordPress HTTP API per fetch
-- Transients API per caching
+#### Da RSS a API
+```php
+// PRIMA (RSS)
+$rss_url = $profile_url . '.rss';
+// Solo post originali, nessuna info su boost/like
 
-**Piattaforme Supportate:**
-- Mastodon: Feed RSS standard ActivityPub (`profile.rss`)
-- Diggita: Feed RSS standard Lemmy (`/feeds/u/username.xml`)
+// DOPO (API)
+$api_url = "https://{$instance}/api/v1/accounts/{$id}/statuses";
+// Post completi con statistiche e controllo boost
+```
 
-**Limitazioni Correnti:**
-- Nessun supporto Bluesky (Fase 2)
-- Nessuna paginazione timeline
-- Nessun blocco Gutenberg
-- Traduzioni i18n da completare
-- Nessun widget WordPress nativo
+#### Nuovi Endpoint API
+- `GET /api/v1/accounts/lookup?acct={username}` - Ottiene Account ID
+- `GET /api/v1/accounts/{id}/statuses` - Ottiene post con statistiche
+- Parameter: `exclude_reblogs` per filtrare boost
+- Parameter: `exclude_replies` per filtrare risposte
 
----
+#### Struttura Dati Post Estesa
+```php
+array(
+    'platform' => 'mastodon',
+    'date' => 1234567890,
+    'title' => 'Post title',
+    'content' => 'Post content',
+    'link' => 'https://...',
+    'is_boost' => false,
+    'favourites_count' => 10,  // NEW
+    'reblogs_count' => 6,      // NEW
+    'replies_count' => 0       // NEW
+)
+```
 
-## [Unreleased] - Roadmap Futura
+### 🎨 CSS Aggiornamenti
 
-### Fase 2 - Bluesky (In Sviluppo)
-- Integrazione API pubblica Bluesky AT Protocol
-- Fetch posts via `app.bsky.feed.getAuthorFeed`
-- Conversione JSON → formato unificato timeline
-- Gestione autenticazione se necessaria
-- Icona e colori Bluesky
+#### Nuovi Stili
+- `.post-stats` - Container statistiche
+- `.stat-item` - Singola statistica (like/boost/reply)
+- `.boost-badge` - Badge "🔁 Boost"
+- `.timeline-item.is-boost` - Bordo verde per boost
 
-### Fase 3 - Advanced Features (Pianificato)
-- Blocco Gutenberg nativo
-- Widget WordPress nativo per sidebar
-- Paginazione timeline (load more / infinite scroll)
-- Filtri avanzati (hashtag, tipo contenuto, data range)
-- Traduzioni complete (italiano, inglese)
-- Supporto X/Twitter (se tecnicamente possibile)
-- Export timeline (PDF, CSV)
-- Admin statistics dashboard
+#### Responsive
+- Mobile: gap ridotto statistiche (10px)
+- Dark mode: colori statistiche adattati
 
-### Miglioramenti Futuri (Backlog)
-- Personalizzazione template timeline via filter hooks
-- Supporto custom post types per archiviazione
-- Integrazione con Fediverse API dirette (oltre RSS)
-- Supporto immagini inline nei post
-- Lightbox per media attachments
-- Emoji rendering corretto
-- Thread/conversation view
-- User mentions e hashtag cliccabili
-- Statistiche engagement (se disponibili via API)
+### 📋 Impostazioni Admin
 
----
+#### Nuova Opzione
+- **Mostra Statistiche**: Toggle per abilitare/disabilitare conteggi interazioni
+- Default: `true` (attivo)
 
-## Versioning
+#### Opzione Aggiornata
+- **Mostra Boost/Repost**: Ora funzionante grazie ad API Mastodon
+- Filtra i boost prima del rendering
+- API parameter: `exclude_reblogs=true/false`
 
-Questo progetto segue [Semantic Versioning](https://semver.org/):
+### 🔄 Compatibilità
 
-- **MAJOR**: Modifiche incompatibili API/breaking changes
-- **MINOR**: Nuove funzionalità backward-compatible
-- **PATCH**: Bug fixes backward-compatible
+#### Breaking Changes
+Nessuno! Plugin 100% retrocompatibile:
+- Shortcode invariato: `[eg_social_timeline]`
+- Opzioni salvate mantenute
+- Cache auto-invalidata al primo caricamento
 
-Esempio: `1.2.3`
-- `1` = Major (breaking changes)
-- `2` = Minor (nuove features)
-- `3` = Patch (bug fixes)
+#### Requisiti
+- WordPress: 5.0+
+- PHP: 7.4+
+- Istanze Mastodon con API v1 (tutte)
 
----
+### 📊 Confronto v1.0.0 vs v1.1.0
 
-## Release Notes
+| Feature | v1.0.0 (RSS) | v1.1.0 (API) |
+|---------|-------------|--------------|
+| Post originali | ✅ | ✅ |
+| Boost visibili | ❌ | ✅ |
+| Filtro boost funzionante | ❌ | ✅ |
+| Conteggi like | ❌ | ✅ |
+| Conteggi boost | ❌ | ✅ |
+| Conteggi risposte | ❌ | ✅ |
+| Badge boost | ❌ | ✅ |
+| Icone SVG | Basic | Professional |
 
-### v1.0.0 - MVP Ready
+### 🚧 Limitazioni Note
 
-Prima release pubblica del plugin. Focus su semplicità, privacy e performance.
+1. **Diggita/Lemmy**: Ancora su RSS (no statistiche disponibili)
+2. **Bluesky**: Non implementato (pianificato Fase 2)
+3. **Avatar utenti**: Non visualizzati (scelta design)
+4. **Citazioni Mastodon**: Non incluse nel conteggio risposte
 
-**Target utenti:**
-- Blogger che vogliono mostrare attività Fediverso
-- Siti informativi con presenza Mastodon/Diggita
-- Content creators multi-piattaforma
-- Sostenitori open source e decentralizzazione
+### 🔮 Prossimi Passi (v1.2.0)
 
-**Non pronto per:**
-- Produzioni che richiedono Bluesky
-- Siti che necessitano paginazione
-- Integrazioni complesse via API
-
-**Testato su:**
-- WordPress 6.4+
-- PHP 8.0, 8.1, 8.2
-- Mastodon 4.x
-- Diggita/Lemmy 0.19.x
-
----
-
-## Contributi
-
-Per contribuire:
-1. Controlla [ROADMAP](#unreleased---roadmap-futura)
-2. Apri issue per discutere feature
-3. Crea PR con modifiche
-4. Documenta nel CHANGELOG
+- [ ] Integrazione Bluesky API
+- [ ] Statistiche anche per Diggita (se API disponibile)
+- [ ] Filtro per tipo post (solo originali/solo boost)
+- [ ] Ordinamento personalizzabile (data/popolarità)
 
 ---
 
-[Unreleased]: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/compare/v1.0.0...HEAD
-[1.0.0]: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases/tag/v1.0.0
+## [1.0.1] - 2026-01-10 (Non Rilasciata)
+
+### Modifiche Annullate
+- Tentativo fix filtro boost su RSS (non possibile tecnicamente)
+- Icone SVG migliorate (implementate in v1.1.0)
+
+---
+
+## [1.0.0] - 2026-01-09
+
+### Rilascio Iniziale
+- Feed RSS Mastodon
+- Feed RSS Diggita
+- Timeline unificata cronologica
+- Shortcode `[eg_social_timeline]`
+- Admin panel configurazione
+- Sistema caching (WordPress Transients)
+- CSS responsive con dark mode
+- Opzione "Mostra Boost" (non funzionante - fix in v1.1.0)

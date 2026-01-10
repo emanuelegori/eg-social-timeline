@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.0.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.1.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -77,7 +77,8 @@ function eg_social_timeline_register_settings() {
                 'diggita_username' => '',
                 'post_limit' => 10,
                 'cache_duration' => 3600,
-                'show_boosts' => false
+                'show_boosts' => false,
+                'show_stats' => true
             )
         )
     );
@@ -115,7 +116,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_cache_duration',
-        __('Durata Cache (secondi)', 'eg-social-timeline'),
+        __('Durata Cache', 'eg-social-timeline'),
         'eg_social_timeline_cache_duration_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -123,8 +124,16 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_show_boosts',
-        __('Mostra Boost/Repost', 'eg-social-timeline'),
+        __('Includi Boost/Repost', 'eg-social-timeline'),
         'eg_social_timeline_show_boosts_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_show_stats',
+        __('Mostra Statistiche', 'eg-social-timeline'),
+        'eg_social_timeline_show_stats_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
     );
@@ -198,7 +207,7 @@ function eg_social_timeline_cache_duration_callback() {
         <option value="86400" <?php selected($duration, 86400); ?>>24 <?php esc_html_e('ore', 'eg-social-timeline'); ?></option>
     </select>
     <p class="description">
-        <?php esc_html_e('Tempo di cache dei feed RSS. Cache più lunga = meno richieste ai server. Default: 1 ora', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Tempo di cache dei feed. Cache più lunga = meno richieste ai server. Default: 1 ora', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -216,7 +225,25 @@ function eg_social_timeline_show_boosts_callback() {
         <?php esc_html_e('Includi boost e repost nella timeline', 'eg-social-timeline'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Se disabilitato, mostra solo post originali.', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Se disabilitato, mostra solo post originali (nessun boost/reblog).', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_show_stats_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $show = isset($options['show_stats']) ? $options['show_stats'] : true;
+    ?>
+    <label>
+        <input type="checkbox" 
+               id="eg_social_timeline_show_stats" 
+               name="eg_social_timeline_options[show_stats]" 
+               value="1"
+               <?php checked($show, 1); ?>>
+        <?php esc_html_e('Mostra conteggi like/boost/risposte', 'eg-social-timeline'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('Visualizza le statistiche di interazione sotto ogni post.', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -251,6 +278,7 @@ function eg_social_timeline_sanitize_options($input) {
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
     
     $output['show_boosts'] = isset($input['show_boosts']) ? true : false;
+    $output['show_stats'] = isset($input['show_stats']) ? true : false;
     
     delete_transient('eg_social_timeline_cache');
     
@@ -372,60 +400,139 @@ function eg_social_timeline_handle_cache_clear() {
     set_transient('eg_social_timeline_admin_notice', true, 5);
 }
 
-// Fetch Mastodon RSS
+// Get Mastodon Account ID from profile URL
+function eg_social_timeline_get_mastodon_account_id($profile_url) {
+    // Extract instance and username from URL
+    // Format: https://instance.social/@username
+    preg_match('#https?://([^/]+)/@([^/]+)#', $profile_url, $matches);
+    
+    if (count($matches) < 3) {
+        return false;
+    }
+    
+    $instance = $matches[1];
+    $username = $matches[2];
+    
+    // Check cache first
+    $cache_key = 'eg_mastodon_id_' . md5($profile_url);
+    $cached_id = get_transient($cache_key);
+    
+    if ($cached_id !== false) {
+        return $cached_id;
+    }
+    
+    // API lookup endpoint
+    $api_url = "https://{$instance}/api/v1/accounts/lookup?acct={$username}";
+    
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 10,
+        'sslverify' => true
+    ));
+    
+    if (is_wp_error($response)) {
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline: Mastodon account lookup error - ' . $response->get_error_message());
+        }
+        return false;
+    }
+    
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+    
+    if (!isset($data['id'])) {
+        return false;
+    }
+    
+    // Cache for 24 hours
+    set_transient($cache_key, $data['id'], 86400);
+    
+    return $data['id'];
+}
+
+// Fetch Mastodon posts via API
 function eg_social_timeline_fetch_mastodon($profile_url) {
     if (empty($profile_url)) {
         return array();
     }
     
-    $rss_url = rtrim($profile_url, '/') . '.rss';
+    // Get account ID
+    $account_id = eg_social_timeline_get_mastodon_account_id($profile_url);
     
-    $response = wp_remote_get($rss_url, array(
+    if (!$account_id) {
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline: Could not get Mastodon account ID for ' . $profile_url);
+        }
+        return array();
+    }
+    
+    // Extract instance from URL
+    preg_match('#https?://([^/]+)/#', $profile_url, $matches);
+    $instance = $matches[1];
+    
+    // Get options
+    $options = get_option('eg_social_timeline_options');
+    $show_boosts = !empty($options['show_boosts']);
+    
+    // API statuses endpoint
+    $api_url = "https://{$instance}/api/v1/accounts/{$account_id}/statuses";
+    
+    // Parameters
+    $params = array(
+        'limit' => 40, // Get more to account for filtering
+        'exclude_replies' => 'true', // No replies
+        'exclude_reblogs' => $show_boosts ? 'false' : 'true' // Include/exclude boosts
+    );
+    
+    $api_url .= '?' . http_build_query($params);
+    
+    $response = wp_remote_get($api_url, array(
         'timeout' => 15,
         'sslverify' => true
     ));
     
     if (is_wp_error($response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Mastodon Error: ' . $response->get_error_message());
+            error_log('EG Social Timeline Mastodon API Error: ' . $response->get_error_message());
         }
         return array();
     }
     
     $body = wp_remote_retrieve_body($response);
+    $statuses = json_decode($body, true);
     
-    if (empty($body)) {
-        return array();
-    }
-    
-    $xml = simplexml_load_string($body);
-    
-    if ($xml === false) {
+    if (!is_array($statuses)) {
         return array();
     }
     
     $posts = array();
-    $namespaces = $xml->getNamespaces(true);
     
-    foreach ($xml->channel->item as $item) {
-        $pubDate = (string) $item->pubDate;
-        $timestamp = strtotime($pubDate);
+    foreach ($statuses as $status) {
+        // Check if it's a boost
+        $is_boost = !empty($status['reblog']);
         
-        $title = (string) $item->title;
-        if (strpos($title, 'RT @') === 0 || strpos($title, 'Boost: ') === 0) {
-            $options = get_option('eg_social_timeline_options');
-            if (empty($options['show_boosts'])) {
-                continue;
-            }
-        }
+        // Get actual content (from reblog if boost)
+        $content_data = $is_boost ? $status['reblog'] : $status;
         
-        $posts[] = array(
+        // Extract text content (strip HTML tags)
+        $content = strip_tags($content_data['content']);
+        
+        // Get title from first line or beginning of content
+        $title_parts = explode("\n", $content);
+        $title = !empty($title_parts[0]) ? $title_parts[0] : '';
+        
+        // Build post data
+        $post = array(
             'platform' => 'mastodon',
-            'date' => $timestamp,
+            'date' => strtotime($status['created_at']),
             'title' => $title,
-            'content' => (string) $item->description,
-            'link' => (string) $item->link
+            'content' => $content,
+            'link' => $status['url'],
+            'is_boost' => $is_boost,
+            'favourites_count' => isset($content_data['favourites_count']) ? intval($content_data['favourites_count']) : 0,
+            'reblogs_count' => isset($content_data['reblogs_count']) ? intval($content_data['reblogs_count']) : 0,
+            'replies_count' => isset($content_data['replies_count']) ? intval($content_data['replies_count']) : 0
         );
+        
+        $posts[] = $post;
     }
     
     return $posts;
@@ -474,7 +581,11 @@ function eg_social_timeline_fetch_diggita($username) {
             'date' => $timestamp,
             'title' => (string) $item->title,
             'content' => (string) $item->description,
-            'link' => (string) $item->link
+            'link' => (string) $item->link,
+            'is_boost' => false,
+            'favourites_count' => 0,
+            'reblogs_count' => 0,
+            'replies_count' => 0
         );
     }
     
@@ -541,16 +652,23 @@ function eg_social_timeline_shortcode($atts) {
     
     $posts = array_slice($posts, 0, $limit);
     
+    $show_stats = !empty($options['show_stats']);
+    
     ob_start();
     ?>
     <div class="eg-social-timeline">
         <?php foreach ($posts as $post): ?>
-            <article class="timeline-item timeline-<?php echo esc_attr($post['platform']); ?>">
+            <article class="timeline-item timeline-<?php echo esc_attr($post['platform']); ?><?php echo $post['is_boost'] ? ' is-boost' : ''; ?>">
                 <header class="timeline-header">
                     <span class="platform-icon platform-<?php echo esc_attr($post['platform']); ?>">
                         <?php echo eg_social_timeline_get_icon($post['platform']); ?>
                     </span>
                     <span class="platform-name"><?php echo esc_html(eg_social_timeline_get_platform_name($post['platform'])); ?></span>
+                    
+                    <?php if ($post['is_boost']): ?>
+                        <span class="boost-badge">🔁 Boost</span>
+                    <?php endif; ?>
+                    
                     <time datetime="<?php echo esc_attr(date('c', $post['date'])); ?>" class="post-date">
                         <?php echo esc_html(eg_social_timeline_format_date($post['date'])); ?>
                     </time>
@@ -564,6 +682,28 @@ function eg_social_timeline_shortcode($atts) {
                     </div>
                 </div>
                 <footer class="timeline-footer">
+                    <?php if ($show_stats && ($post['favourites_count'] > 0 || $post['reblogs_count'] > 0 || $post['replies_count'] > 0)): ?>
+                        <div class="post-stats">
+                            <?php if ($post['favourites_count'] > 0): ?>
+                                <span class="stat-item stat-favourites" title="<?php esc_attr_e('Preferiti', 'eg-social-timeline'); ?>">
+                                    ❤️ <?php echo esc_html($post['favourites_count']); ?>
+                                </span>
+                            <?php endif; ?>
+                            
+                            <?php if ($post['reblogs_count'] > 0): ?>
+                                <span class="stat-item stat-boosts" title="<?php esc_attr_e('Boost', 'eg-social-timeline'); ?>">
+                                    🔁 <?php echo esc_html($post['reblogs_count']); ?>
+                                </span>
+                            <?php endif; ?>
+                            
+                            <?php if ($post['replies_count'] > 0): ?>
+                                <span class="stat-item stat-replies" title="<?php esc_attr_e('Risposte', 'eg-social-timeline'); ?>">
+                                    💬 <?php echo esc_html($post['replies_count']); ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    
                     <a href="<?php echo esc_url($post['link']); ?>" 
                        target="_blank" 
                        rel="noopener noreferrer"
@@ -590,13 +730,36 @@ function eg_social_timeline_get_platform_name($platform) {
 }
 
 function eg_social_timeline_get_icon($platform) {
-    $icons = array(
-        'mastodon' => '<svg width="20" height="20" viewBox="0 0 61 65" xmlns="http://www.w3.org/2000/svg"><path d="M60.7 14.2c-.8-4.2-3.5-8-7.6-10.3C48.9 1.5 44 .3 38.5.3h-.3c-5.5 0-10.3 1.2-14.6 3.6-4.1 2.3-6.8 6.1-7.6 10.3-.9 4.5-1.1 9.1-.7 13.7.2 2.7.5 5.3 1 7.9.9 5 2.5 9.8 5.3 14 3.8 5.7 9.4 9.6 16 10.9 6.9 1.4 14-.5 19.8-5.3.3-.3.6-.5.8-.8l-3.8-3.2c-.2.2-.4.4-.6.6-4.5 3.8-10.4 5.2-15.9 4-5.3-1.1-9.8-4.3-12.8-9-2.3-3.6-3.6-7.7-4.3-12-.5-2.4-.7-4.9-.9-7.4-.3-4.2-.2-8.3.6-12.4.6-3.1 2.7-5.8 5.6-7.5 3.4-2 7.2-3 11.3-3h.3c4.1 0 7.9 1 11.3 3 2.9 1.7 5 4.4 5.6 7.5.8 4.1.9 8.2.6 12.4-.1 2.5-.4 5-.9 7.4-.7 4.3-2 8.4-4.3 12-2.3 3.6-5.6 6.2-9.7 7.5-1.7.5-3.5.8-5.3.9v5c2.2-.1 4.4-.4 6.5-1 5.2-1.7 9.5-5 12.4-9.5 2.8-4.3 4.5-9.2 5.4-14.4.5-2.6.8-5.2 1-7.9.4-4.6.2-9.2-.7-13.7z"/></svg>',
-        'diggita' => '<svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="currentColor"/><text x="50" y="65" font-size="50" font-weight="bold" text-anchor="middle" fill="white">D</text></svg>',
-        'bluesky' => '<svg width="20" height="20" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M180 265.4C150 223 84 129.4 56.3 93.8c-47.3-60.6-36-46.8-36-8.5 0 18.2 13 95.7 22.3 143 11.8 59.7 51.7 108.7 111.5 108.7 24.7 0 58-19.3 77-30.7m0 0c-19 11.4-52.3 30.7-77 30.7 59.8 0 99.7-49 111.5-108.7 9.3-47.3 22.3-124.8 22.3-143 0-38.3 11.3-52.1-36-8.5-27.7 35.6-93.7 129.2-123.7 171.6"/></svg>'
+    // Path to social-icons directory
+    $icons_dir = EG_SOCIAL_TIMELINE_DIR . 'social-icons/';
+    
+    // Map platform names to icon filenames
+    $icon_map = array(
+        'mastodon' => 'mastodon.svg',
+        'diggita' => 'diggita.svg',
+        'lemmy' => 'lemmy.svg',
+        'bluesky' => 'bluesky.svg'
     );
     
-    return isset($icons[$platform]) ? $icons[$platform] : '';
+    // Get icon filename
+    $icon_file = isset($icon_map[$platform]) ? $icon_map[$platform] : 'generic.svg';
+    $icon_path = $icons_dir . $icon_file;
+    
+    // Check if file exists
+    if (!file_exists($icon_path)) {
+        // Fallback to generic icon
+        $icon_path = $icons_dir . 'generic.svg';
+        
+        if (!file_exists($icon_path)) {
+            // Ultimate fallback: simple circle
+            return '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
+        }
+    }
+    
+    // Read and return SVG content
+    $svg_content = file_get_contents($icon_path);
+    
+    return $svg_content !== false ? $svg_content : '';
 }
 
 function eg_social_timeline_format_date($timestamp) {
