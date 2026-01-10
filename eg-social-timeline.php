@@ -17,6 +17,24 @@
  * Primary Branch: main
  */
 
+/*
+Copyright (C) 2025  Emanuele Gori
+
+Questo programma è software libero; puoi redistribuirlo e/o
+modificarlo secondo i termini della GNU General Public License
+come pubblicata dalla Free Software Foundation; versione 2 della
+Licenza, o (a tua scelta) qualsiasi versione successiva.
+
+Questo programma è distribuito nella speranza che sia utile,
+ma SENZA ALCUNA GARANZIA; senza neppure la garanzia implicita
+di COMMERCIABILITÀ o IDONEITÀ PER UN PARTICOLARE SCOPO.
+Vedi la Licenza Pubblica Generale GNU per maggiori dettagli.
+
+Dovresti aver ricevuto una copia della Licenza Pubblica Generale GNU
+insieme a questo programma; in caso contrario, visita:
+https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
 if (!defined('ABSPATH')) exit;
 
 // Constants
@@ -24,6 +42,9 @@ define('EG_SOCIAL_TIMELINE_VERSION', '1.1.2');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
+
+// Load text domain
+add_action('plugins_loaded', 'eg_social_timeline_load_textdomain');
 
 function eg_social_timeline_load_textdomain() {
     load_plugin_textdomain('eg-social-timeline', false, dirname(plugin_basename(__FILE__)) . '/languages');
@@ -494,16 +515,17 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
         // Extract text content (strip HTML tags)
         $content = strip_tags($content_data['content']);
         
-        // Mastodon posts dont have titles - use full content only
+        // Get title from first line or beginning of content
+        $title_parts = explode("\n", $content);
+        $title = !empty($title_parts[0]) ? $title_parts[0] : '';
         
         // Build post data
         // Use reblog URL for boosts to avoid /activity JSON endpoint
         $post_url = $is_boost ? $content_data["url"] : $status["url"];
-
         $post = array(
             'platform' => 'mastodon',
             'date' => strtotime($status['created_at']),
-            'title' => '',  // No title for Mastodon posts
+            'title' => $title,
             'content' => $content,
             'link' => $post_url,
             'is_boost' => $is_boost,
@@ -659,8 +681,25 @@ function eg_social_timeline_shortcode($atts) {
                     </div>
                 </div>
                 <footer class="timeline-footer">
+                    <?php if ($show_stats && ($post['favourites_count'] > 0 || $post['reblogs_count'] > 0 || $post['replies_count'] > 0)): ?>
+                        <div class="post-stats">
+                            <?php if ($post['favourites_count'] > 0): ?>
+                                <span class="stat-item stat-favourites" title="<?php esc_attr_e('Preferiti', 'eg-social-timeline'); ?>">
+                                    ❤️ <?php echo esc_html($post['favourites_count']); ?>
+                                </span>
+                            <?php endif; ?>
                             
+                            <?php if ($post['reblogs_count'] > 0): ?>
+                                <span class="stat-item stat-boosts" title="<?php esc_attr_e('Boost', 'eg-social-timeline'); ?>">
+                                    🔁 <?php echo esc_html($post['reblogs_count']); ?>
+                                </span>
+                            <?php endif; ?>
                             
+                            <?php if ($post['replies_count'] > 0): ?>
+                                <span class="stat-item stat-replies" title="<?php esc_attr_e('Risposte', 'eg-social-timeline'); ?>">
+                                    💬 <?php echo esc_html($post['replies_count']); ?>
+                                </span>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                     
@@ -690,36 +729,13 @@ function eg_social_timeline_get_platform_name($platform) {
 }
 
 function eg_social_timeline_get_icon($platform) {
-    // Path to social-icons directory
-    $icons_dir = EG_SOCIAL_TIMELINE_DIR . 'social-icons/';
-    
-    // Map platform names to icon filenames
-    $icon_map = array(
-        'mastodon' => 'mastodon.svg',
-        'diggita' => 'diggita.svg',
-        'lemmy' => 'lemmy.svg',
-        'bluesky' => 'bluesky.svg'
+    $icons = array(
+        'mastodon' => '<svg width="24" height="24" viewBox="0 0 216.4 232.1" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M211.8 139.5c-3.2 16.3-28.4 34.2-57.3 37.6-15.2 1.8-30.1 3.4-46 2.7-26.1-1.2-46.6-6.3-46.6-6.3 0 2.6.2 5.1.5 7.4 3.3 25.5 25 27 45.5 27.7 20.7.8 39.2-5.1 39.2-5.1l.9 19.1s-14.5 7.8-40.4 9.2c-14.3.8-32-1.1-52.7-9.4C14.8 208.9 1.5 172.4.2 135.2c-.4-11.8-.2-22.9-.2-32.2 0-40.6 26.6-52.5 26.6-52.5C39.7 43.3 60.5 38.8 82 38.3h.6c21.5.5 42.4 5 55.4 12.2 0 0 26.6 11.9 26.6 52.5 0 0 .3 29.9-2.8 50.5zM177.9 89.7c0-10.5-2.7-18.8-8-24.9-5.5-6.1-12.7-9.2-21.5-9.2-10.3 0-18.1 4-23.4 11.9l-5 8.4-5.1-8.4c-5.3-7.9-13.1-11.9-23.4-11.9-8.8 0-16 3.1-21.5 9.2-5.3 6.1-8 14.4-8 24.9v51h19.8V91.7c0-10.5 4.4-15.8 13.2-15.8 9.7 0 14.6 6.3 14.6 18.7v27.1h19.7v-27.1c0-12.4 4.9-18.7 14.6-18.7 8.8 0 13.2 5.3 13.2 15.8v49h19.8v-51z"/></svg>',
+        'diggita' => '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path fill="currentColor" d="M10 8h4v8h-2v-6h-2V8z"/></svg>',
+        'bluesky' => '<svg width="24" height="24" viewBox="0 0 568 501" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M123.121 33.6637C188.241 82.5526 258.281 181.681 284 234.873c25.719-53.192 95.759-152.32 160.879-201.209C491.866-1.611 568-28.906 568 57.947c0 17.346-9.945 145.713-15.778 166.555-20.275 72.453-94.155 90.933-159.875 79.748C507.222 323.8 536.444 388.56 473.333 453.32c-119.86 122.992-172.272-30.859-185.702-70.281-2.462-7.227-3.614-10.608-3.631-7.733-.017-2.875-1.169.506-3.631 7.733-13.43 39.422-65.842 193.273-185.702 70.281-63.111-64.76-33.889-129.52 80.986-149.07-65.72 11.185-139.6-7.295-159.875-79.748C9.945 203.66 0 75.293 0 57.947 0-28.906 76.134-1.611 123.121 33.6637z"/></svg>'
     );
     
-    // Get icon filename
-    $icon_file = isset($icon_map[$platform]) ? $icon_map[$platform] : 'generic.svg';
-    $icon_path = $icons_dir . $icon_file;
-    
-    // Check if file exists
-    if (!file_exists($icon_path)) {
-        // Fallback to generic icon
-        $icon_path = $icons_dir . 'generic.svg';
-        
-        if (!file_exists($icon_path)) {
-            // Ultimate fallback: simple circle
-            return '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
-        }
-    }
-    
-    // Read and return SVG content
-    $svg_content = file_get_contents($icon_path);
-    
-    return $svg_content !== false ? $svg_content : '';
+    return isset($icons[$platform]) ? $icons[$platform] : '';
 }
 
 function eg_social_timeline_format_date($timestamp) {
