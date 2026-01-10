@@ -1,186 +1,255 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
-Tags: mastodon, fediverse, social, timeline, diggita, lemmy, rss, feed
+Tags: mastodon, fediverse, social, timeline, diggita, lemmy, api, statistics
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.0.0
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky. Privacy-first, solo feed RSS pubblici.
+Timeline unificata Mastodon/Diggita con statistiche interazioni live. API native, icone modulari, filtro boost funzionante. Privacy-first.
 
 == Description ==
 
-**EG Social Timeline** è un plugin WordPress che mostra una timeline cronologica unificata delle tue attività sui social network decentralizzati.
+**EG Social Timeline** è un plugin WordPress che mostra una timeline cronologica unificata delle tue attività sui social network decentralizzati con **statistiche interazioni in tempo reale**.
+
+= Novità v1.1.x =
+
+* **API Mastodon Nativa** - Dati completi invece di RSS limitato
+* **Statistiche Live** - Conteggi like, boost e risposte in tempo reale
+* **Filtro Boost Funzionante** - Mostra/nascondi boost via API
+* **Icone Modulari** - File SVG separati facilmente sostituibili
+* **Badge Boost** - Indicatore visivo post riboostati
+* **Fix Leggibilità** - Nessuna duplicazione contenuto
+* **URL Corretti** - Link boost aprono pagina web (non JSON)
 
 = Caratteristiche Principali =
 
-* **Privacy-First** - Usa solo feed RSS pubblici, nessun tracker
-* **Fediverso-Native** - Supporto completo Mastodon e Diggita (Lemmy)
-* **Timeline Unificata** - Tutti i tuoi post in un unico posto
-* **Design Moderno** - Timeline responsive con card e animazioni
-* **Caching Intelligente** - Riduce carico server (30min-24h configurabile)
-* **Zero Dipendenze** - Nessun JavaScript, solo CSS puro
-* **Dark Mode** - Supporto automatico tema scuro browser
+* **API Native & RSS** - Mastodon API per dati completi, RSS per Diggita
+* **Statistiche Interazioni** - ❤️ like, 🔁 boost, 💬 risposte (Mastodon)
+* **Privacy-First** - Nessun tracker, cookies o servizi esterni
+* **Fediverso-Native** - ActivityPub (Mastodon) e Lemmy (Diggita)
+* **Timeline Unificata** - Tutti i post in ordine cronologico
+* **Filtro Boost** - Mostra/nascondi boost e repost (funzionante!)
+* **Icone SVG Modulari** - Facili da sostituire e personalizzare
+* **Caching Intelligente** - Riduce carico server (30min-24h)
+* **Design Moderno** - Cards responsive, dark mode, statistiche colorate
+* **Zero Dipendenze** - Nessun JavaScript esterno
 * **Open Source** - Codice trasparente GPL-2.0-or-later
 
 = Piattaforme Supportate =
 
-**MVP - Fase 1 (v1.0.0):**
-* Mastodon (e tutte le istanze Fediverso compatibili: Pleroma, Pixelfed, ecc.)
-* Diggita (piattaforma Lemmy italiana)
+**Corrente (v1.1.2):**
+* **Mastodon** - API nativa con statistiche complete
+* **Diggita** - Feed RSS (Lemmy)
 
-**Fase 2 (Prossimamente):**
-* Bluesky (AT Protocol)
+**Prossimamente (v1.2.0):**
+* **Bluesky** - AT Protocol con statistiche
 
 = Come Funziona =
 
-1. Configura almeno un profilo social (Mastodon o Diggita)
-2. Il plugin scarica automaticamente i feed RSS pubblici
-3. I post vengono uniti e ordinati cronologicamente
-4. La timeline viene cachata per migliori performance
-5. Inserisci lo shortcode `[eg_social_timeline]` dove vuoi mostrare la timeline
+1. Configura almeno un profilo (Mastodon o Diggita)
+2. **Mastodon**: API nativa ottiene post + statistiche (like/boost/risposte)
+3. **Diggita**: Feed RSS standard
+4. Post uniti, ordinati cronologicamente e cachati
+5. Timeline con statistiche colorate e badge boost
+6. Inserisci `[eg_social_timeline]` ovunque
 
-Semplice, veloce, rispettoso della privacy!
+**Esempio Output:**
+
+```
+🐘 Mastodon  🔁 Boost  2 ore fa
+──────────────────────────────
+Testo del post social...
+
+❤️ 16  🔁 10  💬 2
+Vedi post originale →
+```
 
 = Utilizzo =
 
-Inserisci lo shortcode nel contenuto di articoli o pagine:
-
+Shortcode base:
 `[eg_social_timeline]`
 
-Limita il numero di post mostrati:
-
+Con limite personalizzato:
 `[eg_social_timeline limit="20"]`
 
 = Configurazione =
 
-Vai in **Impostazioni → EG Social Timeline** e configura:
+**Impostazioni → EG Social Timeline:**
 
-* URL profilo Mastodon (es: https://mastodon.uno/@username)
-* Username Diggita (es: emanuelegori)
-* Numero post da mostrare (1-50)
-* Durata cache (30min, 1h, 2h, 4h, 8h, 24h)
-* Mostra/nascondi boost e repost
+* **URL Profilo Mastodon** - Es: https://mastodon.uno/@username
+* **Username Diggita** - Es: emanuelegori (senza @)
+* **Numero Post** - 1-50 (default: 10)
+* **Durata Cache** - 30min, 1h, 2h, 4h, 8h, 24h
+* **Includi Boost** - Mostra/nascondi boost (ora funzionante!)
+* **Mostra Statistiche** - Abilita/disabilita conteggi interazioni
 
-Almeno un profilo social è obbligatorio.
+Almeno un profilo obbligatorio.
 
 == Installation ==
 
 = Installazione Automatica =
 
-1. Vai in WordPress → Plugin → Aggiungi nuovo
+1. WordPress → Plugin → Aggiungi nuovo
 2. Cerca "EG Social Timeline"
-3. Clicca "Installa ora" e poi "Attiva"
-4. Vai in Impostazioni → EG Social Timeline per configurare
+3. Installa e attiva
+4. Impostazioni → EG Social Timeline per configurare
 
 = Installazione Manuale =
 
-1. Scarica il file ZIP del plugin
-2. Vai in WordPress → Plugin → Aggiungi nuovo → Carica plugin
-3. Seleziona il file ZIP e clicca "Installa ora"
-4. Attiva il plugin
-5. Vai in Impostazioni → EG Social Timeline per configurare
+1. Scarica ZIP: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
+2. WordPress → Plugin → Aggiungi nuovo → Carica plugin
+3. Seleziona ZIP, installa e attiva
+4. Impostazioni → EG Social Timeline per configurare
 
 = Via FTP =
 
-1. Scarica e estrai il file ZIP
-2. Carica la cartella `eg-social-timeline` in `/wp-content/plugins/`
-3. Attiva il plugin dal pannello Plugin di WordPress
-4. Vai in Impostazioni → EG Social Timeline per configurare
+1. Scarica ed estrai ZIP
+2. Carica cartella `eg-social-timeline` in `/wp-content/plugins/`
+3. Attiva da pannello Plugin
+4. Impostazioni → EG Social Timeline per configurare
 
-= Configurazione Iniziale =
+= Post-Installazione =
 
-Dopo l'installazione:
-
-1. Vai in Impostazioni → EG Social Timeline
-2. Inserisci almeno un profilo social (Mastodon o Diggita)
-3. Salva le impostazioni
-4. Inserisci `[eg_social_timeline]` dove vuoi la timeline
+1. Impostazioni → EG Social Timeline
+2. Inserisci almeno un profilo (Mastodon o Diggita)
+3. Configura opzioni (statistiche, boost, cache)
+4. Salva impostazioni
+5. Inserisci `[eg_social_timeline]` in articolo/pagina
 
 == Frequently Asked Questions ==
 
 = Quali piattaforme sono supportate? =
 
-Versione corrente (v1.0.0 - MVP):
-* Mastodon e tutte le istanze Fediverso compatibili (Pleroma, Pixelfed, Misskey, ecc.)
-* Diggita (e altre istanze Lemmy)
+**Corrente (v1.1.2):**
+* Mastodon (API nativa + statistiche)
+* Diggita/Lemmy (RSS)
 
-Prossimamente: Bluesky (Fase 2)
+**Prossime:**
+* Bluesky (v1.2.0)
+
+= Cosa sono le statistiche interazioni? =
+
+Per post Mastodon, il plugin mostra:
+* ❤️ Preferiti (like)
+* 🔁 Boost (reblog)
+* 💬 Risposte (replies)
+
+Conteggi in tempo reale tramite API Mastodon.
 
 = Il plugin raccoglie dati personali? =
 
-No! Il plugin:
-* Usa solo feed RSS pubblici
+**NO!** Il plugin:
+* Usa solo API pubbliche e RSS
 * Non installa tracker o analytics
 * Non invia dati a servizi esterni
 * Non usa cookie
-* È completamente GDPR-compliant
+* Cache locale su server WordPress
+* GDPR-compliant al 100%
 
-Tutti i dati sono cachati localmente sul tuo server WordPress.
+= Come funziona il filtro boost? =
 
-= Come funziona il caching? =
+**v1.1.x**: Funzionante tramite API Mastodon!
 
-Il plugin salva i feed RSS nella cache di WordPress (Transients API) per ridurre le richieste ai server esterni. Puoi configurare la durata da 30 minuti a 24 ore.
+Opzione "Includi Boost/Repost":
+* **Abilitato**: Mostra post originali + boost
+* **Disabilitato**: Solo post originali
 
-Per svuotare la cache manualmente: Impostazioni → EG Social Timeline → "Svuota Cache Ora"
+Badge visivo "🔁 Boost" su post riboostati.
 
-= Posso nascondere i boost e repost? =
+= Le icone sono personalizzabili? =
 
-Sì! In Impostazioni → EG Social Timeline trovi l'opzione "Mostra Boost/Repost". Se disabilitata, la timeline mostrerà solo i tuoi post originali.
+**Sì!** (novità v1.1.0)
 
-= Come personalizzo il design? =
+Icone in file SVG separati (`social-icons/`):
+* `mastodon.svg`
+* `diggita.svg`
+* `bluesky.svg`
+* `generic.svg` (fallback)
 
-Il plugin usa CSS standard. Puoi sovrascrivere gli stili nel CSS del tuo tema targeting le classi `.eg-social-timeline`.
+Sostituisci file SVG per personalizzare!
 
-Esempio nel file CSS del tema:
+= Come svuoto la cache? =
 
-`.timeline-item {
-    border-color: #tuocolore;
-}`
+Impostazioni → EG Social Timeline → bottone "Svuota Cache Ora"
 
-= Il plugin è compatibile con il mio tema? =
+Cache si svuota automaticamente salvando impostazioni.
 
-Sì! Il plugin usa HTML semantico e CSS standard, quindi è compatibile con qualsiasi tema WordPress moderno.
+= Compatibile con il mio tema? =
+
+Sì! HTML semantico e CSS standard.
+
+Funziona con qualsiasi tema WordPress moderno.
 
 = Supporta Gutenberg? =
 
-Al momento (v1.0.0) usa solo shortcode. Il blocco Gutenberg nativo è pianificato per la Fase 3.
+**Shortcode**: Usa blocco "Shortcode" di Gutenberg
+**Blocco nativo**: Pianificato v1.3.0
 
-Puoi comunque usare il blocco "Shortcode" di Gutenberg e inserire `[eg_social_timeline]`.
+Intanto: inserisci `[eg_social_timeline]` nel blocco Shortcode.
 
-= Come aggiorno il plugin? =
+= Come aggiorno da v1.0.0? =
 
-**Metodo 1 - Manuale:**
-Scarica la nuova versione e sostituisci i file (le configurazioni sono salvate nel database).
+**Metodo 1 - Automatico (Raccomandato):**
+Installa [Git Updater](https://git-updater.com/)
 
-**Metodo 2 - Automatico (Raccomandato):**
-Installa [Git Updater](https://git-updater.com/) che controlla automaticamente nuove versioni dal repository Gitea.
+**Metodo 2 - Manuale:**
+Scarica ZIP nuova versione e sostituisci file.
+
+**Breaking Changes**: Nessuno! Retrocompatibile.
+
+Configurazioni salvate in database (non perse).
 
 = Dove trovo supporto? =
 
-* Documentazione completa: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
+* Documentazione: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
+* CHANGELOG: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/src/branch/main/CHANGELOG.md
 * Blog: https://emanuelegori.uno
-* Fediverso: @emanuelegori@emanuelegori.uno
+* Fediverso: @emanuelegori@mastodon.uno
 
 == Screenshots ==
 
-1. Timeline unificata con post da Mastodon e Diggita
-2. Pannello amministrazione con tutte le opzioni
-3. Design responsive su mobile
-4. Card post con icone colorate
-5. Dark mode automatico
+1. Timeline unificata con statistiche interazioni (❤️ 🔁 💬)
+2. Badge boost su post riboostati
+3. Pannello amministrazione con tutte le opzioni
+4. Design responsive su mobile con dark mode
+5. Icone SVG colorate per piattaforme
+6. Card post con separatori e spaziatura ottimizzata
 
 == Changelog ==
 
-= 1.0.0 - 2025-01-10 =
-* Prima release pubblica (MVP - Fase 1)
+= 1.1.2 (2026-01-10) =
+* Fix: URL boost non terminano più con /activity
+* Fix: Link boost ora aprono pagina web invece di JSON
+* Migliorato: Link puntano sempre a post originale
+
+= 1.1.1 (2026-01-10) =
+* Fix: Rimossa duplicazione contenuto (titolo + testo)
+* Fix: Migliorata leggibilità generale
+* Migliorato: Badge boost ridimensionato (discreto)
+* Migliorato: Spaziatura e contrasti
+* Migliorato: Dark mode ottimizzato
+* Migliorato: Separatore header post
+
+= 1.1.0 (2026-01-10) =
+* Novità: API Mastodon nativa (sostituisce RSS)
+* Novità: Statistiche interazioni (like/boost/risposte)
+* Novità: Filtro boost funzionante via API
+* Novità: Badge visivo per post boostati
+* Novità: Icone SVG modulari in cartella separata
+* Novità: Opzione "Mostra Statistiche" in admin
+* Migliorato: Icone professionali (Mastodon, Diggita, Bluesky)
+* Migliorato: Performance con cache Account ID (24h)
+
+= 1.0.0 (2026-01-09) =
+* Prima release pubblica (MVP)
 * Supporto Mastodon RSS feed
 * Supporto Diggita/Lemmy RSS feed
 * Timeline unificata cronologica
 * Caching intelligente configurabile
-* Shortcode `[eg_social_timeline]`
+* Shortcode [eg_social_timeline]
 * Admin panel completo
 * Design responsive con dark mode
 * Zero dipendenze JavaScript
@@ -189,47 +258,101 @@ Vedi [CHANGELOG.md](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
 
 == Upgrade Notice ==
 
+= 1.1.2 =
+Hotfix: Corregge URL boost che mostravano JSON. Aggiornamento raccomandato se usi boost.
+
+= 1.1.1 =
+Hotfix critico: Risolve duplicazione contenuto. Aggiornamento altamente raccomandato!
+
+= 1.1.0 =
+Grande aggiornamento! API Mastodon + statistiche interazioni. Retrocompatibile, nessun breaking change.
+
 = 1.0.0 =
 Prima release pubblica. Nessuna migrazione necessaria.
 
 == Roadmap ==
 
-**Fase 2 - Bluesky:**
+**v1.2.0 - Bluesky:**
 * Integrazione API pubblica Bluesky
+* Statistiche Bluesky
 * Supporto AT Protocol
 
-**Fase 3 - Advanced:**
+**v1.3.0 - Advanced:**
 * Blocco Gutenberg nativo
+* Visualizzazione media/immagini
 * Paginazione timeline
-* Filtri avanzati
+* Filtri hashtag
 * Widget WordPress nativo
 * Traduzioni complete (IT/EN)
 
 == Privacy Policy ==
 
-EG Social Timeline non raccoglie, trasmette o memorizza alcun dato personale. Il plugin:
+EG Social Timeline rispetta completamente la tua privacy:
 
-* Usa solo feed RSS pubblici
-* Non installa cookie
-* Non usa analytics o tracker
-* Non invia dati a server esterni
-* Cache i feed localmente sul server WordPress
-* È completamente GDPR-compliant
+**Non raccoglie:**
+* Dati personali utenti
+* Cookie o storage browser
+* Analytics o statistiche d'uso
+
+**Usa solo:**
+* API pubbliche Mastodon (nessuna autenticazione)
+* Feed RSS pubblici Diggita
+* Cache locale server WordPress
+
+**Conformità:**
+* GDPR-compliant
+* No tracker
+* No servizi esterni
+* Codice open source verificabile
+
+Le statistiche mostrate (like/boost) sono **conteggi anonimi** da API pubbliche, non identificano utenti.
 
 == Credits ==
 
 Sviluppato da [Emanuele Gori](https://emanuelegori.uno)
 
-Altri plugin dell'autore:
+**Altri plugin dell'autore:**
 * [EG Sharebar Fedi](https://git.emanuelegori.uno/emanuelegori/eg-sharebar-fedi) - Barra condivisione Fediverso
 * [EG Fediverso Box](https://git.emanuelegori.uno/emanuelegori/eg-fediverso-box) - Box follow Fediverso
 * [EG Fediverso Page](https://git.emanuelegori.uno/emanuelegori/eg-fediverso-page) - Pagina educativa Fediverso
+* [EG Contact Form Privacy](https://git.emanuelegori.uno/emanuelegori/eg-contact-form-privacy) - Form contatti privacy-first
+
+**Supporta lo sviluppo:**
+* ⭐ Stella su Gitea
+* 🐘 Follow su Mastodon: @emanuelegori@mastodon.uno
+* 📝 Blog post e condivisioni
+
+== Technical Details ==
+
+**Architettura v1.1.x:**
+
+* Mastodon: API nativa `/api/v1/accounts/{id}/statuses`
+* Diggita: Feed RSS Lemmy standard
+* Cache: WordPress Transients API
+* Storage: Nessuno (solo cache temporanea)
+* Frontend: CSS puro, zero JavaScript
+* Backend: WordPress HTTP API
+
+**Performance:**
+* Account ID cache: 24h (riduce lookup)
+* Timeline cache: Configurabile (30min-24h)
+* Lazy loading: Solo quando shortcode presente
+* CSS minificato: <5KB
+
+**Compatibilità:**
+* WordPress: 5.0+
+* PHP: 7.4, 8.0, 8.1, 8.2, 8.3
+* MySQL: 5.7+
+* Temi: Tutti i temi moderni
+* Multisite: Compatibile
 
 == License ==
-
-Questo plugin è rilasciato sotto licenza GPL-2.0-or-later.
 
 GNU General Public License v2.0 or later
 https://www.gnu.org/licenses/gpl-2.0.html
 
 Questo programma è software libero; puoi redistribuirlo e/o modificarlo secondo i termini della GNU General Public License come pubblicata dalla Free Software Foundation; versione 2 della Licenza, o (a tua scelta) qualsiasi versione successiva.
+
+Testo completo:
+* Inglese: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/src/branch/main/LICENSE.md
+* Italiano: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/src/branch/main/LICENSE.IT.md

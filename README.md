@@ -1,38 +1,47 @@
 # EG Social Timeline
 
-Plugin WordPress per visualizzare una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky. Privacy-first, nessun tracker, solo feed RSS pubblici.
+Plugin WordPress per visualizzare una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky con statistiche interazioni in tempo reale. Privacy-first, nessun tracker, API native e feed RSS.
 
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-21759B)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4)](https://www.php.net/)
-[![Versione](https://img.shields.io/badge/Versione-1.0.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.1.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 
 ---
 
-## MVP - Fase 1
+## Versione Corrente: 1.1.2
 
-Versione corrente: **1.0.0 (MVP)**
+**Novità v1.1.x:**
+- ✅ API Mastodon nativa (sostituisce RSS)
+- ✅ Statistiche interazioni: ❤️ like, 🔁 boost, 💬 risposte
+- ✅ Filtro boost funzionante
+- ✅ Icone SVG modulari in cartella separata
+- ✅ Fix duplicazione contenuto
+- ✅ Fix URL boost con `/activity`
 
 Piattaforme supportate:
-- Mastodon (e tutte le istanze Fediverso compatibili)
-- Diggita (piattaforma Lemmy italiana)
+- **Mastodon** (API nativa + statistiche)
+- **Diggita** (feed RSS Lemmy)
 
-Prossimamente: Bluesky (Fase 2)
+Prossimamente: **Bluesky** (Fase 2)
 
 ---
 
 ## Caratteristiche
 
-- Privacy-First - Usa solo feed RSS pubblici, nessun tracker o servizio esterno
-- Fediverso-Native - Supporto Mastodon/ActivityPub e Diggita/Lemmy
-- Timeline Unificata - Tutti i tuoi post social in ordine cronologico
-- Caching Intelligente - Riduci le richieste ai server con cache configurabile (30min-24h)
-- Design Moderno - Timeline responsive con card, icone colorate e animazioni smooth
-- Dark Mode - Supporto automatico dark mode del browser
-- Leggero - Zero dipendenze JavaScript, solo CSS e feed RSS
-- Admin Panel Completo - Configurazione semplice da interfaccia WordPress
-- Multilingua - Supporto i18n (presto traduzioni IT/EN)
-- Open Source - Codice trasparente GPL-2.0-or-later
+- **API Native** - Mastodon API per dati completi, RSS per Diggita
+- **Statistiche Live** - Conteggi like, boost e risposte in tempo reale (Mastodon)
+- **Privacy-First** - Nessun tracker, cookies o servizi esterni
+- **Fediverso-Native** - Supporto ActivityPub (Mastodon) e Lemmy (Diggita)
+- **Timeline Unificata** - Tutti i tuoi post social in ordine cronologico
+- **Filtro Boost** - Mostra/nascondi boost e repost (funzionante via API)
+- **Icone Modulari** - File SVG separati facilmente sostituibili
+- **Caching Intelligente** - Riduci richieste server (30min-24h configurabile)
+- **Design Moderno** - Cards responsive, dark mode, animazioni smooth
+- **Leggero** - Zero dipendenze JavaScript, solo CSS
+- **Admin Completo** - Configurazione semplice da WordPress
+- **Multilingua** - Supporto i18n (traduzioni IT/EN in arrivo)
+- **Open Source** - GPL-2.0-or-later, codice verificabile
 
 ---
 
@@ -78,6 +87,7 @@ Almeno un profilo social è obbligatorio.
 - Formato: `https://istanza.social/@username`
 - Esempio: `https://mastodon.uno/@emanuelegori`
 - Funziona con qualsiasi istanza Fediverso compatibile (Mastodon, Pleroma, Pixelfed, ecc.)
+- **Nuovo v1.1**: Usa API nativa per statistiche complete
 
 **2. Username Diggita** (opzionale)
 - Il tuo username su diggita.com (senza @)
@@ -89,13 +99,19 @@ Almeno un profilo social è obbligatorio.
 - Range: 1-50
 
 **4. Durata Cache** (default: 1 ora)
-- Quanto tempo conservare i feed in cache
+- Quanto tempo conservare i dati in cache
 - Opzioni: 30min, 1h, 2h, 4h, 8h, 24h
-- Cache più lunga = meno richieste ai server = migliori performance
+- Cache più lunga = meno richieste = migliori performance
 
-**5. Mostra Boost/Repost** (default: no)
-- Se abilitato, include anche boost Mastodon e repost
+**5. Includi Boost/Repost** (default: no)
+- Se abilitato, include anche boost Mastodon
 - Se disabilitato, mostra solo post originali
+- **Nuovo v1.1**: Ora funzionante grazie ad API Mastodon!
+
+**6. Mostra Statistiche** (default: sì) **NUOVO v1.1**
+- Visualizza conteggi like/boost/risposte sotto ogni post
+- Mostra: ❤️ preferiti, 🔁 boost, 💬 risposte
+- Solo per Mastodon (API), non disponibile per Diggita (RSS)
 
 #### Svuota Cache Manualmente
 
@@ -142,49 +158,72 @@ Limita numero post (sovrascrive impostazione admin):
 
 ## Come Funziona
 
-### Architettura
+### Architettura v1.1.x
 
-1. **Feed RSS Nativi**
-   - Mastodon: `https://istanza.social/@username.rss` (standard ActivityPub)
-   - Diggita: `https://diggita.com/feeds/u/username.xml` (standard Lemmy)
+#### Mastodon - API Nativa
+1. **Account Lookup**: `GET /api/v1/accounts/lookup?acct=username`
+   - Ottiene Account ID da username
+   - Cache ID per 24h (riduce chiamate)
 
-2. **Fetching**
-   - Il plugin usa `wp_remote_get()` (WordPress HTTP API)
-   - Parse XML con `simplexml_load_string()`
-   - Estrae: data, titolo, contenuto, link
+2. **Fetch Statuses**: `GET /api/v1/accounts/{id}/statuses`
+   - Parametri: `exclude_reblogs`, `exclude_replies`, `limit`
+   - Restituisce JSON con post completi e statistiche
 
-3. **Merging & Sorting**
-   - Unisce i post di tutte le piattaforme
-   - Ordina per data (più recenti prima)
-   - Applica limit configurato
+3. **Dati Estratti**:
+   - Contenuto post (testo HTML → plain text)
+   - Data pubblicazione
+   - URL post originale
+   - Conteggi: favourites, reblogs, replies
+   - Flag boost (is_boost)
 
-4. **Caching**
-   - Salva in WordPress Transients API
-   - Durata configurabile (30min-24h)
-   - Riduce carico server e migliora performance
+#### Diggita - Feed RSS
+1. **Fetch RSS**: `https://diggita.com/feeds/u/username.xml`
+2. **Parse XML** con `simplexml_load_string()`
+3. **Estrae**: data, titolo, contenuto, link
 
-5. **Output**
-   - HTML semantico con microformats
-   - CSS modulare con variabili
-   - Dark mode automatico
-   - Responsive mobile-first
+#### Merging & Output
+1. Unisce post da tutte le piattaforme
+2. Ordina per data (più recenti prima)
+3. Applica filtri (boost, limit)
+4. Caching in WordPress Transients
+5. Render HTML con statistiche
 
-### Filtri Post
+### Icone SVG Modulari **NUOVO v1.1**
 
-Se "Mostra Boost/Repost" è disabilitato, il plugin filtra:
-- Post Mastodon che iniziano con "RT @" o "Boost:"
-- Logica boost detection: analizza titolo RSS
+Le icone sono in file SVG separati nella cartella `social-icons/`:
+- `mastodon.svg` - Logo ufficiale Mastodon
+- `diggita.svg` - Icona personalizzata Diggita
+- `lemmy.svg` - Icona Lemmy
+- `bluesky.svg` - Logo Bluesky (Fase 2)
+- `generic.svg` - Fallback
+
+Vantaggi:
+- Facile sostituire icone (modifica file SVG)
+- Aggiungere piattaforme (aggiungi file + mapping)
+- Codice PHP pulito (nessun SVG inline)
 
 ---
 
-## Design Timeline
+## Design Timeline v1.1
 
 ### Card Post
 
 Ogni post è una card con:
-- **Header**: Icona piattaforma colorata + nome piattaforma + data relativa ("2 ore fa")
-- **Content**: Titolo (se presente) + estratto testo (max 200 caratteri)
-- **Footer**: Link "Vedi post originale →" con hover effect
+- **Header**: Icona SVG piattaforma + nome + badge boost (se boost) + data relativa
+- **Content**: Testo completo (max 300 caratteri)
+- **Stats** (Mastodon): ❤️ like, 🔁 boost, 💬 risposte
+- **Footer**: Link "Vedi post originale →"
+
+### Statistiche Interazioni **NUOVO**
+
+```
+❤️ 16    🔁 10    💬  2
+```
+
+- Colori specifici per tipo (rosso/verde/blu)
+- Tooltip hover con descrizione
+- Dark mode support
+- Disabilitabili da admin
 
 ### Colori Piattaforme
 
@@ -192,24 +231,56 @@ Ogni post è una card con:
 - Diggita: Gradient rosso `#FF6B6B → #EE5A6F`
 - Bluesky: Gradient blu `#0085FF → #00A8FF` (Fase 2)
 
-### Responsive
+### Badge Boost **NUOVO**
 
-- **Desktop**: Timeline centrata 800px, card con ombra e hover lift
-- **Mobile**: Full width, stack verticale, touch-friendly
-- **Dark Mode**: Supporto automatico `prefers-color-scheme`
+Post boostati mostrano badge discreto:
+```
+🔁 Boost
+```
+- Verde chiaro
+- Bordo laterale verde sulla card
+- Nessun avatar (privacy-first)
 
-### Accessibilità
+---
 
-- Semantic HTML5 (`<article>`, `<header>`, `<time>`)
-- ARIA labels appropriati
-- Contrasto colori WCAG AA
-- Keyboard navigation friendly
+## Changelog
+
+### v1.1.2 (2026-01-10) - Hotfix URL Boost
+- **Fix**: URL boost non terminano più con `/activity`
+- **Fix**: Link boost ora aprono pagina web invece di JSON
+- Migliorato: Link puntano sempre a post originale
+
+### v1.1.1 (2026-01-10) - Hotfix Leggibilità
+- **Fix**: Rimossa duplicazione contenuto (titolo + testo)
+- **Fix**: Migliorata leggibilità generale
+- Migliorato: Badge boost ridimensionato (discreto)
+- Migliorato: Spaziatura e contrasti
+- Migliorato: Dark mode ottimizzato
+
+### v1.1.0 (2026-01-10) - API Mastodon + Statistiche
+- **Novità**: API Mastodon nativa (sostituisce RSS)
+- **Novità**: Statistiche interazioni (like/boost/risposte)
+- **Novità**: Filtro boost funzionante
+- **Novità**: Badge visivo per boost
+- **Novità**: Icone SVG modulari in cartella separata
+- **Novità**: Opzione "Mostra Statistiche"
+- Migliorato: Icone professionali (Mastodon, Diggita, Bluesky)
+- Performance: Cache Account ID (24h)
+
+### v1.0.0 (2026-01-09) - MVP Iniziale
+- Prima release pubblica
+- Supporto Mastodon via RSS
+- Supporto Diggita via RSS
+- Timeline unificata
+- Sistema caching
+- Admin panel
+- Design responsive
 
 ---
 
 ## Roadmap Sviluppo
 
-### Fase 1 - MVP (Completata)
+### ✅ Fase 1 - MVP (Completata v1.0.0)
 - Supporto Mastodon RSS
 - Supporto Diggita RSS
 - Timeline unificata
@@ -217,18 +288,27 @@ Ogni post è una card con:
 - Admin panel
 - Design responsive
 
-### Fase 2 - Bluesky (Prossima)
-- Integrazione API pubblica Bluesky
-- Conversione JSON → formato unificato
-- Gestione autenticazione (se necessaria)
+### ✅ Fase 1.1 - API & Stats (Completata v1.1.2)
+- API Mastodon nativa
+- Statistiche interazioni
+- Filtro boost funzionante
+- Icone SVG modulari
+- Fix UI e leggibilità
 
-### Fase 3 - Advanced Features
+### 🔜 Fase 2 - Bluesky (Prossima v1.2.0)
+- Integrazione API pubblica Bluesky
+- Statistiche Bluesky
+- Icona farfalla attiva
+- Conversione JSON → formato unificato
+
+### 📅 Fase 3 - Advanced Features (v1.3.0+)
 - Blocco Gutenberg nativo
+- Visualizzazione media/immagini
 - Filtri avanzati (hashtag, tipo contenuto)
 - Paginazione timeline
 - Traduzioni complete (IT/EN)
 - Widget nativo WordPress
-- Supporto X/Twitter (se possibile con scraping)
+- Supporto X/Twitter (se possibile)
 
 ---
 
@@ -250,24 +330,28 @@ Nessuna libreria esterna richiesta!
 
 ---
 
-## Compatibilità Piattaforme
+## Struttura Repository
 
-### Mastodon (Testato)
-- Mastodon ufficiale
-- Istanze Fediverso compatibili:
-  - Pleroma (compatibilità teorica)
-  - Pixelfed (compatibilità teorica)
-  - Misskey (se supporta RSS)
-  - Akkoma (compatibilità teorica)
-  - GoToSocial (compatibilità teorica)
-
-### Diggita (Testato)
-- diggita.com (istanza Lemmy)
-- Altre istanze Lemmy italiane (feddit.it, poliversity.it)
-
-### Bluesky (Fase 2)
-- API pubblica AT Protocol
-- Feed pubblici senza autenticazione
+```
+eg-social-timeline/
+├── eg-social-timeline.php     # File principale plugin
+├── eg-social-timeline.css     # Stili timeline
+├── social-icons/              # Icone SVG modulari (v1.1+)
+│   ├── mastodon.svg
+│   ├── diggita.svg
+│   ├── lemmy.svg
+│   ├── bluesky.svg
+│   ├── generic.svg
+│   └── README.md
+├── languages/                 # Traduzioni (prossima versione)
+├── README.md                  # Questa documentazione
+├── readme.txt                 # Documentazione WordPress standard
+├── CHANGELOG.md               # Storico versioni dettagliato
+├── LICENSE.md                 # Licenza GPL v2 (inglese)
+├── LICENSE.IT.md              # Licenza GPL v2 (italiano)
+├── .gitignore                 # File da ignorare
+└── .gitattributes             # Export pulito
+```
 
 ---
 
@@ -278,119 +362,63 @@ Nessuna libreria esterna richiesta!
 1. Verifica che il plugin sia attivo
 2. Controlla di aver configurato almeno un profilo in Impostazioni
 3. Verifica shortcode: `[eg_social_timeline]` (con underscore!)
-4. Svuota cache sito e browser
-5. Controlla log errori WordPress
+4. Svuota cache plugin: Impostazioni → "Svuota Cache Ora"
+5. Svuota cache sito e browser
+6. Controlla log errori WordPress
 
-### Banner "Configurazione Richiesta"
+### Statistiche Non Visibili (Mastodon)
 
-Se vedi il banner rosso in admin:
-1. Vai in Impostazioni → EG Social Timeline
-2. Inserisci almeno un URL Mastodon o username Diggita
-3. Salva le impostazioni
-4. Il banner scomparirà
+1. Verifica opzione "Mostra Statistiche" sia abilitata
+2. Svuota cache plugin
+3. Solo Mastodon supporta statistiche (API)
+4. Diggita usa RSS (nessuna statistica disponibile)
+
+### Link Boost Mostrano JSON
+
+**Risolto in v1.1.2!** Aggiorna alla versione più recente.
+
+### Testo Post Duplicato
+
+**Risolto in v1.1.1!** Aggiorna alla versione più recente.
+
+### "Could not get Mastodon account ID"
+
+1. Verifica URL profilo formato: `https://istanza.social/@username`
+2. Controlla che il profilo sia pubblico
+3. Verifica connessione server → istanza Mastodon
+4. Svuota cache plugin
 
 ### "Nessun Post Disponibile"
 
 Possibili cause:
-1. **Feed RSS vuoto**: I profili non hanno post pubblici
-2. **Errore connessione**: Verifica che i server siano raggiungibili
+1. **Nessun post pubblico**: Profili senza contenuti
+2. **Errore connessione**: Server non raggiungibili
 3. **URL errato**: Controlla formato URL Mastodon
-4. **Cache vecchia**: Clicca "Svuota Cache Ora" in admin
+4. **Cache vecchia**: Clicca "Svuota Cache Ora"
 
 Debug:
 1. Attiva `define('EG_SOCIAL_TIMELINE_DEBUG', true);` in `eg-social-timeline.php`
 2. Controlla log errori WordPress: `/wp-content/debug.log`
 
-### Post Duplicati o Mancanti
-
-1. Svuota cache plugin (bottone admin)
-2. Verifica filtro "Mostra Boost/Repost"
-3. Controlla se i feed RSS hanno dati corretti (apri URL RSS in browser)
-
-### Performance Lente
-
-1. Aumenta durata cache (8h o 24h)
-2. Riduci numero post mostrati
-3. Disabilita "Mostra Boost/Repost" se non necessario
-
----
-
-## Personalizzazione CSS
-
-### Cambiare Colori Piattaforme
-
-Modifica `eg-social-timeline.css`:
-
-```css
-/* Mastodon - Cambia gradient */
-.platform-icon.platform-mastodon {
-    background: linear-gradient(135deg, #TUO_COLORE1 0%, #TUO_COLORE2 100%);
-}
-
-/* Link hover color */
-.view-original:hover {
-    background: #TUO_COLORE_PRIMARY;
-}
-```
-
-### Cambiare Font
-
-Aggiungi nel tuo tema:
-
-```css
-.eg-social-timeline {
-    font-family: 'TUO_FONT', sans-serif;
-}
-```
-
-### Card più Grandi/Piccole
-
-```css
-.timeline-item {
-    padding: 30px; /* aumenta */
-    font-size: 17px; /* aumenta testo */
-}
-```
-
 ---
 
 ## Aggiornamenti
 
-### Manuale
+### Da v1.0.0 a v1.1.x
 
-1. Scarica nuova versione ZIP
-2. Disattiva plugin in WordPress
-3. Elimina vecchia cartella plugin
-4. Carica nuova versione
-5. Riattiva plugin
+**Breaking Changes**: Nessuno! Completamente retrocompatibile.
 
-Le configurazioni nel database NON vengono perse.
+**Novità**:
+- API Mastodon (automatico, nessuna config)
+- Statistiche (disabilitabili da admin)
+- Icone modulari (automatiche)
 
-### Automatico (Raccomandato)
-
-Usa [Git Updater](https://git-updater.com/):
-- Controllo automatico nuove release
-- Notifiche in WordPress → Aggiornamenti
-- Click "Aggiorna" per installare
-- Configurazioni mantenute
-
----
-
-## Struttura Repository
-
-```
-eg-social-timeline/
-├── eg-social-timeline.php     # File principale plugin
-├── eg-social-timeline.css     # Stili timeline
-├── languages/                 # Traduzioni (prossima versione)
-├── README.md                  # Questa documentazione
-├── readme.txt                 # Documentazione WordPress standard
-├── CHANGELOG.md               # Storico versioni
-├── LICENSE.md                 # Licenza GPL v2 (inglese)
-├── LICENSE.IT.md              # Licenza GPL v2 (italiano)
-├── .gitignore                 # File da ignorare
-└── .gitattributes             # Export pulito
-```
+**Procedura**:
+1. Backup database WordPress (precauzione)
+2. Aggiorna plugin (ZIP, FTP o Git Updater)
+3. Svuota cache in Impostazioni
+4. Verifica timeline funzioni
+5. Enjoy new features! 🎉
 
 ---
 
@@ -412,7 +440,7 @@ Testo completo licenza:
 ### Documentazione
 
 - [README.md](README.md) - Questa documentazione
-- [CHANGELOG.md](CHANGELOG.md) - Storico versioni
+- [CHANGELOG.md](CHANGELOG.md) - Storico versioni dettagliato
 - Repository: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
 
 ### Contatti
@@ -420,8 +448,8 @@ Testo completo licenza:
 - Website: https://emanuelegori.uno
 - Repository: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
 - Blog: Informatica, libertà digitale e open source
-- Fediverso: @emanuelegori@emanuelegori.uno
-- Diggita: @emanuelegori (presto)
+- Fediverso: @emanuelegori@mastodon.uno
+- Diggita: @emanuelegori
 
 ---
 
@@ -432,23 +460,24 @@ Testo completo licenza:
 - Website: [emanuelegori.uno](https://emanuelegori.uno)
 - Git: [git.emanuelegori.uno](https://git.emanuelegori.uno/emanuelegori)
 - Blog: Privacy, FOSS, Fediverso, Self-hosting
-- Fediverso: @emanuelegori@emanuelegori.uno
+- Fediverso: @emanuelegori@mastodon.uno
 
 Altri plugin:
 - [eg-sharebar-fedi](https://git.emanuelegori.uno/emanuelegori/eg-sharebar-fedi) - Barra condivisione Fediverso
 - [eg-fediverso-box](https://git.emanuelegori.uno/emanuelegori/eg-fediverso-box) - Box follow Fediverso
 - [eg-fediverso-page](https://git.emanuelegori.uno/emanuelegori/eg-fediverso-page) - Pagina educativa Fediverso
+- [eg-contact-form-privacy](https://git.emanuelegori.uno/emanuelegori/eg-contact-form-privacy) - Form contatti privacy-first
 
 ---
 
 ## Statistiche
 
-- **Versione**: 1.0.0 (MVP - Fase 1)
-- **Data Release**: Gennaio 2025
+- **Versione**: 1.1.2 (Stable)
+- **Data Release**: 10 Gennaio 2025
 - **Licenza**: GPL-2.0-or-later
 - **Compatibilità**: WordPress 5.0+ | PHP 7.4+
-- **Piattaforme**: Mastodon (testato), Diggita (testato)
-- **Roadmap**: Bluesky (Fase 2), Features avanzate (Fase 3)
+- **Piattaforme**: Mastodon (API), Diggita (RSS)
+- **Roadmap**: Bluesky (v1.2.0), Features avanzate (v1.3.0+)
 
 ---
 
@@ -456,13 +485,14 @@ Altri plugin:
 
 EG Social Timeline è costruito con attenzione alla privacy:
 
-- Usa solo feed RSS pubblici
+- API pubbliche e feed RSS (nessuna autenticazione)
 - Nessun tracker o analytics
 - Nessun dato inviato a servizi esterni
 - Nessun cookie o storage browser
 - Codice open source verificabile
 - Dati cachati solo sul server WordPress
 - Conforme GDPR (nessun dato personale raccolto)
+- Statistiche anonime (conteggi, non utenti)
 
 ---
 

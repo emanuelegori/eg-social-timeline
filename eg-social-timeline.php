@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky
- * Version: 1.1.0
+ * Version: 1.1.2
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.1.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.1.2');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -515,17 +515,17 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
         // Extract text content (strip HTML tags)
         $content = strip_tags($content_data['content']);
         
-        // Get title from first line or beginning of content
-        $title_parts = explode("\n", $content);
-        $title = !empty($title_parts[0]) ? $title_parts[0] : '';
+        // Mastodon posts dont have titles - use full content only
         
         // Build post data
+        // Use reblog URL for boosts, status URL for original posts
+        $post_url = $is_boost ? $content_data['url'] : $status['url'];
         $post = array(
             'platform' => 'mastodon',
             'date' => strtotime($status['created_at']),
-            'title' => $title,
+            'title' => '',  // No title for Mastodon posts
             'content' => $content,
-            'link' => $status['url'],
+            'link' => $post_url,
             'is_boost' => $is_boost,
             'favourites_count' => isset($content_data['favourites_count']) ? intval($content_data['favourites_count']) : 0,
             'reblogs_count' => isset($content_data['reblogs_count']) ? intval($content_data['reblogs_count']) : 0,
@@ -674,33 +674,13 @@ function eg_social_timeline_shortcode($atts) {
                     </time>
                 </header>
                 <div class="timeline-content">
-                    <?php if (!empty($post['title'])): ?>
-                        <h3 class="post-title"><?php echo esc_html($post['title']); ?></h3>
-                    <?php endif; ?>
-                    <div class="post-excerpt">
-                        <?php echo wp_kses_post(eg_social_timeline_truncate($post['content'], 200)); ?>
+                    <div class="post-text">
+                        <?php echo wp_kses_post(eg_social_timeline_truncate($post['content'], 300)); ?>
                     </div>
                 </div>
                 <footer class="timeline-footer">
-                    <?php if ($show_stats && ($post['favourites_count'] > 0 || $post['reblogs_count'] > 0 || $post['replies_count'] > 0)): ?>
-                        <div class="post-stats">
-                            <?php if ($post['favourites_count'] > 0): ?>
-                                <span class="stat-item stat-favourites" title="<?php esc_attr_e('Preferiti', 'eg-social-timeline'); ?>">
-                                    ❤️ <?php echo esc_html($post['favourites_count']); ?>
-                                </span>
-                            <?php endif; ?>
                             
-                            <?php if ($post['reblogs_count'] > 0): ?>
-                                <span class="stat-item stat-boosts" title="<?php esc_attr_e('Boost', 'eg-social-timeline'); ?>">
-                                    🔁 <?php echo esc_html($post['reblogs_count']); ?>
-                                </span>
-                            <?php endif; ?>
                             
-                            <?php if ($post['replies_count'] > 0): ?>
-                                <span class="stat-item stat-replies" title="<?php esc_attr_e('Risposte', 'eg-social-timeline'); ?>">
-                                    💬 <?php echo esc_html($post['replies_count']); ?>
-                                </span>
-                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                     
