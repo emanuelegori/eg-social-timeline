@@ -7,123 +7,106 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ---
 
+## [1.2.4] - 2026-01-11
+
+### Fixed
+- **Diggita statistiche visualizzate**: risolto parsing HTML con `strip_tags()` prima dello split per estrarre correttamente punti e commenti
+- **Forgejo nome repository visibile**: incluso nome repo nel campo `content` così appare nella timeline
+
+### Changed
+- **Diggita parsing robusto**: usa `strip_tags()` per rimuovere TUTTI i tag HTML (inclusi `<a>`, `<br>`, `<p>`) prima di parsare righe
+- **Forgejo content format**: da solo messaggio a "Commit to {repo}: {message}" per chiarezza
+
+### Technical
+- Diggita: parsing sequenziale riga-per-riga dopo strip HTML invece di regex multipli
+- Forgejo: `$full_content = 'Commit to ' . $repo_name . ': ' . $short_message`
+
+---
+
 ## [1.2.3] - 2026-01-11
 
 ### Fixed
 - **Filtri CSS logica invertita**: risolto bug selezione checkbox. Ora logica corretta: nascondi tutto di default, mostra solo piattaforme checked
-- **Diggita parsing robusto**: statistiche estratte correttamente con split multi-riga invece di regex su stringa unica
 - **Forgejo link pagina commits**: link ora punta a `/commits/branch/{branch}` invece di singolo commit `/commit/{sha}`
 - **UI filtri compatta**: ridotto font-size, padding e dimensioni icone per box filtri più discreto
 
 ### Changed
-- **CSS filtri**: da `:not(:checked) ~ .timeline-item { display: none }` a `:checked ~ .timeline-item { display: block }` (logica invertita)
-- **Box filtri dimensioni**:
-  - Header h3: 1.1em → 0.95em
-  - Label: 0.85em font, 6px padding (era 8px)
-  - Icone: 16px (erano 20px)
-  - Checkbox indicator: 16px (era 20px)
-- **Forgejo URL format**: `{instance}/{owner}/{repo}/commits/branch/{branch}` per vedere tutti i commit del repo
-
-### Technical
-- Diggita: parsing con `explode("\n")` e `array_shift()` invece di regex multipli
-- CSS: default `.timeline-item { display: none !important }` con override `!important` su `:checked`
-- Forgejo: usa `urlencode($default_branch)` per branch names con caratteri speciali
+- **CSS filtri**: da `:not(:checked) ~ .timeline-item { display: none }` a `:checked ~ .timeline-item { display: block }`
+- **Forgejo URL format**: `{instance}/{owner}/{repo}/commits/branch/{branch}`
 
 ---
 
 ## [1.2.2] - 2026-01-11
 
 ### Fixed
-- **Forgejo API affidabile**: risolto feed vuoto su alcune istanze Forgejo usando API commits diretta invece di `/activities/feeds`
-- **Diggita contenuto pulito**: rimossa riga "submitted by X to Y" che appariva sopra il testo
-- **Diggita statistiche separate**: estratti punti e commenti dal contenuto per visualizzazione pulita
+- **Forgejo API affidabile**: risolto feed vuoto usando API commits diretta invece di `/activities/feeds`
+- **Diggita contenuto pulito**: rimossa riga "submitted by X to Y"
+- **Diggita statistiche separate**: estratti punti e commenti per visualizzazione pulita
 
 ### Changed
-- **Forgejo implementazione**: usa `/api/v1/users/{user}/repos` + `/api/v1/repos/{owner}/{repo}/commits` per affidabilità
-- **Diggita emoji**: mostra ⭐ (punti) invece di ❤️ e 💬 (commenti) per chiarezza
-- **Forgejo link**: personalizzato "Vedi commit" invece di generico "Vedi post originale"
-
-### Added
-- **Diggita statistiche visuali**: upvotes e commenti mostrati sotto il post come Mastodon (formato omogeneo)
-- **Forgejo multi-repository**: recupera commit da tutti i repository pubblici dell'utente (ultimi 5 per repo)
+- **Forgejo implementazione**: usa `/repos` + `/commits` API
+- **Diggita emoji**: ⭐ (punti) e 💬 (commenti)
 
 ---
 
 ## [1.2.1] - 2026-01-11
 
 ### Fixed
-- **Filtri CSS siblings fix**: checkbox ora posizionati FUORI dal container come siblings diretti degli `<article>` per corretto funzionamento dei selettori CSS `~`
+- **Filtri CSS siblings fix**: checkbox posizionati FUORI dal container come siblings diretti degli `<article>`
 - **Post visibili**: risolto bug v1.2.0 che mostrava solo box filtri senza post
-
-### Technical
-- Checkbox HTML spostati prima del `<div class="eg-timeline-filters">` invece che dentro
-- Label rimangono dentro il container e usano attributo `for` per associazione
 
 ---
 
 ## [1.2.0] - 2026-01-11
 
 ### Added
-- **Integrazione Forgejo/Gitea**: mostra attività repository pubbliche (commit)
-- **Campo settings username Forgejo**: configurabile nelle impostazioni plugin
-- **Campo settings URL istanza Forgejo**: supporta istanze personalizzate
-- **Supporto filtro Forgejo**: integrato nel sistema filtri CSS della timeline
-- **Icona Forgejo**: aggiunta icona modulare SVG
+- **Integrazione Forgejo/Gitea**: mostra attività repository pubbliche
+- **Campo settings Forgejo**: username e URL istanza configurabili
 
 ### Fixed
-- **Sistema icone file-based**: le icone ora si caricano da file SVG in `social-icons/` invece di essere hardcoded in array PHP
+- **Sistema icone file-based**: icone caricate da file SVG invece di hardcoded
 
 ---
 
 ## [1.1.2] - 2026-01-11
 
 ### Fixed
-- **URL boost Mastodon**: i boost non puntano più all'endpoint JSON `/activity` ma alla pagina web del post originale
+- **URL boost Mastodon**: non puntano più a JSON `/activity`
 
 ### Added
-- **Box filtri interattivi**: checkbox CSS per ogni piattaforma con conteggio post
-- **Attributo data-platform**: aggiunto a ogni `<article>` per supportare filtri CSS
+- **Box filtri interattivi**: checkbox CSS per ogni piattaforma
 
 ---
 
 ## [1.1.1] - 2026-01-10
 
 ### Fixed
-- **Post duplicati**: rimossa duplicazione accidentale di post nella timeline
+- **Post duplicati**: rimossa duplicazione accidentale
 
 ---
 
 ## [1.1.0] - 2026-01-10
 
 ### Added
-- **API Mastodon v1**: migrazione da RSS a API REST `/api/v1/accounts/{id}/statuses`
-- **Statistiche complete**: mostra like (❤️), boost (🔁) e commenti (💬) per post Mastodon
-- **Sistema icone modulare**: icone SVG caricate da file invece di hardcoded
-- **Cartella social-icons/**: directory dedicata per file SVG icone piattaforme
+- **API Mastodon v1**: migrazione da RSS a API REST
+- **Statistiche complete**: like, boost, commenti per Mastodon
+- **Sistema icone modulare**: SVG da file
 
 ### Deprecated
-- **RSS Mastodon**: sostituito da API (RSS non fornisce statistiche)
+- **RSS Mastodon**: sostituito da API
 
 ---
 
 ## [1.0.0] - 2026-01-10
 
 ### Added - MVP Release
-- **Plugin WordPress**: prima release pubblica
-- **Supporto Mastodon**: integrazione RSS per post pubblici
-- **Supporto Diggita**: integrazione RSS per post Lemmy
-- **Sistema cache**: transient WordPress con durata configurabile (30min - 24h)
-- **Admin settings**: pannello impostazioni completo
-- **Shortcode base**: `[eg_social_timeline]` e `[eg_social_timeline limit="20"]`
-- **Timeline unificata**: ordine cronologico inverso di tutti i post
-- **Design responsive**: supporto mobile, tablet, desktop
-- **Dark mode**: supporto automatico tema scuro
-- **Licenza GPL-2.0-or-later**: software libero
-
-### Technical
-- **Requisiti**: WordPress 5.0+, PHP 7.4+
-- **Cache**: WordPress transient API
-- **i18n ready**: text domain `eg-social-timeline`
+- Plugin WordPress prima release
+- Supporto Mastodon e Diggita
+- Sistema cache configurabile
+- Admin settings panel
+- Shortcode base
+- Design responsive
+- Dark mode
 
 ---
 
@@ -131,8 +114,7 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ### Planned
 - Integrazione Bluesky API
-- Integrazione feed blog RSS
-- Opzione localStorage per persistenza filtri
+- Feed blog RSS
 - Widget sidebar
 - Gutenberg block
 

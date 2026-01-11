@@ -2,9 +2,9 @@
 Contributors: emanuelegori
 Tags: mastodon, fediverse, social media, timeline, aggregator, forgejo, gitea, lemmy
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,54 +115,52 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 
 == Changelog ==
 
+= 1.2.4 - 2026-01-11 =
+* Fix: Diggita statistiche ora visualizzate correttamente (parsing HTML robusto)
+* Fix: Forgejo nome repository ora visibile in timeline ("Commit to {repo}: {message}")
+* Changed: Diggita parsing usa strip_tags() prima di split per gestire correttamente tag HTML
+* Changed: Forgejo include nome repo nel campo content per visualizzazione
+
 = 1.2.3 - 2026-01-11 =
-* Fix: Filtri CSS logica invertita (nascondi tutto, mostra checked) risolve bug selezione
-* Fix: Diggita parsing statistiche robusto con split multi-riga
-* Fix: Forgejo link ora punta a pagina commits repo (/commits/branch/main)
-* Changed: UI filtri più compatta (font ridotto, padding ridotto, icone piccole)
+* Fix: Filtri CSS logica invertita (nascondi tutto, mostra checked)
+* Fix: Forgejo link pagina commits repo
+* Fix: UI filtri più compatta
 
 = 1.2.2 - 2026-01-11 =
-* Fix: Forgejo API commits diretta risolve feed vuoto su alcune istanze
-* Fix: Diggita contenuto pulito senza "submitted by" e statistiche separate
-* Changed: Diggita mostra ⭐ punti e 💬 commenti in formato pulito
-* Changed: Forgejo link "Vedi commit" invece di generico "Vedi post originale"
+* Fix: Forgejo API commits diretta
+* Fix: Diggita contenuto pulito
 
 = 1.2.1 - 2026-01-11 =
-* Fix: Checkbox filtri posizionati come siblings degli article
-* Fix: Post visibili correttamente insieme ai filtri
+* Fix: Checkbox filtri posizionati come siblings
 
 = 1.2.0 - 2026-01-11 =
 * Aggiunta integrazione Forgejo/Gitea
-* Fix: sistema icone file-based invece di hardcoded
+* Fix: sistema icone file-based
 
 = 1.1.2 - 2026-01-11 =
 * Fix: URL boost Mastodon
-* Aggiunto sistema filtri CSS puro con checkbox
+* Aggiunto sistema filtri CSS
 
 = 1.1.1 - 2026-01-10 =
 * Fix: Rimossi post duplicati
 
 = 1.1.0 - 2026-01-10 =
 * Aggiunta API Mastodon v1
-* Aggiunte statistiche complete per Mastodon
-* Sistema icone modulare con file SVG
+* Sistema icone modulare
 
 = 1.0.0 - 2026-01-10 =
 * Release iniziale MVP
 
 == Upgrade Notice ==
 
+= 1.2.4 =
+Fix importante! Risolve statistiche Diggita e visualizzazione nome repo Forgejo. Aggiornamento raccomandato.
+
 = 1.2.3 =
-Fix critico filtri CSS! Risolve bug selezione checkbox. Aggiornamento raccomandato.
+Fix critico filtri CSS. Aggiornamento raccomandato.
 
 = 1.2.2 =
-Hotfix Forgejo feed vuoto e Diggita statistiche. Aggiornamento raccomandato.
-
-= 1.2.1 =
-Hotfix post invisibili in v1.2.0. Aggiornamento immediato raccomandato.
-
-= 1.2.0 =
-Nuova integrazione Forgejo/Gitea! Sistema icone migliorato.
+Hotfix Forgejo e Diggita. Aggiornamento raccomandato.
 
 == Additional Info ==
 

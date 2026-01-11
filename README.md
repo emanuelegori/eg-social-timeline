@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.2.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.2.4-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy), **Forgejo/Gitea** e **Bluesky**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy) e **Forgejo/Gitea**.
 
 ---
 
@@ -31,7 +31,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ### Automatica (WordPress)
 
-1. Scarica ultima versione da [Gitea](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+1. Scarica ultima versione da [Forgejo](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 2. Vai su **Plugin → Aggiungi nuovo → Carica plugin**
 3. Seleziona file ZIP scaricato
 4. Clicca **Installa** e poi **Attiva**
@@ -54,9 +54,8 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 1. Vai su **Impostazioni → EG Social Timeline**
 2. Configura almeno un profilo:
    - **Mastodon**: URL completo profilo (es: `https://mastodon.uno/@emanuelegori`)
-   - **Diggita**: Username (senza @) (es: emanuelegori)
-   - **Forgejo**: URL istanza (es: `https://git.emanuelegori.uno`)
-   - **Forgejo**: Username (es: emanuelegori)
+   - **Diggita**: Username (senza @)
+   - **Forgejo**: Username + URL istanza (es: `https://git.emanuelegori.uno`)
 3. Regola impostazioni cache e visualizzazione
 4. Salva
 
@@ -143,7 +142,7 @@ Crea `wp-content/themes/tuo-tema/eg-social-timeline-custom.css`:
 
 ### Requisiti
 
-- WordPress 6.7+
+- WordPress 5.0+
 - PHP 7.4+
 - API access alle piattaforme configurate
 
@@ -174,46 +173,34 @@ eg-social-timeline/
 
 ## 📋 Changelog
 
+### [1.2.4] - 2026-01-11
+
+#### Fixed
+- **Diggita statistiche**: parsing HTML corretto con `strip_tags()` prima dello split
+- **Forgejo nome repo**: ora visibile nella timeline ("Commit to {repo}: {message}")
+
+#### Changed
+- Diggita: parsing robusto riga-per-riga dopo rimozione tag HTML
+- Forgejo: nome repository incluso nel campo `content` per visualizzazione
+
 ### [1.2.3] - 2026-01-11
 
 #### Fixed
-- **Filtri CSS**: logica invertita corregge bug selezione (ora: nascondi tutto, mostra checked)
-- **Diggita parsing**: statistiche estratte correttamente con parsing robusto multi-riga
-- **Forgejo link**: ora punta a pagina commits repo invece di singolo commit
-- **UI filtri**: ridotto font-size per box filtri più compatto (0.95em → 0.85em)
-
-#### Changed
-- CSS: checkbox label padding ridotto (8px → 6px) e icone più piccole (20px → 16px)
-- CSS: header filtri font-size ridotto (1.1em → 0.95em)
-- Forgejo: URL commits page format `/commits/branch/{branch}` invece di `/commit/{sha}`
+- Filtri CSS: logica invertita (nascondi tutto, mostra checked)
+- Forgejo: link pagina commits repo
+- UI: box filtri più compatto
 
 ### [1.2.2] - 2026-01-11
 
 #### Fixed
-- Forgejo: risolto feed vuoto usando API commits diretta
-- Diggita: rimosso "submitted by..." dal contenuto
-- Diggita: estratte statistiche punti/commenti
+- Forgejo: API commits diretta
+- Diggita: contenuto pulito
 
-#### Changed
-- Forgejo: usa `/repos` + `/commits` API
-- Diggita: emoji ⭐ (punti) e 💬 (commenti)
+### [1.2.0-1.2.1] - 2026-01-11
+- Integrazione Forgejo, fix filtri CSS
 
-### [1.2.1] - 2026-01-11
-
-#### Fixed
-- Filtri CSS: checkbox posizionati come siblings degli article
-
-### [1.2.0] - 2026-01-11
-
-#### Added
-- Integrazione Forgejo/Gitea
-- Sistema icone file-based
-
-### [1.1.0-1.1.2] - 2026-01-10/11
-- API Mastodon, filtri CSS, fix vari
-
-### [1.0.0] - 2026-01-10
-- Release iniziale MVP
+### [1.0.0-1.1.2] - 2026-01-10/11
+- Release iniziali, API Mastodon, filtri
 
 ---
 

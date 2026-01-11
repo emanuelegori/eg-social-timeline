@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.2.3');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.2.4');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -615,35 +615,38 @@ function eg_social_timeline_fetch_diggita($username) {
         $pubDate = (string) $item->pubDate;
         $timestamp = strtotime($pubDate);
         
-        // Parse description to extract statistics (robust parsing)
+        // Parse description: strip HTML tags first, then parse lines
         $description = (string) $item->description;
         
-        // Split into lines
-        $lines = explode("\n", $description);
+        // Remove all HTML tags
+        $clean_text = strip_tags($description);
+        
+        // Split into lines and remove empty ones
+        $lines = explode("\n", $clean_text);
+        $lines = array_filter(array_map('trim', $lines));
         
         $points = 0;
         $comments = 0;
-        $clean_content = '';
+        $content_lines = array();
         
-        if (count($lines) >= 2) {
-            // First line: "submitted by..." - remove it
-            array_shift($lines);
-            
-            // Second line should be statistics: "X points | Y comments"
-            $stats_line = array_shift($lines);
-            
-            // Parse statistics with flexible whitespace
-            if (preg_match('/(\d+)\s+points?\s+\|\s+(\d+)\s+comments?/i', $stats_line, $matches)) {
-                $points = intval($matches[1]);
-                $comments = intval($matches[2]);
+        foreach ($lines as $line) {
+            // Skip "submitted by X to Y" line
+            if (stripos($line, 'submitted by') !== false) {
+                continue;
             }
             
-            // Remaining lines are the actual content
-            $clean_content = trim(implode("\n", $lines));
-        } else {
-            // Fallback if structure is different
-            $clean_content = trim($description);
+            // Parse statistics line: "X points | Y comments"
+            if (preg_match('/^(\d+)\s+points?\s+\|\s+(\d+)\s+comments?/i', $line, $matches)) {
+                $points = intval($matches[1]);
+                $comments = intval($matches[2]);
+                continue;
+            }
+            
+            // All other lines are content
+            $content_lines[] = $line;
         }
+        
+        $clean_content = trim(implode("\n", $content_lines));
         
         $posts[] = array(
             'platform' => 'diggita',
@@ -652,7 +655,7 @@ function eg_social_timeline_fetch_diggita($username) {
             'content' => $clean_content,
             'link' => (string) $item->link,
             'is_boost' => false,
-            'favourites_count' => $points,      // Diggita upvotes as "favourites"
+            'favourites_count' => $points,      // Diggita upvotes
             'reblogs_count' => 0,               // Diggita doesn't have boosts
             'replies_count' => $comments        // Diggita comments
         );
@@ -736,18 +739,21 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url) {
                 continue;
             }
             
-            // Extract first line of commit message as title
+            // Extract first line of commit message
             $message_lines = explode("\n", $commit_message);
             $short_message = trim($message_lines[0]);
             
-            // Link to commits page of the repository instead of single commit
+            // Link to commits page of the repository
             $commits_page_url = $instance_url . '/' . $repo_full_name . '/commits/branch/' . urlencode($default_branch);
+            
+            // Include repo name in content so it's visible in timeline
+            $full_content = 'Commit to ' . $repo_name . ': ' . $short_message;
             
             $all_commits[] = array(
                 'platform' => 'forgejo',
                 'date' => strtotime($commit_date),
                 'title' => 'Commit to ' . $repo_name,
-                'content' => $short_message,
+                'content' => $full_content,
                 'link' => $commits_page_url,
                 'is_boost' => false,
                 'favourites_count' => 0,
