@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.2.5-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.3.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -17,6 +17,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
   - **Diggita** (Lemmy) con statistiche complete
   - **Forgejo/Gitea** (commit repository)
   - **Bluesky** (in sviluppo)
+- **Limiti Configurabili per Piattaforma**: Previene che una piattaforma monopolizzi la timeline
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
@@ -56,8 +57,12 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
    - **Mastodon**: URL completo profilo (es: `https://mastodon.uno/@emanuelegori`)
    - **Diggita**: Username (senza @)
    - **Forgejo**: Username + URL istanza (es: `https://git.emanuelegori.uno`)
-3. Regola impostazioni cache e visualizzazione
-4. Salva
+3. **NUOVO v1.3.0**: Configura limiti per piattaforma (opzionale):
+   - Max post Mastodon (default: 20, 0 = illimitato)
+   - Max post Diggita (default: 10, 0 = illimitato)
+   - Max commit Forgejo (default: 5, 0 = illimitato)
+4. Regola impostazioni cache e visualizzazione
+5. Salva
 
 ---
 
@@ -79,7 +84,7 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 
 ```
 <h2>La mia attività recente</h2>
-[eg_social_timeline limit="15"]
+[eg_social_timeline limit="50"]
 ```
 
 ---
@@ -90,7 +95,7 @@ Sistema filtri CSS integrato:
 
 ```
 ┌──────────────────────────────────────┐
-│ 🔍 Filtra per piattaforma:           │
+│ Filtra per piattaforma:              │
 │ ☑ Mastodon (12) ☑ Diggita (8)       │
 │ ☑ Forgejo (5)   ☐ Bluesky (2)       │
 └──────────────────────────────────────┘
@@ -100,7 +105,7 @@ Click checkbox = mostra/nascondi post istantaneamente (zero JavaScript richiesto
 
 ---
 
-## 🔧 Personalizzazione
+## Personalizzazione
 
 ### Icone Piattaforme
 
@@ -173,13 +178,27 @@ eg-social-timeline/
 
 ## Changelog
 
+### [1.3.0] - 2026-01-11
+
+#### Added
+- Limiti configurabili per piattaforma nelle impostazioni admin
+- Nuovi campi: Max post Mastodon, Max post Diggita, Max commit Forgejo
+- Valore 0 = nessun limite (comportamento v1.2.x)
+- Timeline più equilibrata: previene monopolizzazione da singola piattaforma
+
+#### Changed
+- Logica fetch modificata per rispettare limiti per piattaforma
+- Forgejo: limite TOTALE commit invece di per-repo
+- Default sensati: Mastodon 20, Diggita 10, Forgejo 5
+- Limite totale timeline aumentato: 1-100 (era 1-50)
+
 ### [1.2.5] - 2026-01-11
 
 #### Fixed
-- **Diggita statistiche**: `<br>` tag convertiti in `\n` prima di `strip_tags()` per parsing corretto
-- **Forgejo nome repository**: ora visibile in timeline ("Commit to {repo}: {message}")
-- **Pulsanti filtri**: larghezza automatica risolve altezza disuniforme
-- **Icone filtri**: dimensioni uniformi senza distorsione
+- Diggita statistiche: `<br>` tag convertiti in `\n` prima di `strip_tags()` per parsing corretto
+- Forgejo nome repository: ora visibile in timeline ("Commit to {repo}: {message}")
+- Pulsanti filtri: larghezza automatica risolve altezza disuniforme
+- Icone filtri: dimensioni uniformi senza distorsione
 
 #### Changed
 - CSS: rimossa larghezza fissa pulsanti filtri (era 145px → auto)
@@ -243,6 +262,4 @@ Vedi file [LICENSE](LICENSE) per dettagli completi.
 - Diggita.com per piattaforma Lemmy italiana
 - Forgejo/Gitea per eccellente API
 - WordPress community
-
-
 

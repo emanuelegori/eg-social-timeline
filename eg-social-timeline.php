@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.2.5
+ * Version: 1.3.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.2.5');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.3.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -80,7 +80,10 @@ function eg_social_timeline_register_settings() {
                 'post_limit' => 10,
                 'cache_duration' => 3600,
                 'show_boosts' => false,
-                'show_stats' => true
+                'show_stats' => true,
+                'mastodon_limit' => 20,
+                'diggita_limit' => 10,
+                'forgejo_limit' => 5
             )
         )
     );
@@ -124,6 +127,37 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_main_section'
     );
     
+    add_settings_section(
+        'eg_social_timeline_limits_section',
+        __('Limiti Post per Piattaforma', 'eg-social-timeline'),
+        'eg_social_timeline_limits_section_callback',
+        'eg-social-timeline'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_mastodon_limit',
+        __('Max Post Mastodon', 'eg-social-timeline'),
+        'eg_social_timeline_mastodon_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_diggita_limit',
+        __('Max Post Diggita', 'eg-social-timeline'),
+        'eg_social_timeline_diggita_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_forgejo_limit',
+        __('Max Commit Forgejo', 'eg-social-timeline'),
+        'eg_social_timeline_forgejo_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+    
     add_settings_field(
         'eg_social_timeline_post_limit',
         __('Numero Post da Mostrare', 'eg-social-timeline'),
@@ -160,6 +194,10 @@ function eg_social_timeline_register_settings() {
 // Settings callbacks
 function eg_social_timeline_main_section_callback() {
     echo '<p>' . esc_html__('Configura i tuoi profili social per mostrare una timeline unificata. Almeno un profilo è obbligatorio.', 'eg-social-timeline') . '</p>';
+}
+
+function eg_social_timeline_limits_section_callback() {
+    echo '<p>' . esc_html__('Limita il numero massimo di post per ciascuna piattaforma. Questo previene che una piattaforma molto attiva (es: Forgejo) monopolizzi tutti gli slot disponibili. Imposta 0 per nessun limite.', 'eg-social-timeline') . '</p>';
 }
 
 function eg_social_timeline_mastodon_url_callback() {
@@ -226,6 +264,57 @@ function eg_social_timeline_forgejo_instance_callback() {
     <?php
 }
 
+function eg_social_timeline_mastodon_limit_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $limit = isset($options['mastodon_limit']) ? $options['mastodon_limit'] : 20;
+    ?>
+    <input type="number" 
+           id="eg_social_timeline_mastodon_limit" 
+           name="eg_social_timeline_options[mastodon_limit]" 
+           value="<?php echo esc_attr($limit); ?>" 
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_diggita_limit_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $limit = isset($options['diggita_limit']) ? $options['diggita_limit'] : 10;
+    ?>
+    <input type="number" 
+           id="eg_social_timeline_diggita_limit" 
+           name="eg_social_timeline_options[diggita_limit]" 
+           value="<?php echo esc_attr($limit); ?>" 
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Numero massimo di post Diggita da recuperare (0 = illimitato). Default: 10', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_forgejo_limit_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $limit = isset($options['forgejo_limit']) ? $options['forgejo_limit'] : 5;
+    ?>
+    <input type="number" 
+           id="eg_social_timeline_forgejo_limit" 
+           name="eg_social_timeline_options[forgejo_limit]" 
+           value="<?php echo esc_attr($limit); ?>" 
+           min="0"
+           max="50"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Numero massimo di commit Forgejo TOTALI da recuperare (0 = illimitato). Default: 5', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
 function eg_social_timeline_post_limit_callback() {
     $options = get_option('eg_social_timeline_options');
     $limit = isset($options['post_limit']) ? $options['post_limit'] : 10;
@@ -235,10 +324,10 @@ function eg_social_timeline_post_limit_callback() {
            name="eg_social_timeline_options[post_limit]" 
            value="<?php echo esc_attr($limit); ?>" 
            min="1"
-           max="50"
+           max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di post da mostrare nella timeline (1-50). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Numero massimo di post da mostrare nella timeline (1-100). Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -327,7 +416,16 @@ function eg_social_timeline_sanitize_options($input) {
     $output['forgejo_instance'] = !empty($forgejo_instance) ? $forgejo_instance : 'https://gitea.com';
     
     $limit = isset($input['post_limit']) ? intval($input['post_limit']) : 10;
-    $output['post_limit'] = max(1, min(50, $limit));
+    $output['post_limit'] = max(1, min(100, $limit));
+    
+    $mastodon_limit = isset($input['mastodon_limit']) ? intval($input['mastodon_limit']) : 20;
+    $output['mastodon_limit'] = max(0, min(100, $mastodon_limit));
+    
+    $diggita_limit = isset($input['diggita_limit']) ? intval($input['diggita_limit']) : 10;
+    $output['diggita_limit'] = max(0, min(100, $diggita_limit));
+    
+    $forgejo_limit = isset($input['forgejo_limit']) ? intval($input['forgejo_limit']) : 5;
+    $output['forgejo_limit'] = max(0, min(50, $forgejo_limit));
     
     $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
@@ -499,7 +597,7 @@ function eg_social_timeline_get_mastodon_account_id($profile_url) {
 }
 
 // Fetch Mastodon posts via API
-function eg_social_timeline_fetch_mastodon($profile_url) {
+function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
     if (empty($profile_url)) {
         return array();
     }
@@ -519,10 +617,13 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
     $options = get_option('eg_social_timeline_options');
     $show_boosts = !empty($options['show_boosts']);
     
+    // Use configured limit or default to 40
+    $api_limit = ($limit > 0) ? min($limit, 40) : 40;
+    
     $api_url = "https://{$instance}/api/v1/accounts/{$account_id}/statuses";
     
     $params = array(
-        'limit' => 40,
+        'limit' => $api_limit,
         'exclude_replies' => 'true',
         'exclude_reblogs' => $show_boosts ? 'false' : 'true'
     );
@@ -578,7 +679,7 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
 }
 
 // Fetch Diggita RSS with statistics parsing
-function eg_social_timeline_fetch_diggita($username) {
+function eg_social_timeline_fetch_diggita($username, $limit = 0) {
     if (empty($username)) {
         return array();
     }
@@ -610,13 +711,20 @@ function eg_social_timeline_fetch_diggita($username) {
     }
     
     $posts = array();
+    $count = 0;
     
     foreach ($xml->channel->item as $item) {
+        // Apply limit if set
+        if ($limit > 0 && $count >= $limit) {
+            break;
+        }
+        
         $pubDate = (string) $item->pubDate;
         $timestamp = strtotime($pubDate);
         
-        // Parse description: strip HTML tags first, then parse lines
+        // Parse description: convert <br> to newlines first
         $description = (string) $item->description;
+        $description = str_replace(['<br>', '<br/>', '<br />'], "\n", $description);
         
         // Remove all HTML tags
         $clean_text = strip_tags($description);
@@ -655,17 +763,19 @@ function eg_social_timeline_fetch_diggita($username) {
             'content' => $clean_content,
             'link' => (string) $item->link,
             'is_boost' => false,
-            'favourites_count' => $points,      // Diggita upvotes
-            'reblogs_count' => 0,               // Diggita doesn't have boosts
-            'replies_count' => $comments        // Diggita comments
+            'favourites_count' => $points,
+            'reblogs_count' => 0,
+            'replies_count' => $comments
         );
+        
+        $count++;
     }
     
     return $posts;
 }
 
 // Fetch Forgejo/Gitea commits via direct API
-function eg_social_timeline_fetch_forgejo($username, $instance_url) {
+function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) {
     if (empty($username) || empty($instance_url)) {
         return array();
     }
@@ -694,22 +804,47 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url) {
         return array();
     }
     
+    // Filter to public repos only
+    $public_repos = array_filter($repositories, function($repo) {
+        return empty($repo['private']);
+    });
+    
+    if (empty($public_repos)) {
+        return array();
+    }
+    
+    // Calculate commits per repo based on total limit
+    $repo_count = count($public_repos);
+    
+    if ($limit > 0) {
+        // Distribute limit across repos (minimum 1 per repo if possible)
+        $commits_per_repo = max(1, intval(ceil($limit / $repo_count)));
+        $total_limit = $limit;
+    } else {
+        // No limit: default 5 per repo
+        $commits_per_repo = 5;
+        $total_limit = PHP_INT_MAX;
+    }
+    
     $all_commits = array();
+    $total_fetched = 0;
     
     // Step 2: Get commits from each public repository
-    foreach ($repositories as $repo) {
-        // Skip private repositories
-        if (!empty($repo['private'])) {
-            continue;
+    foreach ($public_repos as $repo) {
+        if ($total_fetched >= $total_limit) {
+            break;
         }
         
         $repo_name = $repo['name'];
         $repo_full_name = $repo['full_name'];
         $default_branch = isset($repo['default_branch']) ? $repo['default_branch'] : 'main';
         
-        // Get last 5 commits from this repo
+        // Calculate how many commits to fetch from this repo
+        $remaining = $total_limit - $total_fetched;
+        $fetch_limit = min($commits_per_repo, $remaining);
+        
         $commits_url = $instance_url . '/api/v1/repos/' . $repo_full_name . '/commits';
-        $commits_url .= '?limit=5&sha=' . urlencode($default_branch);
+        $commits_url .= '?limit=' . $fetch_limit . '&sha=' . urlencode($default_branch);
         
         $commits_response = wp_remote_get($commits_url, array(
             'timeout' => 10,
@@ -732,6 +867,10 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url) {
         
         // Process each commit
         foreach ($commits as $commit) {
+            if ($total_fetched >= $total_limit) {
+                break 2;
+            }
+            
             $commit_message = isset($commit['commit']['message']) ? $commit['commit']['message'] : '';
             $commit_date = isset($commit['commit']['committer']['date']) ? $commit['commit']['committer']['date'] : '';
             
@@ -760,6 +899,8 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url) {
                 'reblogs_count' => 0,
                 'replies_count' => 0
             );
+            
+            $total_fetched++;
         }
     }
     
@@ -777,15 +918,25 @@ function eg_social_timeline_fetch_all_feeds() {
     $options = get_option('eg_social_timeline_options');
     $all_posts = array();
     
-    $mastodon_posts = eg_social_timeline_fetch_mastodon($options['mastodon_url']);
-    $all_posts = array_merge($all_posts, $mastodon_posts);
+    // Get platform limits
+    $mastodon_limit = isset($options['mastodon_limit']) ? intval($options['mastodon_limit']) : 20;
+    $diggita_limit = isset($options['diggita_limit']) ? intval($options['diggita_limit']) : 10;
+    $forgejo_limit = isset($options['forgejo_limit']) ? intval($options['forgejo_limit']) : 5;
     
-    $diggita_posts = eg_social_timeline_fetch_diggita($options['diggita_username']);
-    $all_posts = array_merge($all_posts, $diggita_posts);
+    // Fetch with limits
+    if (!empty($options['mastodon_url'])) {
+        $mastodon_posts = eg_social_timeline_fetch_mastodon($options['mastodon_url'], $mastodon_limit);
+        $all_posts = array_merge($all_posts, $mastodon_posts);
+    }
+    
+    if (!empty($options['diggita_username'])) {
+        $diggita_posts = eg_social_timeline_fetch_diggita($options['diggita_username'], $diggita_limit);
+        $all_posts = array_merge($all_posts, $diggita_posts);
+    }
     
     if (!empty($options['forgejo_username'])) {
         $forgejo_instance = !empty($options['forgejo_instance']) ? $options['forgejo_instance'] : 'https://gitea.com';
-        $forgejo_posts = eg_social_timeline_fetch_forgejo($options['forgejo_username'], $forgejo_instance);
+        $forgejo_posts = eg_social_timeline_fetch_forgejo($options['forgejo_username'], $forgejo_instance, $forgejo_limit);
         $all_posts = array_merge($all_posts, $forgejo_posts);
     }
     
@@ -1057,3 +1208,4 @@ function eg_social_timeline_action_links($links) {
     
     return $links;
 }
+
