@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social media, timeline, aggregator, forgejo, gitea, l
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,6 @@ EG Social Timeline è un plugin WordPress che aggrega e mostra in ordine cronolo
 * **Mastodon** e compatibili ActivityPub (con statistiche complete)
 * **Diggita** (Lemmy) - piattaforma social italiana con statistiche pulite
 * **Forgejo/Gitea** - attività repository (commit via API diretta)
-* **Bluesky** (in sviluppo)
 
 = Caratteristiche Principali =
 
@@ -70,7 +69,7 @@ Con limite personalizzato:
 
 = Quali piattaforme sono supportate? =
 
-Attualmente: Mastodon (e istanze compatibili ActivityPub), Diggita (Lemmy), Forgejo/Gitea. Bluesky è in sviluppo.
+Attualmente: Mastodon (e istanze compatibili ActivityPub), Diggita (Lemmy), Forgejo/Gitea.
 
 = Come funzionano i filtri? =
 
@@ -115,16 +114,22 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 
 == Changelog ==
 
+= 1.2.5 - 2026-01-11 =
+* Fix: Diggita statistiche ora visualizzate correttamente (parsing <br> → newline)
+* Fix: Forgejo nome repository visibile in timeline
+* Fix: Pulsanti filtri larghezza automatica (risolve altezza disuniforme)
+* Fix: Icone filtri dimensioni uniformi
+* Changed: CSS pulsanti filtri senza larghezza fissa
+* Changed: Rimosso object-fit da icone per rendering uniforme
+
 = 1.2.4 - 2026-01-11 =
-* Fix: Diggita statistiche ora visualizzate correttamente (parsing HTML robusto)
-* Fix: Forgejo nome repository ora visibile in timeline ("Commit to {repo}: {message}")
-* Changed: Diggita parsing usa strip_tags() prima di split per gestire correttamente tag HTML
-* Changed: Forgejo include nome repo nel campo content per visualizzazione
+* Fix: Diggita statistiche parsing HTML robusto
+* Fix: Forgejo nome repository incluso nel content
 
 = 1.2.3 - 2026-01-11 =
-* Fix: Filtri CSS logica invertita (nascondi tutto, mostra checked)
-* Fix: Forgejo link pagina commits repo
-* Fix: UI filtri più compatta
+* Fix: Filtri CSS logica invertita
+* Fix: Forgejo link pagina commits
+* Fix: UI filtri compatta
 
 = 1.2.2 - 2026-01-11 =
 * Fix: Forgejo API commits diretta
@@ -153,14 +158,14 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 
 == Upgrade Notice ==
 
+= 1.2.5 =
+Fix importante UI! Risolve pulsanti filtri altezza disuniforme e icone Diggita. Aggiornamento raccomandato.
+
 = 1.2.4 =
-Fix importante! Risolve statistiche Diggita e visualizzazione nome repo Forgejo. Aggiornamento raccomandato.
+Fix statistiche Diggita e nome repo Forgejo. Aggiornamento raccomandato.
 
 = 1.2.3 =
 Fix critico filtri CSS. Aggiornamento raccomandato.
-
-= 1.2.2 =
-Hotfix Forgejo e Diggita. Aggiornamento raccomandato.
 
 == Additional Info ==
 

@@ -7,31 +7,47 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ---
 
+## [1.2.5] - 2026-01-11
+
+### Fixed
+- **Diggita statistiche visualizzate**: `<br>` tag HTML convertiti in newline (`\n`) prima di `strip_tags()` per parsing corretto delle righe
+- **Forgejo nome repository visibile**: incluso nel campo `content` così appare nella timeline come "Commit to {repo}: {message}"
+- **Pulsanti filtri altezza uniforme**: rimossa larghezza fissa (min/max-width) per evitare text wrapping che causava altezze diverse
+- **Icone filtri dimensioni uniformi**: rimosso `object-fit: contain` che causava rendering disuniforme tra diverse icone SVG
+
+### Changed
+- **CSS pulsanti filtri**: da larghezza fissa 145px/160px a larghezza automatica basata su contenuto
+- **CSS icone filtri**: da `width/height + object-fit: contain` a solo `width/height` per rendering naturale
+- **Diggita parsing**: usa `str_replace(['<br>', '<br/>', '<br />'], "\n", $description)` prima di `strip_tags()` per preservare struttura righe
+
+### Technical
+- Diggita: conversione `<br>` → `\n` prima di strip HTML garantisce che `explode("\n")` funzioni correttamente
+- CSS: larghezza automatica evita text wrapping che aumenta altezza pulsanti
+- SVG: rendering naturale senza `object-fit` mantiene dimensioni uniformi tra icone diverse
+
+---
+
 ## [1.2.4] - 2026-01-11
 
 ### Fixed
-- **Diggita statistiche visualizzate**: risolto parsing HTML con `strip_tags()` prima dello split per estrarre correttamente punti e commenti
-- **Forgejo nome repository visibile**: incluso nome repo nel campo `content` così appare nella timeline
+- **Diggita statistiche**: parsing HTML robusto con `strip_tags()` prima dello split
+- **Forgejo nome repository**: ora visibile nella timeline ("Commit to {repo}: {message}")
 
 ### Changed
-- **Diggita parsing robusto**: usa `strip_tags()` per rimuovere TUTTI i tag HTML (inclusi `<a>`, `<br>`, `<p>`) prima di parsare righe
-- **Forgejo content format**: da solo messaggio a "Commit to {repo}: {message}" per chiarezza
-
-### Technical
-- Diggita: parsing sequenziale riga-per-riga dopo strip HTML invece di regex multipli
-- Forgejo: `$full_content = 'Commit to ' . $repo_name . ': ' . $short_message`
+- Diggita: parsing robusto riga-per-riga dopo rimozione tag HTML
+- Forgejo: nome repository incluso nel campo `content` per visualizzazione
 
 ---
 
 ## [1.2.3] - 2026-01-11
 
 ### Fixed
-- **Filtri CSS logica invertita**: risolto bug selezione checkbox. Ora logica corretta: nascondi tutto di default, mostra solo piattaforme checked
-- **Forgejo link pagina commits**: link ora punta a `/commits/branch/{branch}` invece di singolo commit `/commit/{sha}`
-- **UI filtri compatta**: ridotto font-size, padding e dimensioni icone per box filtri più discreto
+- **Filtri CSS logica invertita**: risolto bug selezione checkbox (nascondi tutto, mostra checked)
+- **Forgejo link pagina commits**: ora punta a `/commits/branch/{branch}` invece di singolo commit
+- **UI filtri compatta**: ridotto font-size, padding e dimensioni icone
 
 ### Changed
-- **CSS filtri**: da `:not(:checked) ~ .timeline-item { display: none }` a `:checked ~ .timeline-item { display: block }`
+- **CSS filtri**: da `:not(:checked)` a `:checked` (logica più affidabile)
 - **Forgejo URL format**: `{instance}/{owner}/{repo}/commits/branch/{branch}`
 
 ---
@@ -39,9 +55,9 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 ## [1.2.2] - 2026-01-11
 
 ### Fixed
-- **Forgejo API affidabile**: risolto feed vuoto usando API commits diretta invece di `/activities/feeds`
+- **Forgejo API affidabile**: risolto feed vuoto usando API commits diretta
 - **Diggita contenuto pulito**: rimossa riga "submitted by X to Y"
-- **Diggita statistiche separate**: estratti punti e commenti per visualizzazione pulita
+- **Diggita statistiche separate**: estratti punti e commenti
 
 ### Changed
 - **Forgejo implementazione**: usa `/repos` + `/commits` API
@@ -52,8 +68,8 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 ## [1.2.1] - 2026-01-11
 
 ### Fixed
-- **Filtri CSS siblings fix**: checkbox posizionati FUORI dal container come siblings diretti degli `<article>`
-- **Post visibili**: risolto bug v1.2.0 che mostrava solo box filtri senza post
+- **Filtri CSS siblings fix**: checkbox posizionati FUORI dal container
+- **Post visibili**: risolto bug v1.2.0
 
 ---
 
@@ -64,7 +80,7 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 - **Campo settings Forgejo**: username e URL istanza configurabili
 
 ### Fixed
-- **Sistema icone file-based**: icone caricate da file SVG invece di hardcoded
+- **Sistema icone file-based**: icone caricate da file SVG
 
 ---
 
@@ -89,7 +105,7 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ### Added
 - **API Mastodon v1**: migrazione da RSS a API REST
-- **Statistiche complete**: like, boost, commenti per Mastodon
+- **Statistiche complete**: like, boost, commenti
 - **Sistema icone modulare**: SVG da file
 
 ### Deprecated

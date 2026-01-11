@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.2.4-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.2.5-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -9,14 +9,14 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ---
 
-## 🚀 Caratteristiche
+## Caratteristiche
 
 - **Timeline Unificata**: Aggrega post da multiple piattaforme in ordine cronologico
 - **Piattaforme Supportate**:
-  - 🐘 **Mastodon** (e compatibili ActivityPub)
-  - 📰 **Diggita** (Lemmy) con statistiche complete
-  - 🦊 **Forgejo/Gitea** (commit repository)
-  - 🦋 **Bluesky** (in sviluppo)
+  - **Mastodon** (e compatibili ActivityPub)
+  - **Diggita** (Lemmy) con statistiche complete
+  - **Forgejo/Gitea** (commit repository)
+  - **Bluesky** (in sviluppo)
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
@@ -27,11 +27,11 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ---
 
-## 📦 Installazione
+## Installazione
 
 ### Automatica (WordPress)
 
-1. Scarica ultima versione da [Forgejo](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+1. Scarica l'ultima versione da [Forgejo](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 2. Vai su **Plugin → Aggiungi nuovo → Carica plugin**
 3. Seleziona file ZIP scaricato
 4. Clicca **Installa** e poi **Attiva**
@@ -49,7 +49,7 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 
 ---
 
-## ⚙️ Configurazione
+## Configurazione
 
 1. Vai su **Impostazioni → EG Social Timeline**
 2. Configura almeno un profilo:
@@ -61,7 +61,7 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 
 ---
 
-## 📝 Utilizzo
+## Utilizzo
 
 ### Shortcode Base
 
@@ -84,15 +84,15 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 
 ---
 
-## 🎨 Filtri Piattaforme
+## Filtri Piattaforme
 
 Sistema filtri CSS integrato:
 
 ```
 ┌──────────────────────────────────────┐
 │ 🔍 Filtra per piattaforma:           │
-│ ☑ Mastodon (12) ☑ Diggita (8)      │
-│ ☑ Forgejo (5)   ☐ Bluesky (2)      │
+│ ☑ Mastodon (12) ☑ Diggita (8)       │
+│ ☑ Forgejo (5)   ☐ Bluesky (2)       │
 └──────────────────────────────────────┘
 ```
 
@@ -138,7 +138,7 @@ Crea `wp-content/themes/tuo-tema/eg-social-timeline-custom.css`:
 
 ---
 
-## 🛠️ Sviluppo
+## Sviluppo
 
 ### Requisiti
 
@@ -171,40 +171,43 @@ eg-social-timeline/
 
 ---
 
-## 📋 Changelog
+## Changelog
+
+### [1.2.5] - 2026-01-11
+
+#### Fixed
+- **Diggita statistiche**: `<br>` tag convertiti in `\n` prima di `strip_tags()` per parsing corretto
+- **Forgejo nome repository**: ora visibile in timeline ("Commit to {repo}: {message}")
+- **Pulsanti filtri**: larghezza automatica risolve altezza disuniforme
+- **Icone filtri**: dimensioni uniformi senza distorsione
+
+#### Changed
+- CSS: rimossa larghezza fissa pulsanti filtri (era 145px → auto)
+- CSS: rimosso `object-fit: contain` da icone per rendering uniforme
+- Diggita: parsing usa `str_replace` per `<br>` prima di `strip_tags()`
 
 ### [1.2.4] - 2026-01-11
 
 #### Fixed
-- **Diggita statistiche**: parsing HTML corretto con `strip_tags()` prima dello split
-- **Forgejo nome repo**: ora visibile nella timeline ("Commit to {repo}: {message}")
-
-#### Changed
-- Diggita: parsing robusto riga-per-riga dopo rimozione tag HTML
-- Forgejo: nome repository incluso nel campo `content` per visualizzazione
+- Diggita: parsing HTML robusto con `strip_tags()`
+- Forgejo: nome repo incluso nel content
 
 ### [1.2.3] - 2026-01-11
 
 #### Fixed
-- Filtri CSS: logica invertita (nascondi tutto, mostra checked)
-- Forgejo: link pagina commits repo
-- UI: box filtri più compatto
+- Filtri CSS: logica invertita
+- Forgejo: link pagina commits
+- UI: box filtri compatto
 
-### [1.2.2] - 2026-01-11
-
-#### Fixed
-- Forgejo: API commits diretta
-- Diggita: contenuto pulito
-
-### [1.2.0-1.2.1] - 2026-01-11
-- Integrazione Forgejo, fix filtri CSS
+### [1.2.0-1.2.2] - 2026-01-11
+- Integrazione Forgejo, fix vari
 
 ### [1.0.0-1.1.2] - 2026-01-10/11
-- Release iniziali, API Mastodon, filtri
+- Release iniziali, API Mastodon
 
 ---
 
-## 🤝 Contributi
+## Contributi
 
 I contributi sono benvenuti!
 
@@ -216,7 +219,7 @@ I contributi sono benvenuti!
 
 ---
 
-## 📄 Licenza
+## Licenza
 
 Questo progetto è rilasciato sotto licenza **GPL-2.0-or-later**.
 
@@ -224,7 +227,7 @@ Vedi file [LICENSE](LICENSE) per dettagli completi.
 
 ---
 
-## 👤 Autore
+## Autore
 
 **Emanuele Gori**
 
@@ -234,21 +237,12 @@ Vedi file [LICENSE](LICENSE) per dettagli completi.
 
 ---
 
-## 🙏 Ringraziamenti
+## Ringraziamenti
 
 - Community Mastodon per API ben documentate
 - Diggita.com per piattaforma Lemmy italiana
 - Forgejo/Gitea per eccellente API
 - WordPress community
 
----
 
-## 📞 Supporto
 
-- **Issues**: [Gitea Issues](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/issues)
-- **Documentazione**: Questo README
-- **Discussioni**: [Mastodon @emanuelegori](https://mastodon.uno/@emanuelegori)
-
----
-
-**⭐ Se trovi utile questo plugin, lascia una stella su Gitea!**
