@@ -402,8 +402,6 @@ function eg_social_timeline_handle_cache_clear() {
 
 // Get Mastodon Account ID from profile URL
 function eg_social_timeline_get_mastodon_account_id($profile_url) {
-    // Extract instance and username from URL
-    // Format: https://instance.social/@username
     preg_match('#https?://([^/]+)/@([^/]+)#', $profile_url, $matches);
     
     if (count($matches) < 3) {
@@ -413,7 +411,6 @@ function eg_social_timeline_get_mastodon_account_id($profile_url) {
     $instance = $matches[1];
     $username = $matches[2];
     
-    // Check cache first
     $cache_key = 'eg_mastodon_id_' . md5($profile_url);
     $cached_id = get_transient($cache_key);
     
@@ -421,7 +418,6 @@ function eg_social_timeline_get_mastodon_account_id($profile_url) {
         return $cached_id;
     }
     
-    // API lookup endpoint
     $api_url = "https://{$instance}/api/v1/accounts/lookup?acct={$username}";
     
     $response = wp_remote_get($api_url, array(
@@ -442,7 +438,6 @@ function eg_social_timeline_get_mastodon_account_id($profile_url) {
         return false;
     }
     
-    // Cache for 24 hours
     set_transient($cache_key, $data['id'], 86400);
     
     return $data['id'];
@@ -454,7 +449,6 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
         return array();
     }
     
-    // Get account ID
     $account_id = eg_social_timeline_get_mastodon_account_id($profile_url);
     
     if (!$account_id) {
@@ -464,22 +458,18 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
         return array();
     }
     
-    // Extract instance from URL
     preg_match('#https?://([^/]+)/#', $profile_url, $matches);
     $instance = $matches[1];
     
-    // Get options
     $options = get_option('eg_social_timeline_options');
     $show_boosts = !empty($options['show_boosts']);
     
-    // API statuses endpoint
     $api_url = "https://{$instance}/api/v1/accounts/{$account_id}/statuses";
     
-    // Parameters
     $params = array(
-        'limit' => 40, // Get more to account for filtering
-        'exclude_replies' => 'true', // No replies
-        'exclude_reblogs' => $show_boosts ? 'false' : 'true' // Include/exclude boosts
+        'limit' => 40,
+        'exclude_replies' => 'true',
+        'exclude_reblogs' => $show_boosts ? 'false' : 'true'
     );
     
     $api_url .= '?' . http_build_query($params);
@@ -506,23 +496,17 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
     $posts = array();
     
     foreach ($statuses as $status) {
-        // Check if it's a boost
         $is_boost = !empty($status['reblog']);
-        
-        // Get actual content (from reblog if boost)
         $content_data = $is_boost ? $status['reblog'] : $status;
         
-        // Extract text content (strip HTML tags)
         $content = strip_tags($content_data['content']);
         
-        // Get title from first line or beginning of content
         $title_parts = explode("\n", $content);
         $title = !empty($title_parts[0]) ? $title_parts[0] : '';
         
-        // Build post data
-        // Use reblog URL for boosts to avoid /activity JSON endpoint
         $post_url = $is_boost ? $content_data["url"] : $status["url"];
-        $post = array(
+        
+        $posts[] = array(
             'platform' => 'mastodon',
             'date' => strtotime($status['created_at']),
             'title' => $title,
@@ -533,14 +517,12 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
             'reblogs_count' => isset($content_data['reblogs_count']) ? intval($content_data['reblogs_count']) : 0,
             'replies_count' => isset($content_data['replies_count']) ? intval($content_data['replies_count']) : 0
         );
-        
-        $posts[] = $post;
     }
     
     return $posts;
 }
 
-// Fetch Diggita RSS (Lemmy)
+// Fetch Diggita RSS
 function eg_social_timeline_fetch_diggita($username) {
     if (empty($username)) {
         return array();
@@ -659,8 +641,59 @@ function eg_social_timeline_shortcode($atts) {
     ob_start();
     ?>
     <div class="eg-social-timeline">
+        
+        <?php
+        // Count posts per platform for filters
+        $platform_counts = array();
+        foreach ($posts as $post) {
+            $platform = $post['platform'];
+            if (!isset($platform_counts[$platform])) {
+                $platform_counts[$platform] = 0;
+            }
+            $platform_counts[$platform]++;
+        }
+        
+        // Platform display names
+        $platform_names = array(
+            'mastodon' => 'Mastodon',
+            'diggita' => 'Diggita',
+            'bluesky' => 'Bluesky',
+            'forgejo' => 'Forgejo',
+            'blog' => 'Blog'
+        );
+        ?>
+        
+        <!-- CSS-only Filters Box -->
+        <div class="eg-timeline-filters">
+            <div class="filters-header">
+                <span class="filters-icon">🔍</span>
+                <h3>Filtra per piattaforma:</h3>
+            </div>
+            
+            <div class="filters-checkboxes">
+                <?php foreach ($platform_counts as $platform => $count): ?>
+                    <input type="checkbox" 
+                           id="filter-<?php echo esc_attr($platform); ?>" 
+                           class="filter-checkbox-input"
+                           checked>
+                    <label for="filter-<?php echo esc_attr($platform); ?>" 
+                           class="filter-checkbox-label">
+                        <span class="platform-icon-small">
+                            <?php echo eg_social_timeline_get_icon($platform); ?>
+                        </span>
+                        <?php 
+                        $name = isset($platform_names[$platform]) ? $platform_names[$platform] : ucfirst($platform);
+                        echo esc_html($name); 
+                        ?>
+                        <span class="post-count">(<?php echo intval($count); ?>)</span>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
         <?php foreach ($posts as $post): ?>
-            <article class="timeline-item timeline-<?php echo esc_attr($post['platform']); ?><?php echo $post['is_boost'] ? ' is-boost' : ''; ?>">
+            <article class="timeline-item timeline-<?php echo esc_attr($post['platform']); ?><?php echo $post['is_boost'] ? ' is-boost' : ''; ?>" 
+                     data-platform="<?php echo esc_attr($post['platform']); ?>">
                 <header class="timeline-header">
                     <span class="platform-icon platform-<?php echo esc_attr($post['platform']); ?>">
                         <?php echo eg_social_timeline_get_icon($post['platform']); ?>
