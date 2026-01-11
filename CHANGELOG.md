@@ -1,156 +1,129 @@
 # Changelog
 
-## [1.1.2] - 2026-01-10
+Tutte le modifiche importanti a questo progetto sono documentate in questo file.
 
-### 🐛 Bug Fix
+Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/),
+e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/).
 
-#### Link Boost Mostrano JSON
-- **RISOLTO**: Link a post boostati terminano con `/activity` e mostrano JSON invece della pagina web
-- **Causa**: API Mastodon restituisce URL dell'attività di boost invece dell'URL del post originale
-- **Fix**: Quando è un boost, usa `reblog.url` (post originale) invece di `status.url` (attività boost)
+---
 
-### 🔧 Dettagli Tecnici
+## [1.2.0] - 2026-01-11
 
-#### Prima (v1.1.1) - URL Sbagliato
-```php
-'link' => $status['url']  // Per boost: termina con /activity
-```
+### Added
+- **Integrazione Forgejo/Gitea**: mostra attività repository pubbliche (commit e nuovi repository)
+- **Campo settings username Forgejo**: configurabile nelle impostazioni plugin
+- **Campo settings URL istanza Forgejo**: supporta istanze personalizzate (default: https://gitea.com)
+- **Supporto filtro Forgejo**: integrato nel sistema filtri CSS della timeline
+- **Icona Forgejo**: aggiunta icona modulare SVG per Forgejo/Gitea
 
-**Risultato**: 
-```
-https://mastodon.uno/users/emanuelegori/statuses/115838898186338772/activity
-                                                                      ^^^^^^^^
-                                                                      Mostra JSON!
-```
+### Fixed
+- **Sistema icone file-based**: le icone ora si caricano da file SVG in `social-icons/` invece di essere hardcoded in array PHP
+- **Icone personalizzabili**: modifica file SVG senza toccare codice PHP
 
-#### Dopo (v1.1.2) - URL Corretto
-```php
-$post_url = $is_boost ? $content_data['url'] : $status['url'];
-'link' => $post_url  // Per boost: URL post originale senza /activity
-```
+### Changed
+- **Versione**: 1.1.2 → 1.2.0 (nuova feature Forgejo)
+- **Funzione get_icon()**: refactored per leggere da filesystem
 
-**Risultato**:
-```
-https://mastodon.uno/@username/115838898186338772
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
-                     Pagina web normale!
-```
+---
 
-### 📊 Comportamento
+## [1.1.2] - 2026-01-11
 
-| Tipo Post | v1.1.1 URL | v1.1.2 URL |
-|-----------|------------|------------|
-| Post originale | `status.url` ✅ | `status.url` ✅ |
-| Boost | `status.url` ❌ `/activity` | `reblog.url` ✅ normale |
+### Fixed
+- **URL boost Mastodon**: i boost non puntano più all'endpoint JSON `/activity` ma alla pagina web del post originale
+- **Timeline filtri**: integrato sistema filtri CSS puro per mostrare/nascondere piattaforme
 
-### 🔄 Impatto
+### Added
+- **Box filtri interattivi**: checkbox CSS per ogni piattaforma con conteggio post
+- **Attributo data-platform**: aggiunto a ogni `<article>` per supportare filtri CSS
+- **CSS filtri**: styling completo con dark mode e mobile responsive
 
-- ✅ Link boost ora aprono pagina web leggibile
-- ✅ Utenti possono vedere post, rispondere, likare normalmente
-- ✅ Nessun cambio visivo nella timeline (solo link funzionanti)
-- ✅ Retrocompatibile: post originali invariati
-
-### 📝 Modifica Codice
-
-**File**: `eg-social-timeline.php`  
-**Linea**: ~420 (funzione `eg_social_timeline_fetch_mastodon()`)
-
-```php
-// AGGIUNTO: Calcolo URL corretto prima del post array
-$post_url = $is_boost ? $content_data['url'] : $status['url'];
-
-// MODIFICATO: Usa $post_url invece di $status['url']
-'link' => $post_url,
-```
-
-### 🚀 Aggiornamento
-
-```bash
-# Backup
-cp eg-social-timeline.php{,.v1.1.1.backup}
-
-# Sostituisci file
-cp eg-social-timeline-v1.1.2.php eg-social-timeline.php
-
-# Nessuna modifica CSS necessaria
-
-# Commit
-git add eg-social-timeline.php
-git commit -m "Fix v1.1.2 - Correggi URL boost con /activity"
-git push origin main
-
-# Svuota cache WordPress
-```
-
-### ✅ Test
-
-Dopo l'aggiornamento:
-
-1. Trova un post con badge "🔁 Boost"
-2. Clicca "Vedi post originale →"
-3. Verifica che si apra la **pagina web normale** (non JSON)
-4. URL NON deve terminare con `/activity`
-
-### 🔗 Esempio Pratico
-
-**Prima (v1.1.1)**:
-```
-Clic su "Vedi post originale" → 
-Browser mostra:
-{
-  "@context": "https://www.w3.org/ns/activitystreams",
-  "type": "Announce",
-  ...
-}
-```
-❌ JSON incomprensibile!
-
-**Dopo (v1.1.2)**:
-```
-Clic su "Vedi post originale" →
-Browser mostra normale post Mastodon con:
-- Testo completo
-- Immagini/media
-- Bottoni like/boost/risposta
-- Commenti
-```
-✅ Pagina web leggibile!
-
-### 🎯 Priorità
-
-**Fix Minore ma Importante**
-
-- Non critico (timeline funziona)
-- Ma molto fastidioso per utenti che cliccano link
-- Raccomandato aggiornamento rapido
-
-### 📋 Compatibilità
-
-- ✅ Compatibile con v1.1.0, v1.1.1
-- ✅ Nessun breaking change
-- ✅ Shortcode invariato
-- ✅ Opzioni admin invariate
-- ✅ CSS invariato
-- ✅ Database invariato
-
-### 🔮 Note
-
-Questo fix completa la trilogia di hotfix post-v1.1.0:
-- v1.1.1: Fix duplicazione contenuto + leggibilità
-- v1.1.2: Fix URL boost con `/activity`
-
-La v1.2.0 sarà una release feature completa con Bluesky!
+### Changed
+- **UX design**: aumentato spazio tra post (20px → 40px)
+- **Link "Vedi originale"**: ridotto da bottone full-width a link inline discreto
 
 ---
 
 ## [1.1.1] - 2026-01-10
 
-### 🐛 Bug Fix Critici
-*(Changelog v1.1.1 precedente...)*
+### Fixed
+- **Post duplicati**: rimossa duplicazione accidentale di post nella timeline
 
 ---
 
 ## [1.1.0] - 2026-01-10
 
-### 🚀 Nuove Funzionalità
-*(Changelog v1.1.0 precedente...)*
+### Added
+- **API Mastodon v1**: migrazione da RSS a API REST `/api/v1/accounts/{id}/statuses`
+- **Statistiche complete**: mostra like (❤️), boost (🔁) e commenti (💬) per post Mastodon
+- **Sistema icone modulare**: icone SVG caricate da file invece di hardcoded
+- **Cartella social-icons/**: directory dedicata per file SVG icone piattaforme
+- **Fallback icone**: icona generica se file non trovato
+
+### Changed
+- **Fetch Mastodon**: da RSS feed a API JSON
+- **Struttura dati**: standardizzata con campi `favourites_count`, `reblogs_count`, `replies_count`
+
+### Deprecated
+- **RSS Mastodon**: sostituito da API (RSS non fornisce statistiche)
+
+---
+
+## [1.0.0] - 2026-01-10
+
+### Added - MVP Release
+- **Plugin WordPress**: prima release pubblica
+- **Supporto Mastodon**: integrazione RSS per post pubblici
+- **Supporto Diggita**: integrazione RSS per post Lemmy
+- **Sistema cache**: transient WordPress con durata configurabile (30min - 24h)
+- **Admin settings**: pannello impostazioni completo
+- **Shortcode base**: `[eg_social_timeline]` e `[eg_social_timeline limit="20"]`
+- **Timeline unificata**: ordine cronologico inverso di tutti i post
+- **Design responsive**: supporto mobile, tablet, desktop
+- **Dark mode**: supporto automatico tema scuro
+- **Licenza GPL-2.0-or-later**: software libero
+- **README completo**: documentazione e istruzioni
+- **readme.txt WordPress**: file standard per directory plugin
+- **CHANGELOG.md**: questo file
+
+### Technical
+- **Requisiti**: WordPress 5.0+, PHP 7.4+
+- **API**: Mastodon RSS, Diggita RSS
+- **Cache**: WordPress transient API
+- **Sanitization**: `esc_url_raw()`, `sanitize_text_field()`, `wp_kses_post()`
+- **i18n ready**: text domain `eg-social-timeline`
+
+---
+
+## [Unreleased]
+
+### Planned
+- Integrazione Bluesky API
+- Integrazione feed blog RSS
+- Statistiche Diggita via Lemmy API
+- Opzione localStorage per persistenza filtri
+- Widget sidebar
+- Gutenberg block
+
+---
+
+## Formato Versioni
+
+Questo progetto segue Semantic Versioning (MAJOR.MINOR.PATCH):
+
+- **MAJOR**: Modifiche incompatibili API
+- **MINOR**: Nuove funzionalità compatibili
+- **PATCH**: Bug fix compatibili
+
+Esempio:
+- `1.0.0` → `1.0.1`: Bug fix (patch)
+- `1.0.1` → `1.1.0`: Nuova feature (minor)
+- `1.1.0` → `2.0.0`: Breaking change (major)
+
+---
+
+## Link
+
+- **Repository**: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
+- **Issues**: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/issues
+- **Releases**: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases
+- **Autore**: [Emanuele Gori](https://emanuelegori.uno)

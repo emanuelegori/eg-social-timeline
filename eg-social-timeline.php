@@ -2,8 +2,8 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
- * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita e Bluesky
- * Version: 1.1.2
+ * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
+ * Version: 1.2.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.1.2');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.2.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -75,6 +75,8 @@ function eg_social_timeline_register_settings() {
             'default' => array(
                 'mastodon_url' => '',
                 'diggita_username' => '',
+                'forgejo_username' => '',
+                'forgejo_instance' => 'https://gitea.com',
                 'post_limit' => 10,
                 'cache_duration' => 3600,
                 'show_boosts' => false,
@@ -102,6 +104,22 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_diggita_username',
         __('Username Diggita', 'eg-social-timeline'),
         'eg_social_timeline_diggita_username_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_forgejo_username',
+        __('Username Forgejo/Gitea', 'eg-social-timeline'),
+        'eg_social_timeline_forgejo_username_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+    
+    add_settings_field(
+        'eg_social_timeline_forgejo_instance',
+        __('URL Istanza Forgejo/Gitea', 'eg-social-timeline'),
+        'eg_social_timeline_forgejo_instance_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
     );
@@ -172,6 +190,38 @@ function eg_social_timeline_diggita_username_callback() {
            class="regular-text">
     <p class="description">
         <?php esc_html_e('Username Diggita (senza @).', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_forgejo_username_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $username = isset($options['forgejo_username']) ? $options['forgejo_username'] : '';
+    ?>
+    <input type="text" 
+           id="eg_social_timeline_forgejo_username" 
+           name="eg_social_timeline_options[forgejo_username]" 
+           value="<?php echo esc_attr($username); ?>" 
+           placeholder="<?php echo esc_attr__('es: emanuelegori', 'eg-social-timeline'); ?>"
+           class="regular-text">
+    <p class="description">
+        <?php esc_html_e('Username del tuo account Forgejo/Gitea (senza @).', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_forgejo_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $instance = isset($options['forgejo_instance']) ? $options['forgejo_instance'] : 'https://gitea.com';
+    ?>
+    <input type="url" 
+           id="eg_social_timeline_forgejo_instance" 
+           name="eg_social_timeline_options[forgejo_instance]" 
+           value="<?php echo esc_attr($instance); ?>" 
+           placeholder="https://gitea.com"
+           class="regular-text">
+    <p class="description">
+        <?php esc_html_e('URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -254,13 +304,14 @@ function eg_social_timeline_sanitize_options($input) {
     
     $mastodon_url = isset($input['mastodon_url']) ? esc_url_raw($input['mastodon_url']) : '';
     $diggita_username = isset($input['diggita_username']) ? sanitize_text_field($input['diggita_username']) : '';
+    $forgejo_username = isset($input['forgejo_username']) ? sanitize_text_field($input['forgejo_username']) : '';
     
-    if (empty($mastodon_url) && empty($diggita_username)) {
+    if (empty($mastodon_url) && empty($diggita_username) && empty($forgejo_username)) {
         add_settings_error(
             'eg_social_timeline_options',
             'no_profiles',
             '<strong>' . __('Errore:', 'eg-social-timeline') . '</strong> ' . 
-            __('Devi configurare almeno un profilo social (Mastodon o Diggita).', 'eg-social-timeline'),
+            __('Devi configurare almeno un profilo social (Mastodon, Diggita o Forgejo).', 'eg-social-timeline'),
             'error'
         );
         
@@ -270,6 +321,10 @@ function eg_social_timeline_sanitize_options($input) {
     
     $output['mastodon_url'] = $mastodon_url;
     $output['diggita_username'] = $diggita_username;
+    $output['forgejo_username'] = $forgejo_username;
+    
+    $forgejo_instance = isset($input['forgejo_instance']) ? esc_url_raw($input['forgejo_instance']) : 'https://gitea.com';
+    $output['forgejo_instance'] = !empty($forgejo_instance) ? $forgejo_instance : 'https://gitea.com';
     
     $limit = isset($input['post_limit']) ? intval($input['post_limit']) : 10;
     $output['post_limit'] = max(1, min(50, $limit));
@@ -303,7 +358,7 @@ function eg_social_timeline_admin_notice() {
     
     $options = get_option('eg_social_timeline_options');
     
-    if (empty($options['mastodon_url']) && empty($options['diggita_username'])) {
+    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username'])) {
         ?>
         <div class="notice notice-error">
             <p>
@@ -576,6 +631,73 @@ function eg_social_timeline_fetch_diggita($username) {
     return $posts;
 }
 
+// Fetch Forgejo/Gitea activity
+function eg_social_timeline_fetch_forgejo($username, $instance_url) {
+    if (empty($username) || empty($instance_url)) {
+        return array();
+    }
+    
+    $api_url = rtrim($instance_url, '/') . '/api/v1/users/' . sanitize_text_field($username) . '/activities/feeds';
+    
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 15,
+        'sslverify' => true
+    ));
+    
+    if (is_wp_error($response)) {
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline Forgejo Error: ' . $response->get_error_message());
+        }
+        return array();
+    }
+    
+    $body = wp_remote_retrieve_body($response);
+    
+    if (empty($body)) {
+        return array();
+    }
+    
+    $activities = json_decode($body, true);
+    
+    if (!is_array($activities)) {
+        return array();
+    }
+    
+    $posts = array();
+    
+    foreach ($activities as $activity) {
+        // Only show commits and new repositories
+        if (!in_array($activity['op_type'], array('commit_repo', 'create_repo'))) {
+            continue;
+        }
+        
+        $repo_name = isset($activity['repo']['name']) ? $activity['repo']['name'] : '';
+        $repo_url = isset($activity['repo']['html_url']) ? $activity['repo']['html_url'] : '';
+        
+        if ($activity['op_type'] === 'create_repo') {
+            $title = sprintf(__('Created repository: %s', 'eg-social-timeline'), $repo_name);
+            $content = isset($activity['content']) ? $activity['content'] : __('New public repository', 'eg-social-timeline');
+        } else {
+            $title = sprintf(__('Commit to %s', 'eg-social-timeline'), $repo_name);
+            $content = isset($activity['content']) ? $activity['content'] : '';
+        }
+        
+        $posts[] = array(
+            'platform' => 'forgejo',
+            'date' => strtotime($activity['created']),
+            'title' => $title,
+            'content' => $content,
+            'link' => $repo_url,
+            'is_boost' => false,
+            'favourites_count' => 0,
+            'reblogs_count' => 0,
+            'replies_count' => 0
+        );
+    }
+    
+    return $posts;
+}
+
 // Fetch and merge all feeds
 function eg_social_timeline_fetch_all_feeds() {
     $cached = get_transient('eg_social_timeline_cache');
@@ -593,6 +715,12 @@ function eg_social_timeline_fetch_all_feeds() {
     $diggita_posts = eg_social_timeline_fetch_diggita($options['diggita_username']);
     $all_posts = array_merge($all_posts, $diggita_posts);
     
+    if (!empty($options['forgejo_username'])) {
+        $forgejo_instance = !empty($options['forgejo_instance']) ? $options['forgejo_instance'] : 'https://gitea.com';
+        $forgejo_posts = eg_social_timeline_fetch_forgejo($options['forgejo_username'], $forgejo_instance);
+        $all_posts = array_merge($all_posts, $forgejo_posts);
+    }
+    
     usort($all_posts, function($a, $b) {
         return $b['date'] - $a['date'];
     });
@@ -609,7 +737,7 @@ add_shortcode('eg_social_timeline', 'eg_social_timeline_shortcode');
 function eg_social_timeline_shortcode($atts) {
     $options = get_option('eg_social_timeline_options');
     
-    if (empty($options['mastodon_url']) && empty($options['diggita_username'])) {
+    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username'])) {
         if (current_user_can('manage_options')) {
             return '<div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
                 <strong>' . esc_html__('EG Social Timeline - Configurazione Richiesta', 'eg-social-timeline') . '</strong><br>
@@ -755,7 +883,8 @@ function eg_social_timeline_get_platform_name($platform) {
     $names = array(
         'mastodon' => __('Mastodon', 'eg-social-timeline'),
         'diggita' => __('Diggita', 'eg-social-timeline'),
-        'bluesky' => __('Bluesky', 'eg-social-timeline')
+        'bluesky' => __('Bluesky', 'eg-social-timeline'),
+        'forgejo' => __('Forgejo', 'eg-social-timeline')
     );
     
     return isset($names[$platform]) ? $names[$platform] : $platform;
