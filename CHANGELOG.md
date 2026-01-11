@@ -7,6 +7,20 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ---
 
+## [1.2.1] - 2026-01-11
+
+### Fixed
+- **Filtri CSS siblings fix**: checkbox ora posizionati FUORI dal container come siblings diretti degli `<article>` per corretto funzionamento dei selettori CSS `~`
+- **Post visibili**: risolto bug v1.2.0 che mostrava solo box filtri senza post
+- **CSS selectors**: logica invertita `#filter:not(:checked) ~ .timeline-item` per nascondere solo quando unchecked
+
+### Technical
+- Checkbox HTML spostati prima del `<div class="eg-timeline-filters">` invece che dentro
+- Label rimangono dentro il container e usano attributo `for` per associazione
+- Selettore CSS ora raggiunge correttamente gli article siblings
+
+---
+
 ## [1.2.0] - 2026-01-11
 
 ### Added

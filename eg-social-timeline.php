@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.2.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.2.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -770,7 +770,7 @@ function eg_social_timeline_shortcode($atts) {
     ?>
     <div class="eg-social-timeline">
         
-        <?php
+    <?php
         // Count posts per platform for filters
         $platform_counts = array();
         foreach ($posts as $post) {
@@ -791,7 +791,15 @@ function eg_social_timeline_shortcode($atts) {
         );
         ?>
         
-        <!-- CSS-only Filters Box -->
+        <!-- Checkbox FUORI dal container (siblings degli article) -->
+        <?php foreach ($platform_counts as $platform => $count): ?>
+            <input type="checkbox" 
+                   id="filter-<?php echo esc_attr($platform); ?>" 
+                   class="filter-checkbox-input"
+                   checked>
+        <?php endforeach; ?>
+        
+        <!-- CSS-only Filters Box (solo label, checkbox sopra) -->
         <div class="eg-timeline-filters">
             <div class="filters-header">
                 <span class="filters-icon">🔍</span>
@@ -800,10 +808,6 @@ function eg_social_timeline_shortcode($atts) {
             
             <div class="filters-checkboxes">
                 <?php foreach ($platform_counts as $platform => $count): ?>
-                    <input type="checkbox" 
-                           id="filter-<?php echo esc_attr($platform); ?>" 
-                           class="filter-checkbox-input"
-                           checked>
                     <label for="filter-<?php echo esc_attr($platform); ?>" 
                            class="filter-checkbox-label">
                         <span class="platform-icon-small">

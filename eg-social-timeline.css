@@ -309,19 +309,17 @@
     }
 }
 
-
 /* ==============================================
-   FILTRI SOLO CSS - Zero JavaScript Required
+   FILTRI SOLO CSS - Checkbox esterni
    ============================================== */
 
-/* Nascondi checkbox originali */
+/* Nascondi checkbox originali (sono fuori dal box) */
 .filter-checkbox-input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
-/* Box filtri */
 .eg-timeline-filters {
     background: #F8F9FF;
     border: 2px solid #E0E2FF;
@@ -357,7 +355,6 @@
     gap: 12px;
 }
 
-/* Label come bottone checkbox */
 .filter-checkbox-label {
     display: flex;
     align-items: center;
@@ -373,7 +370,7 @@
     color: #2C3E50;
 }
 
-/* Check indicator (pseudo-elemento) */
+/* Check indicator usando :checked sul checkbox esterno */
 .filter-checkbox-label::before {
     content: '✓';
     display: inline-flex;
@@ -390,19 +387,34 @@
     transition: all 0.2s ease;
 }
 
-/* Unchecked state */
-.filter-checkbox-input:not(:checked) + .filter-checkbox-label::before {
+/* Quando checkbox unchecked, nascondi check */
+.filter-checkbox-input:not(:checked) + * .filter-checkbox-label[for]:not([for=""]):before {
     background: white;
     color: transparent;
     border-color: #E0E0E0;
 }
 
-.filter-checkbox-input:not(:checked) + .filter-checkbox-label {
+/* Approccio migliore: usa ID specifici */
+#filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"]::before,
+#filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
+#filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
+#filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
+#filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
+    background: white;
+    color: transparent;
+    border-color: #E0E0E0;
+}
+
+/* Label unchecked - diverso styling */
+#filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"],
+#filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
+#filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
+#filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
+#filter-blog:not(:checked) ~ * label[for="filter-blog"] {
     opacity: 0.6;
     background: #F5F5F5;
 }
 
-/* Hover */
 .filter-checkbox-label:hover {
     border-color: #6364FF;
     background: #FAFBFF;
@@ -427,18 +439,22 @@
     font-weight: 400;
 }
 
-/* Default: tutti i post nascosti */
+/* ==============================================
+   LOGICA FILTRI - CORRETTA!
+   ============================================== */
+
+/* Default: TUTTI VISIBILI */
 .timeline-item {
-    display: none;
+    display: block;
 }
 
-/* Mostra post solo se checkbox corrispondente è checked */
-#filter-mastodon:checked ~ * .timeline-mastodon,
-#filter-diggita:checked ~ * .timeline-diggita,
-#filter-bluesky:checked ~ * .timeline-bluesky,
-#filter-forgejo:checked ~ * .timeline-forgejo,
-#filter-blog:checked ~ * .timeline-blog {
-    display: block !important;
+/* Nascondi solo quando unchecked */
+#filter-mastodon:not(:checked) ~ .timeline-mastodon,
+#filter-diggita:not(:checked) ~ .timeline-diggita,
+#filter-bluesky:not(:checked) ~ .timeline-bluesky,
+#filter-forgejo:not(:checked) ~ .timeline-forgejo,
+#filter-blog:not(:checked) ~ .timeline-blog {
+    display: none !important;
 }
 
 /* Dark mode */
@@ -467,22 +483,30 @@
         border-color: #8B8DFF;
     }
     
-    .filter-checkbox-input:not(:checked) + .filter-checkbox-label {
-        background: #252525;
-    }
-    
     .filter-checkbox-label::before {
         border-color: #8B8DFF;
         background: #8B8DFF;
     }
     
-    .filter-checkbox-input:not(:checked) + .filter-checkbox-label::before {
+    #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"]::before,
+    #filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
+    #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
+    #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
+    #filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
         background: #1E1E1E;
         border-color: #3A3A3A;
     }
+    
+    #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"],
+    #filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
+    #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
+    #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
+    #filter-blog:not(:checked) ~ * label[for="filter-blog"] {
+        background: #252525;
+    }
 }
 
-/* Mobile responsive */
+/* Mobile */
 @media (max-width: 768px) {
     .eg-timeline-filters {
         padding: 16px;

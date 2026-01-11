@@ -2,9 +2,9 @@
 Contributors: emanuelegori
 Tags: mastodon, fediverse, social media, timeline, aggregator, forgejo, gitea, lemmy
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,10 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 
 == Changelog ==
 
+= 1.2.1 - 2026-01-11 =
+* Fix: Checkbox filtri ora posizionati come siblings degli article per corretto funzionamento CSS
+* Fix: Post ora visibili correttamente insieme ai filtri (hotfix v1.2.0)
+
 = 1.2.0 - 2026-01-11 =
 * Aggiunta integrazione Forgejo/Gitea (commit e nuovi repository)
 * Aggiunto campo settings URL istanza Forgejo configurabile
@@ -147,6 +151,9 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 * Shortcode base
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Hotfix importante! Risolve problema post invisibili in v1.2.0. Aggiornamento immediato raccomandato.
 
 = 1.2.0 =
 Nuova integrazione Forgejo/Gitea! Sistema icone migliorato: ora le icone si caricano da file SVG invece di essere hardcoded nel codice.
