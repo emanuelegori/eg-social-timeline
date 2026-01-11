@@ -7,36 +7,71 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ---
 
+## [1.2.3] - 2026-01-11
+
+### Fixed
+- **Filtri CSS logica invertita**: risolto bug selezione checkbox. Ora logica corretta: nascondi tutto di default, mostra solo piattaforme checked
+- **Diggita parsing robusto**: statistiche estratte correttamente con split multi-riga invece di regex su stringa unica
+- **Forgejo link pagina commits**: link ora punta a `/commits/branch/{branch}` invece di singolo commit `/commit/{sha}`
+- **UI filtri compatta**: ridotto font-size, padding e dimensioni icone per box filtri più discreto
+
+### Changed
+- **CSS filtri**: da `:not(:checked) ~ .timeline-item { display: none }` a `:checked ~ .timeline-item { display: block }` (logica invertita)
+- **Box filtri dimensioni**:
+  - Header h3: 1.1em → 0.95em
+  - Label: 0.85em font, 6px padding (era 8px)
+  - Icone: 16px (erano 20px)
+  - Checkbox indicator: 16px (era 20px)
+- **Forgejo URL format**: `{instance}/{owner}/{repo}/commits/branch/{branch}` per vedere tutti i commit del repo
+
+### Technical
+- Diggita: parsing con `explode("\n")` e `array_shift()` invece di regex multipli
+- CSS: default `.timeline-item { display: none !important }` con override `!important` su `:checked`
+- Forgejo: usa `urlencode($default_branch)` per branch names con caratteri speciali
+
+---
+
+## [1.2.2] - 2026-01-11
+
+### Fixed
+- **Forgejo API affidabile**: risolto feed vuoto su alcune istanze Forgejo usando API commits diretta invece di `/activities/feeds`
+- **Diggita contenuto pulito**: rimossa riga "submitted by X to Y" che appariva sopra il testo
+- **Diggita statistiche separate**: estratti punti e commenti dal contenuto per visualizzazione pulita
+
+### Changed
+- **Forgejo implementazione**: usa `/api/v1/users/{user}/repos` + `/api/v1/repos/{owner}/{repo}/commits` per affidabilità
+- **Diggita emoji**: mostra ⭐ (punti) invece di ❤️ e 💬 (commenti) per chiarezza
+- **Forgejo link**: personalizzato "Vedi commit" invece di generico "Vedi post originale"
+
+### Added
+- **Diggita statistiche visuali**: upvotes e commenti mostrati sotto il post come Mastodon (formato omogeneo)
+- **Forgejo multi-repository**: recupera commit da tutti i repository pubblici dell'utente (ultimi 5 per repo)
+
+---
+
 ## [1.2.1] - 2026-01-11
 
 ### Fixed
 - **Filtri CSS siblings fix**: checkbox ora posizionati FUORI dal container come siblings diretti degli `<article>` per corretto funzionamento dei selettori CSS `~`
 - **Post visibili**: risolto bug v1.2.0 che mostrava solo box filtri senza post
-- **CSS selectors**: logica invertita `#filter:not(:checked) ~ .timeline-item` per nascondere solo quando unchecked
 
 ### Technical
 - Checkbox HTML spostati prima del `<div class="eg-timeline-filters">` invece che dentro
 - Label rimangono dentro il container e usano attributo `for` per associazione
-- Selettore CSS ora raggiunge correttamente gli article siblings
 
 ---
 
 ## [1.2.0] - 2026-01-11
 
 ### Added
-- **Integrazione Forgejo/Gitea**: mostra attività repository pubbliche (commit e nuovi repository)
+- **Integrazione Forgejo/Gitea**: mostra attività repository pubbliche (commit)
 - **Campo settings username Forgejo**: configurabile nelle impostazioni plugin
-- **Campo settings URL istanza Forgejo**: supporta istanze personalizzate (default: https://gitea.com)
+- **Campo settings URL istanza Forgejo**: supporta istanze personalizzate
 - **Supporto filtro Forgejo**: integrato nel sistema filtri CSS della timeline
-- **Icona Forgejo**: aggiunta icona modulare SVG per Forgejo/Gitea
+- **Icona Forgejo**: aggiunta icona modulare SVG
 
 ### Fixed
 - **Sistema icone file-based**: le icone ora si caricano da file SVG in `social-icons/` invece di essere hardcoded in array PHP
-- **Icone personalizzabili**: modifica file SVG senza toccare codice PHP
-
-### Changed
-- **Versione**: 1.1.2 → 1.2.0 (nuova feature Forgejo)
-- **Funzione get_icon()**: refactored per leggere da filesystem
 
 ---
 
@@ -44,16 +79,10 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 
 ### Fixed
 - **URL boost Mastodon**: i boost non puntano più all'endpoint JSON `/activity` ma alla pagina web del post originale
-- **Timeline filtri**: integrato sistema filtri CSS puro per mostrare/nascondere piattaforme
 
 ### Added
 - **Box filtri interattivi**: checkbox CSS per ogni piattaforma con conteggio post
 - **Attributo data-platform**: aggiunto a ogni `<article>` per supportare filtri CSS
-- **CSS filtri**: styling completo con dark mode e mobile responsive
-
-### Changed
-- **UX design**: aumentato spazio tra post (20px → 40px)
-- **Link "Vedi originale"**: ridotto da bottone full-width a link inline discreto
 
 ---
 
@@ -71,11 +100,6 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 - **Statistiche complete**: mostra like (❤️), boost (🔁) e commenti (💬) per post Mastodon
 - **Sistema icone modulare**: icone SVG caricate da file invece di hardcoded
 - **Cartella social-icons/**: directory dedicata per file SVG icone piattaforme
-- **Fallback icone**: icona generica se file non trovato
-
-### Changed
-- **Fetch Mastodon**: da RSS feed a API JSON
-- **Struttura dati**: standardizzata con campi `favourites_count`, `reblogs_count`, `replies_count`
 
 ### Deprecated
 - **RSS Mastodon**: sostituito da API (RSS non fornisce statistiche)
@@ -95,15 +119,10 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 - **Design responsive**: supporto mobile, tablet, desktop
 - **Dark mode**: supporto automatico tema scuro
 - **Licenza GPL-2.0-or-later**: software libero
-- **README completo**: documentazione e istruzioni
-- **readme.txt WordPress**: file standard per directory plugin
-- **CHANGELOG.md**: questo file
 
 ### Technical
 - **Requisiti**: WordPress 5.0+, PHP 7.4+
-- **API**: Mastodon RSS, Diggita RSS
 - **Cache**: WordPress transient API
-- **Sanitization**: `esc_url_raw()`, `sanitize_text_field()`, `wp_kses_post()`
 - **i18n ready**: text domain `eg-social-timeline`
 
 ---
@@ -113,7 +132,6 @@ e questo progetto aderisce al [Semantic Versioning](https://semver.org/lang/it/)
 ### Planned
 - Integrazione Bluesky API
 - Integrazione feed blog RSS
-- Statistiche Diggita via Lemmy API
 - Opzione localStorage per persistenza filtri
 - Widget sidebar
 - Gutenberg block
@@ -127,11 +145,6 @@ Questo progetto segue Semantic Versioning (MAJOR.MINOR.PATCH):
 - **MAJOR**: Modifiche incompatibili API
 - **MINOR**: Nuove funzionalità compatibili
 - **PATCH**: Bug fix compatibili
-
-Esempio:
-- `1.0.0` → `1.0.1`: Bug fix (patch)
-- `1.0.1` → `1.1.0`: Nuova feature (minor)
-- `1.1.0` → `2.0.0`: Breaking change (major)
 
 ---
 

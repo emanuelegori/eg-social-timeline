@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.2.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.2.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -15,7 +15,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Piattaforme Supportate**:
   - 🐘 **Mastodon** (e compatibili ActivityPub)
   - 📰 **Diggita** (Lemmy) con statistiche complete
-  - 🦊 **Forgejo/Gitea** (commit e nuovi repository)
+  - 🦊 **Forgejo/Gitea** (commit repository)
   - 🦋 **Bluesky** (in sviluppo)
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
@@ -31,7 +31,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ### Automatica (WordPress)
 
-1. Scarica latest release da [Gitea](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+1. Scarica ultima versione da [Gitea](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 2. Vai su **Plugin → Aggiungi nuovo → Carica plugin**
 3. Seleziona file ZIP scaricato
 4. Clicca **Installa** e poi **Attiva**
@@ -54,8 +54,9 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
 1. Vai su **Impostazioni → EG Social Timeline**
 2. Configura almeno un profilo:
    - **Mastodon**: URL completo profilo (es: `https://mastodon.uno/@emanuelegori`)
-   - **Diggita**: Username (senza @)
-   - **Forgejo**: Username + URL istanza (es: `https://gitea.emanuelegori.uno`)
+   - **Diggita**: Username (senza @) (es: emanuelegori)
+   - **Forgejo**: URL istanza (es: `https://git.emanuelegori.uno`)
+   - **Forgejo**: Username (es: emanuelegori)
 3. Regola impostazioni cache e visualizzazione
 4. Salva
 
@@ -142,7 +143,7 @@ Crea `wp-content/themes/tuo-tema/eg-social-timeline-custom.css`:
 
 ### Requisiti
 
-- WordPress 5.0+
+- WordPress 6.7+
 - PHP 7.4+
 - API access alle piattaforme configurate
 
@@ -166,65 +167,53 @@ eg-social-timeline/
 ### API Utilizzate
 
 - **Mastodon**: `/api/v1/accounts/{id}/statuses`
-- **Diggita**: RSS `/feeds/u/{username}.xml`
-- **Forgejo**: `/api/v1/users/{username}/activities/feeds`
+- **Diggita**: RSS `/feeds/u/{username}.xml` (con parsing statistiche)
+- **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 
 ---
 
 ## 📋 Changelog
 
+### [1.2.3] - 2026-01-11
+
+#### Fixed
+- **Filtri CSS**: logica invertita corregge bug selezione (ora: nascondi tutto, mostra checked)
+- **Diggita parsing**: statistiche estratte correttamente con parsing robusto multi-riga
+- **Forgejo link**: ora punta a pagina commits repo invece di singolo commit
+- **UI filtri**: ridotto font-size per box filtri più compatto (0.95em → 0.85em)
+
+#### Changed
+- CSS: checkbox label padding ridotto (8px → 6px) e icone più piccole (20px → 16px)
+- CSS: header filtri font-size ridotto (1.1em → 0.95em)
+- Forgejo: URL commits page format `/commits/branch/{branch}` invece di `/commit/{sha}`
+
+### [1.2.2] - 2026-01-11
+
+#### Fixed
+- Forgejo: risolto feed vuoto usando API commits diretta
+- Diggita: rimosso "submitted by..." dal contenuto
+- Diggita: estratte statistiche punti/commenti
+
+#### Changed
+- Forgejo: usa `/repos` + `/commits` API
+- Diggita: emoji ⭐ (punti) e 💬 (commenti)
+
 ### [1.2.1] - 2026-01-11
 
 #### Fixed
-- Filtri CSS: checkbox ora posizionati come siblings degli article per corretto funzionamento selettori CSS
-- Post ora visibili correttamente insieme ai filtri
+- Filtri CSS: checkbox posizionati come siblings degli article
 
 ### [1.2.0] - 2026-01-11
 
 #### Added
-- Integrazione Forgejo/Gitea: mostra commit e nuovi repository pubblici
-- Campo settings per username e URL istanza Forgejo configurabile
-- Supporto filtro Forgejo in sistema filtri timeline
-- Icona Forgejo modulare
+- Integrazione Forgejo/Gitea
+- Sistema icone file-based
 
-#### Fixed  
-- Sistema icone ora legge da file SVG invece di array hardcoded
-- Icone modificabili senza toccare codice PHP
-
-### [1.1.2] - 2026-01-11
-
-#### Fixed
-- URL boost Mastodon non mostrano più endpoint JSON activity
-- Sistema filtri CSS integrato
-
-#### Added
-- Box filtri piattaforme con checkbox interattivi
-- Supporto `data-platform` per filtri CSS
-
-### [1.1.1] - 2026-01-10
-
-#### Fixed
-- Rimossi post duplicati da timeline
-
-### [1.1.0] - 2026-01-10
-
-#### Added
-- API Mastodon v1 (sostituisce RSS)
-- Statistiche complete (like, boost, commenti) per Mastodon
-- Sistema icone modulare con file SVG
-- Supporto cartella `social-icons/`
-
-#### Changed
-- Migrazione da RSS a API REST per Mastodon
+### [1.1.0-1.1.2] - 2026-01-10/11
+- API Mastodon, filtri CSS, fix vari
 
 ### [1.0.0] - 2026-01-10
-
 - Release iniziale MVP
-- Supporto Mastodon (RSS)
-- Supporto Diggita (RSS)
-- Sistema cache
-- Admin settings
-- Shortcode base
 
 ---
 

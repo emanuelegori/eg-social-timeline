@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.2.1
+ * Version: 1.2.3
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.2.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.2.3');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -577,7 +577,7 @@ function eg_social_timeline_fetch_mastodon($profile_url) {
     return $posts;
 }
 
-// Fetch Diggita RSS
+// Fetch Diggita RSS with statistics parsing
 function eg_social_timeline_fetch_diggita($username) {
     if (empty($username)) {
         return array();
@@ -615,87 +615,149 @@ function eg_social_timeline_fetch_diggita($username) {
         $pubDate = (string) $item->pubDate;
         $timestamp = strtotime($pubDate);
         
+        // Parse description to extract statistics (robust parsing)
+        $description = (string) $item->description;
+        
+        // Split into lines
+        $lines = explode("\n", $description);
+        
+        $points = 0;
+        $comments = 0;
+        $clean_content = '';
+        
+        if (count($lines) >= 2) {
+            // First line: "submitted by..." - remove it
+            array_shift($lines);
+            
+            // Second line should be statistics: "X points | Y comments"
+            $stats_line = array_shift($lines);
+            
+            // Parse statistics with flexible whitespace
+            if (preg_match('/(\d+)\s+points?\s+\|\s+(\d+)\s+comments?/i', $stats_line, $matches)) {
+                $points = intval($matches[1]);
+                $comments = intval($matches[2]);
+            }
+            
+            // Remaining lines are the actual content
+            $clean_content = trim(implode("\n", $lines));
+        } else {
+            // Fallback if structure is different
+            $clean_content = trim($description);
+        }
+        
         $posts[] = array(
             'platform' => 'diggita',
             'date' => $timestamp,
             'title' => (string) $item->title,
-            'content' => (string) $item->description,
+            'content' => $clean_content,
             'link' => (string) $item->link,
             'is_boost' => false,
-            'favourites_count' => 0,
-            'reblogs_count' => 0,
-            'replies_count' => 0
+            'favourites_count' => $points,      // Diggita upvotes as "favourites"
+            'reblogs_count' => 0,               // Diggita doesn't have boosts
+            'replies_count' => $comments        // Diggita comments
         );
     }
     
     return $posts;
 }
 
-// Fetch Forgejo/Gitea activity
+// Fetch Forgejo/Gitea commits via direct API
 function eg_social_timeline_fetch_forgejo($username, $instance_url) {
     if (empty($username) || empty($instance_url)) {
         return array();
     }
     
-    $api_url = rtrim($instance_url, '/') . '/api/v1/users/' . sanitize_text_field($username) . '/activities/feeds';
+    $instance_url = rtrim($instance_url, '/');
     
-    $response = wp_remote_get($api_url, array(
+    // Step 1: Get list of public repositories
+    $repos_url = $instance_url . '/api/v1/users/' . sanitize_text_field($username) . '/repos';
+    
+    $repos_response = wp_remote_get($repos_url, array(
         'timeout' => 15,
         'sslverify' => true
     ));
     
-    if (is_wp_error($response)) {
+    if (is_wp_error($repos_response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Forgejo Error: ' . $response->get_error_message());
+            error_log('EG Social Timeline Forgejo Repos Error: ' . $repos_response->get_error_message());
         }
         return array();
     }
     
-    $body = wp_remote_retrieve_body($response);
+    $repos_body = wp_remote_retrieve_body($repos_response);
+    $repositories = json_decode($repos_body, true);
     
-    if (empty($body)) {
+    if (!is_array($repositories)) {
         return array();
     }
     
-    $activities = json_decode($body, true);
+    $all_commits = array();
     
-    if (!is_array($activities)) {
-        return array();
-    }
-    
-    $posts = array();
-    
-    foreach ($activities as $activity) {
-        // Only show commits and new repositories
-        if (!in_array($activity['op_type'], array('commit_repo', 'create_repo'))) {
+    // Step 2: Get commits from each public repository
+    foreach ($repositories as $repo) {
+        // Skip private repositories
+        if (!empty($repo['private'])) {
             continue;
         }
         
-        $repo_name = isset($activity['repo']['name']) ? $activity['repo']['name'] : '';
-        $repo_url = isset($activity['repo']['html_url']) ? $activity['repo']['html_url'] : '';
+        $repo_name = $repo['name'];
+        $repo_full_name = $repo['full_name'];
+        $default_branch = isset($repo['default_branch']) ? $repo['default_branch'] : 'main';
         
-        if ($activity['op_type'] === 'create_repo') {
-            $title = sprintf(__('Created repository: %s', 'eg-social-timeline'), $repo_name);
-            $content = isset($activity['content']) ? $activity['content'] : __('New public repository', 'eg-social-timeline');
-        } else {
-            $title = sprintf(__('Commit to %s', 'eg-social-timeline'), $repo_name);
-            $content = isset($activity['content']) ? $activity['content'] : '';
+        // Get last 5 commits from this repo
+        $commits_url = $instance_url . '/api/v1/repos/' . $repo_full_name . '/commits';
+        $commits_url .= '?limit=5&sha=' . urlencode($default_branch);
+        
+        $commits_response = wp_remote_get($commits_url, array(
+            'timeout' => 10,
+            'sslverify' => true
+        ));
+        
+        if (is_wp_error($commits_response)) {
+            if (EG_SOCIAL_TIMELINE_DEBUG) {
+                error_log('EG Social Timeline Forgejo Commits Error for ' . $repo_name . ': ' . $commits_response->get_error_message());
+            }
+            continue;
         }
         
-        $posts[] = array(
-            'platform' => 'forgejo',
-            'date' => strtotime($activity['created']),
-            'title' => $title,
-            'content' => $content,
-            'link' => $repo_url,
-            'is_boost' => false,
-            'favourites_count' => 0,
-            'reblogs_count' => 0,
-            'replies_count' => 0
-        );
+        $commits_body = wp_remote_retrieve_body($commits_response);
+        $commits = json_decode($commits_body, true);
+        
+        if (!is_array($commits)) {
+            continue;
+        }
+        
+        // Process each commit
+        foreach ($commits as $commit) {
+            $commit_message = isset($commit['commit']['message']) ? $commit['commit']['message'] : '';
+            $commit_date = isset($commit['commit']['committer']['date']) ? $commit['commit']['committer']['date'] : '';
+            
+            if (empty($commit_date) || empty($commit_message)) {
+                continue;
+            }
+            
+            // Extract first line of commit message as title
+            $message_lines = explode("\n", $commit_message);
+            $short_message = trim($message_lines[0]);
+            
+            // Link to commits page of the repository instead of single commit
+            $commits_page_url = $instance_url . '/' . $repo_full_name . '/commits/branch/' . urlencode($default_branch);
+            
+            $all_commits[] = array(
+                'platform' => 'forgejo',
+                'date' => strtotime($commit_date),
+                'title' => 'Commit to ' . $repo_name,
+                'content' => $short_message,
+                'link' => $commits_page_url,
+                'is_boost' => false,
+                'favourites_count' => 0,
+                'reblogs_count' => 0,
+                'replies_count' => 0
+            );
+        }
     }
     
-    return $posts;
+    return $all_commits;
 }
 
 // Fetch and merge all feeds
@@ -770,7 +832,7 @@ function eg_social_timeline_shortcode($atts) {
     ?>
     <div class="eg-social-timeline">
         
-    <?php
+        <?php
         // Count posts per platform for filters
         $platform_counts = array();
         foreach ($posts as $post) {
@@ -849,8 +911,10 @@ function eg_social_timeline_shortcode($atts) {
                     <?php if ($show_stats && ($post['favourites_count'] > 0 || $post['reblogs_count'] > 0 || $post['replies_count'] > 0)): ?>
                         <div class="post-stats">
                             <?php if ($post['favourites_count'] > 0): ?>
-                                <span class="stat-item stat-favourites" title="<?php esc_attr_e('Preferiti', 'eg-social-timeline'); ?>">
-                                    ❤️ <?php echo esc_html($post['favourites_count']); ?>
+                                <span class="stat-item stat-favourites" title="<?php 
+                                    echo esc_attr($post['platform'] === 'diggita' ? __('Punti', 'eg-social-timeline') : __('Preferiti', 'eg-social-timeline')); 
+                                ?>">
+                                    <?php echo $post['platform'] === 'diggita' ? '⭐' : '❤️'; ?> <?php echo esc_html($post['favourites_count']); ?>
                                 </span>
                             <?php endif; ?>
                             
@@ -861,7 +925,9 @@ function eg_social_timeline_shortcode($atts) {
                             <?php endif; ?>
                             
                             <?php if ($post['replies_count'] > 0): ?>
-                                <span class="stat-item stat-replies" title="<?php esc_attr_e('Risposte', 'eg-social-timeline'); ?>">
+                                <span class="stat-item stat-replies" title="<?php 
+                                    echo esc_attr($post['platform'] === 'diggita' ? __('Commenti', 'eg-social-timeline') : __('Risposte', 'eg-social-timeline')); 
+                                ?>">
                                     💬 <?php echo esc_html($post['replies_count']); ?>
                                 </span>
                             <?php endif; ?>
@@ -872,7 +938,13 @@ function eg_social_timeline_shortcode($atts) {
                        target="_blank" 
                        rel="noopener noreferrer"
                        class="view-original">
-                        <?php esc_html_e('Vedi post originale', 'eg-social-timeline'); ?> →
+                        <?php 
+                        if ($post['platform'] === 'forgejo') {
+                            esc_html_e('Vedi commit', 'eg-social-timeline');
+                        } else {
+                            esc_html_e('Vedi post originale', 'eg-social-timeline');
+                        }
+                        ?> →
                     </a>
                 </footer>
             </article>

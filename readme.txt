@@ -2,9 +2,9 @@
 Contributors: emanuelegori
 Tags: mastodon, fediverse, social media, timeline, aggregator, forgejo, gitea, lemmy
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,8 +17,8 @@ EG Social Timeline è un plugin WordPress che aggrega e mostra in ordine cronolo
 = Piattaforme Supportate =
 
 * **Mastodon** e compatibili ActivityPub (con statistiche complete)
-* **Diggita** (Lemmy) - piattaforma social italiana
-* **Forgejo/Gitea** - attività repository (commit e nuovi repo)
+* **Diggita** (Lemmy) - piattaforma social italiana con statistiche pulite
+* **Forgejo/Gitea** - attività repository (commit via API diretta)
 * **Bluesky** (in sviluppo)
 
 = Caratteristiche Principali =
@@ -115,68 +115,62 @@ Pull request benvenute su Gitea! Leggi CONTRIBUTING.md nel repository.
 
 == Changelog ==
 
+= 1.2.3 - 2026-01-11 =
+* Fix: Filtri CSS logica invertita (nascondi tutto, mostra checked) risolve bug selezione
+* Fix: Diggita parsing statistiche robusto con split multi-riga
+* Fix: Forgejo link ora punta a pagina commits repo (/commits/branch/main)
+* Changed: UI filtri più compatta (font ridotto, padding ridotto, icone piccole)
+
+= 1.2.2 - 2026-01-11 =
+* Fix: Forgejo API commits diretta risolve feed vuoto su alcune istanze
+* Fix: Diggita contenuto pulito senza "submitted by" e statistiche separate
+* Changed: Diggita mostra ⭐ punti e 💬 commenti in formato pulito
+* Changed: Forgejo link "Vedi commit" invece di generico "Vedi post originale"
+
 = 1.2.1 - 2026-01-11 =
-* Fix: Checkbox filtri ora posizionati come siblings degli article per corretto funzionamento CSS
-* Fix: Post ora visibili correttamente insieme ai filtri (hotfix v1.2.0)
+* Fix: Checkbox filtri posizionati come siblings degli article
+* Fix: Post visibili correttamente insieme ai filtri
 
 = 1.2.0 - 2026-01-11 =
-* Aggiunta integrazione Forgejo/Gitea (commit e nuovi repository)
-* Aggiunto campo settings URL istanza Forgejo configurabile
-* Aggiunto supporto filtro Forgejo in timeline
-* Fix: sistema icone ora legge da file SVG invece di hardcoded
-* Fix: icone modificabili senza toccare codice PHP
+* Aggiunta integrazione Forgejo/Gitea
+* Fix: sistema icone file-based invece di hardcoded
 
 = 1.1.2 - 2026-01-11 =
-* Fix: URL boost Mastodon non mostrano più JSON activity
+* Fix: URL boost Mastodon
 * Aggiunto sistema filtri CSS puro con checkbox
-* Aggiunto attributo data-platform per filtri
-* UX: Più spazio tra post e link "Vedi originale" più visibile
 
 = 1.1.1 - 2026-01-10 =
-* Fix: Rimossi post duplicati da timeline
+* Fix: Rimossi post duplicati
 
 = 1.1.0 - 2026-01-10 =
-* Aggiunta API Mastodon v1 (sostituisce RSS)
-* Aggiunte statistiche complete (like, boost, commenti) per Mastodon
-* Aggiunto sistema icone modulare con file SVG
-* Aggiunta cartella social-icons/ per icone personalizzabili
-* Cambiato: Migrazione da RSS a API REST per Mastodon
+* Aggiunta API Mastodon v1
+* Aggiunte statistiche complete per Mastodon
+* Sistema icone modulare con file SVG
 
 = 1.0.0 - 2026-01-10 =
 * Release iniziale MVP
-* Supporto Mastodon (RSS)
-* Supporto Diggita (RSS)
-* Sistema cache configurabile
-* Admin settings panel
-* Shortcode base
 
 == Upgrade Notice ==
 
+= 1.2.3 =
+Fix critico filtri CSS! Risolve bug selezione checkbox. Aggiornamento raccomandato.
+
+= 1.2.2 =
+Hotfix Forgejo feed vuoto e Diggita statistiche. Aggiornamento raccomandato.
+
 = 1.2.1 =
-Hotfix importante! Risolve problema post invisibili in v1.2.0. Aggiornamento immediato raccomandato.
+Hotfix post invisibili in v1.2.0. Aggiornamento immediato raccomandato.
 
 = 1.2.0 =
-Nuova integrazione Forgejo/Gitea! Sistema icone migliorato: ora le icone si caricano da file SVG invece di essere hardcoded nel codice.
-
-= 1.1.2 =
-Fix importante per URL boost Mastodon. Sistema filtri CSS integrato per mostrare/nascondere piattaforme.
-
-= 1.1.1 =
-Fix post duplicati. Aggiornamento raccomandato.
-
-= 1.1.0 =
-Migrazione a API Mastodon con statistiche complete! Richiede riconfigurazione URL profilo Mastodon in impostazioni.
-
-= 1.0.0 =
-Prima release stabile.
+Nuova integrazione Forgejo/Gitea! Sistema icone migliorato.
 
 == Additional Info ==
 
 = API Utilizzate =
 
 * Mastodon: `/api/v1/accounts/{id}/statuses`
-* Diggita: RSS `/feeds/u/{username}.xml`
-* Forgejo: `/api/v1/users/{username}/activities/feeds`
+* Diggita: RSS `/feeds/u/{username}.xml` (con parsing statistiche)
+* Forgejo: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 
 = Credits =
 
