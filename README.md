@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.3.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.3.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -177,6 +177,16 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.3.1] - 2026-04-06
+
+#### Security
+- Aggiunto `LIBXML_NONET` al parsing XML del feed RSS Diggita (anti-XXE)
+- Sanitizzazione SVG inline con `wp_kses()` in `eg_social_timeline_get_icon()` (anti-XSS)
+- Validazione anti-SSRF sulle URL API esterne: nuova funzione `eg_social_timeline_is_public_url()` rifiuta IP privati, riservati e localhost
+
+#### Fixed
+- Aggiunto `esc_url()` mancante su link admin nello shortcode
 
 ### [1.3.0] - 2026-01-11
 

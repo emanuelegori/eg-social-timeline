@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -132,6 +132,12 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 
 == Changelog ==
 
+= 1.3.1 - 2026-04-06 =
+* Security: Aggiunto LIBXML_NONET al parsing XML Diggita (anti-XXE)
+* Security: Sanitizzazione SVG inline con wp_kses() (anti-XSS)
+* Security: Validazione anti-SSRF sulle URL API esterne (rifiuta IP privati/riservati)
+* Fixed: Aggiunto esc_url() mancante su link admin nello shortcode
+
 = 1.3.0 - 2026-01-11 =
 * Added: Limiti configurabili per piattaforma nelle impostazioni admin
 * Added: Nuovi campi: Max post Mastodon, Max post Diggita, Max commit Forgejo
@@ -188,6 +194,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 * Added: Design responsive e dark mode
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Fix sicurezza: protezione XXE su parsing RSS, sanitizzazione SVG inline, validazione anti-SSRF su URL API. Aggiornamento consigliato.
 
 = 1.3.0 =
 Nuova funzionalità: limiti configurabili per piattaforma. Previene che Forgejo o altre piattaforme attive monopolizzino la timeline. Default applicati automaticamente (20/10/5), retrocompatibile con v1.2.x.

@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.3.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.3.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -553,10 +553,44 @@ function eg_social_timeline_handle_cache_clear() {
     set_transient('eg_social_timeline_admin_notice', true, 5);
 }
 
+// Validate that a URL points to a public host (anti-SSRF)
+function eg_social_timeline_is_public_url($url) {
+    $host = wp_parse_url($url, PHP_URL_HOST);
+    if (empty($host)) {
+        return false;
+    }
+
+    // Reject IP addresses (IPv4 and IPv6)
+    if (filter_var($host, FILTER_VALIDATE_IP)) {
+        return false;
+    }
+
+    // Reject localhost and common internal hostnames
+    $blocked = array('localhost', 'localhost.localdomain', 'ip6-localhost');
+    if (in_array(strtolower($host), $blocked, true)) {
+        return false;
+    }
+
+    // Resolve hostname and reject private/reserved IPs
+    $ip = gethostbyname($host);
+    if ($ip === $host) {
+        return false; // DNS resolution failed
+    }
+    if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+        return false;
+    }
+
+    return true;
+}
+
 // Get Mastodon Account ID from profile URL
 function eg_social_timeline_get_mastodon_account_id($profile_url) {
+    if (!eg_social_timeline_is_public_url($profile_url)) {
+        return false;
+    }
+
     preg_match('#https?://([^/]+)/@([^/]+)#', $profile_url, $matches);
-    
+
     if (count($matches) < 3) {
         return false;
     }
@@ -704,8 +738,8 @@ function eg_social_timeline_fetch_diggita($username, $limit = 0) {
         return array();
     }
     
-    $xml = simplexml_load_string($body);
-    
+    $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+
     if ($xml === false) {
         return array();
     }
@@ -779,8 +813,12 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
     if (empty($username) || empty($instance_url)) {
         return array();
     }
-    
+
     $instance_url = rtrim($instance_url, '/');
+
+    if (!eg_social_timeline_is_public_url($instance_url)) {
+        return array();
+    }
     
     // Step 1: Get list of public repositories
     $repos_url = $instance_url . '/api/v1/users/' . sanitize_text_field($username) . '/repos';
@@ -961,7 +999,7 @@ function eg_social_timeline_shortcode($atts) {
             return '<div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
                 <strong>' . esc_html__('EG Social Timeline - Configurazione Richiesta', 'eg-social-timeline') . '</strong><br>
                 ' . esc_html__('Nessun profilo social configurato.', 'eg-social-timeline') . ' 
-                <a href="' . admin_url('options-general.php?page=eg-social-timeline') . '">' . esc_html__('Configura ora', 'eg-social-timeline') . '</a>
+                <a href="' . esc_url(admin_url('options-general.php?page=eg-social-timeline')) . '">' . esc_html__('Configura ora', 'eg-social-timeline') . '</a>
             </div>';
         }
         return '';
@@ -1136,15 +1174,26 @@ function eg_social_timeline_get_icon($platform) {
     // Percorso cartella icone
     $icons_dir = EG_SOCIAL_TIMELINE_DIR . 'social-icons/';
     
+    // Tag e attributi SVG consentiti per wp_kses
+    $svg_kses = array(
+        'svg'    => array( 'width' => true, 'height' => true, 'viewbox' => true, 'xmlns' => true, 'fill' => true, 'role' => true, 'aria-hidden' => true, 'class' => true ),
+        'path'   => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true ),
+        'circle' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'opacity' => true ),
+        'rect'   => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'ry' => true, 'fill' => true ),
+        'g'      => array( 'fill' => true, 'transform' => true, 'clip-path' => true ),
+        'defs'   => array(),
+        'clippath' => array( 'id' => true ),
+    );
+
     // Verifica file esiste
     if (isset($icon_files[$platform])) {
         $icon_path = $icons_dir . $icon_files[$platform];
-        
+
         if (file_exists($icon_path)) {
-            return file_get_contents($icon_path);
+            return wp_kses(file_get_contents($icon_path), $svg_kses);
         }
     }
-    
+
     // Fallback: cerchia generica
     return '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.3"/></svg>';
 }

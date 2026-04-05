@@ -6,6 +6,18 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.3.1] - 2026-04-06
+
+### Security
+- Aggiunto `LIBXML_NONET` al parsing XML del feed RSS Diggita per prevenire XXE (XML External Entity)
+- Aggiunta sanitizzazione SVG inline con `wp_kses()` nella funzione `eg_social_timeline_get_icon()` per prevenire XSS da file SVG compromessi
+- Aggiunta validazione anti-SSRF sulle URL delle API esterne (Mastodon, Forgejo): nuova funzione `eg_social_timeline_is_public_url()` rifiuta IP privati, riservati e localhost
+
+### Fixed
+- Aggiunto `esc_url()` mancante sul link admin nello shortcode quando nessun profilo è configurato
+
+---
+
 ## [1.3.0] - 2026-01-11
 
 ### Added
