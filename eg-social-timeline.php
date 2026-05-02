@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.4.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.4.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -85,7 +85,8 @@ function eg_social_timeline_register_settings() {
                 'diggita_limit' => 10,
                 'forgejo_limit' => 5,
                 'bluesky_handle' => '',
-                'bluesky_limit' => 10
+                'bluesky_limit' => 10,
+                'truncate_length' => 300
             )
         )
     );
@@ -204,6 +205,14 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_show_stats',
         __('Mostra Statistiche', 'eg-social-timeline'),
         'eg_social_timeline_show_stats_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_truncate_length',
+        __('Lunghezza Testo Post', 'eg-social-timeline'),
+        'eg_social_timeline_truncate_length_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
     );
@@ -438,6 +447,23 @@ function eg_social_timeline_show_stats_callback() {
     <?php
 }
 
+function eg_social_timeline_truncate_length_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $length = isset($options['truncate_length']) ? $options['truncate_length'] : 300;
+    ?>
+    <input type="number"
+           id="eg_social_timeline_truncate_length"
+           name="eg_social_timeline_options[truncate_length]"
+           value="<?php echo esc_attr($length); ?>"
+           min="0"
+           max="600"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Numero massimo di caratteri mostrati per ogni post (50–600). Imposta 0 per mostrare il testo completo senza limiti (sconsigliato: può compromettere il layout su mobile). Default: 300', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
 // Sanitization
 function eg_social_timeline_sanitize_options($input) {
     $output = array();
@@ -488,6 +514,9 @@ function eg_social_timeline_sanitize_options($input) {
     
     $output['show_boosts'] = isset($input['show_boosts']) ? true : false;
     $output['show_stats'] = isset($input['show_stats']) ? true : false;
+
+    $truncate = isset($input['truncate_length']) ? intval($input['truncate_length']) : 300;
+    $output['truncate_length'] = ($truncate === 0) ? 0 : max(50, min(600, $truncate));
     
     delete_transient('eg_social_timeline_cache');
     
@@ -1172,6 +1201,7 @@ function eg_social_timeline_shortcode($atts) {
     $posts = array_slice($posts, 0, $limit);
     
     $show_stats = !empty($options['show_stats']);
+    $truncate_length = isset($options['truncate_length']) ? intval($options['truncate_length']) : 300;
     
     ob_start();
     ?>
@@ -1249,7 +1279,7 @@ function eg_social_timeline_shortcode($atts) {
                 </header>
                 <div class="timeline-content">
                     <div class="post-text">
-                        <?php echo wp_kses_post(eg_social_timeline_truncate($post['content'], 300)); ?>
+                        <?php echo wp_kses_post($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : esc_html($post['content'])); ?>
                     </div>
                 </div>
                 <footer class="timeline-footer">

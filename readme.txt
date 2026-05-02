@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 
 == Changelog ==
 
+= 1.4.1 - 2026-05-02 =
+* Added: Lunghezza testo post configurabile da admin (default: 300, range: 50-600, 0 = testo completo)
+
 = 1.4.0 - 2026-05-02 =
 * Added: Integrazione Bluesky via API pubblica ATP (nessuna autenticazione richiesta)
 * Added: Nuovo campo admin: Handle Bluesky (es. emanuele.bsky.social)
@@ -215,6 +218,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 * Added: Design responsive e dark mode
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Lunghezza testo post ora configurabile da admin (50-600 caratteri, 0 = testo completo).
 
 = 1.4.0 =
 Nuova integrazione Bluesky via API pubblica ATP. Inserisci il tuo handle nelle impostazioni per aggiungere i post Bluesky alla timeline. Nessuna autenticazione richiesta.

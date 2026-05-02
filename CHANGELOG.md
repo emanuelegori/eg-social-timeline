@@ -6,6 +6,14 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.1] - 2026-05-02
+
+### Added
+- Nuovo campo admin: Lunghezza Testo Post (default: 300, range: 50–600, 0 = testo completo)
+- Troncamento post configurabile per tutte le piattaforme (Mastodon, Diggita, Forgejo, Bluesky)
+
+---
+
 ## [1.4.0] - 2026-05-02
 
 ### Added

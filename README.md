@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.4.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.4.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -180,6 +180,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.4.1] - 2026-05-02
+
+#### Added
+- Lunghezza testo post configurabile da admin (default: 300, range: 50–600, 0 = testo completo senza limiti)
 
 ### [1.4.0] - 2026-05-02
 
