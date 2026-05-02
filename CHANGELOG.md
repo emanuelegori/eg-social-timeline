@@ -6,6 +6,27 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.0] - 2026-05-02
+
+### Added
+- **Integrazione Bluesky** via API pubblica ATP (nessuna autenticazione richiesta)
+- Nuovo campo admin: Handle Bluesky (es. `emanuele.bsky.social`, senza @)
+- Nuovo campo admin: Max Post Bluesky (default: 10, range: 0-100)
+- Funzione `eg_social_timeline_fetch_bluesky()`: recupera post via `app.bsky.feed.getAuthorFeed`
+- Filtro piattaforma Bluesky nella timeline (CSS-only, come le altre piattaforme)
+- Supporto repost Bluesky rispettando l'opzione "Includi Boost/Repost"
+- Statistiche Bluesky: like, repost, risposte
+- Link diretto al post originale su bsky.app
+- `@ ` iniziale nell'handle viene rimosso automaticamente in fase di sanitizzazione
+
+### Changed
+- Validazione "almeno un profilo" aggiornata per includere Bluesky
+- Messaggi di errore admin aggiornati per citare Bluesky
+- `fetch_all_feeds()`: aggiunta chiamata a Bluesky nella pipeline di fetch
+- Default options: aggiunti `bluesky_handle` e `bluesky_limit`
+
+---
+
 ## [1.3.1] - 2026-04-06
 
 ### Security

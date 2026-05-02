@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.3.1
+ * Version: 1.4.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.3.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.4.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -83,7 +83,9 @@ function eg_social_timeline_register_settings() {
                 'show_stats' => true,
                 'mastodon_limit' => 20,
                 'diggita_limit' => 10,
-                'forgejo_limit' => 5
+                'forgejo_limit' => 5,
+                'bluesky_handle' => '',
+                'bluesky_limit' => 10
             )
         )
     );
@@ -126,7 +128,15 @@ function eg_social_timeline_register_settings() {
         'eg-social-timeline',
         'eg_social_timeline_main_section'
     );
-    
+
+    add_settings_field(
+        'eg_social_timeline_bluesky_handle',
+        __('Handle Bluesky', 'eg-social-timeline'),
+        'eg_social_timeline_bluesky_handle_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+
     add_settings_section(
         'eg_social_timeline_limits_section',
         __('Limiti Post per Piattaforma', 'eg-social-timeline'),
@@ -157,7 +167,15 @@ function eg_social_timeline_register_settings() {
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
     );
-    
+
+    add_settings_field(
+        'eg_social_timeline_bluesky_limit',
+        __('Max Post Bluesky', 'eg-social-timeline'),
+        'eg_social_timeline_bluesky_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+
     add_settings_field(
         'eg_social_timeline_post_limit',
         __('Numero Post da Mostrare', 'eg-social-timeline'),
@@ -260,6 +278,39 @@ function eg_social_timeline_forgejo_instance_callback() {
            class="regular-text">
     <p class="description">
         <?php esc_html_e('URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_bluesky_handle_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $handle = isset($options['bluesky_handle']) ? $options['bluesky_handle'] : '';
+    ?>
+    <input type="text"
+           id="eg_social_timeline_bluesky_handle"
+           name="eg_social_timeline_options[bluesky_handle]"
+           value="<?php echo esc_attr($handle); ?>"
+           placeholder="<?php echo esc_attr__('es: emanuele.bsky.social', 'eg-social-timeline'); ?>"
+           class="regular-text">
+    <p class="description">
+        <?php esc_html_e('Handle del tuo profilo Bluesky (senza @). Esempio: emanuele.bsky.social', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_bluesky_limit_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $limit = isset($options['bluesky_limit']) ? $options['bluesky_limit'] : 10;
+    ?>
+    <input type="number"
+           id="eg_social_timeline_bluesky_limit"
+           name="eg_social_timeline_options[bluesky_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -394,23 +445,25 @@ function eg_social_timeline_sanitize_options($input) {
     $mastodon_url = isset($input['mastodon_url']) ? esc_url_raw($input['mastodon_url']) : '';
     $diggita_username = isset($input['diggita_username']) ? sanitize_text_field($input['diggita_username']) : '';
     $forgejo_username = isset($input['forgejo_username']) ? sanitize_text_field($input['forgejo_username']) : '';
-    
-    if (empty($mastodon_url) && empty($diggita_username) && empty($forgejo_username)) {
+    $bluesky_handle = isset($input['bluesky_handle']) ? sanitize_text_field(ltrim($input['bluesky_handle'], '@')) : '';
+
+    if (empty($mastodon_url) && empty($diggita_username) && empty($forgejo_username) && empty($bluesky_handle)) {
         add_settings_error(
             'eg_social_timeline_options',
             'no_profiles',
-            '<strong>' . __('Errore:', 'eg-social-timeline') . '</strong> ' . 
-            __('Devi configurare almeno un profilo social (Mastodon, Diggita o Forgejo).', 'eg-social-timeline'),
+            '<strong>' . __('Errore:', 'eg-social-timeline') . '</strong> ' .
+            __('Devi configurare almeno un profilo social (Mastodon, Diggita, Forgejo o Bluesky).', 'eg-social-timeline'),
             'error'
         );
-        
+
         $old_options = get_option('eg_social_timeline_options');
         return $old_options ? $old_options : array();
     }
-    
+
     $output['mastodon_url'] = $mastodon_url;
     $output['diggita_username'] = $diggita_username;
     $output['forgejo_username'] = $forgejo_username;
+    $output['bluesky_handle'] = $bluesky_handle;
     
     $forgejo_instance = isset($input['forgejo_instance']) ? esc_url_raw($input['forgejo_instance']) : 'https://gitea.com';
     $output['forgejo_instance'] = !empty($forgejo_instance) ? $forgejo_instance : 'https://gitea.com';
@@ -426,7 +479,10 @@ function eg_social_timeline_sanitize_options($input) {
     
     $forgejo_limit = isset($input['forgejo_limit']) ? intval($input['forgejo_limit']) : 5;
     $output['forgejo_limit'] = max(0, min(50, $forgejo_limit));
-    
+
+    $bluesky_limit = isset($input['bluesky_limit']) ? intval($input['bluesky_limit']) : 10;
+    $output['bluesky_limit'] = max(0, min(100, $bluesky_limit));
+
     $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
     
@@ -456,7 +512,7 @@ function eg_social_timeline_admin_notice() {
     
     $options = get_option('eg_social_timeline_options');
     
-    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username'])) {
+    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username']) && empty($options['bluesky_handle'])) {
         ?>
         <div class="notice notice-error">
             <p>
@@ -945,6 +1001,91 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
     return $all_commits;
 }
 
+// Fetch Bluesky posts via public ATP API (no auth required)
+function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
+    if (empty($handle)) {
+        return array();
+    }
+
+    $handle = ltrim($handle, '@');
+    $api_limit = ($limit > 0) ? min($limit, 100) : 10;
+
+    $api_url = 'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?' . http_build_query(array(
+        'actor'  => $handle,
+        'limit'  => $api_limit,
+        'filter' => 'posts_no_replies',
+    ));
+
+    $response = wp_remote_get($api_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline Bluesky Error: ' . $response->get_error_message());
+        }
+        return array();
+    }
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (empty($data['feed']) || !is_array($data['feed'])) {
+        return array();
+    }
+
+    $options = get_option('eg_social_timeline_options');
+    $show_boosts = !empty($options['show_boosts']);
+
+    $posts = array();
+
+    foreach ($data['feed'] as $item) {
+        $is_repost = isset($item['reason']['$type']) && $item['reason']['$type'] === 'app.bsky.feed.defs#reasonRepost';
+
+        if ($is_repost && !$show_boosts) {
+            continue;
+        }
+
+        $post = $item['post'];
+        $record = $post['record'] ?? array();
+
+        $content = isset($record['text']) ? sanitize_text_field($record['text']) : '';
+        if (empty($content)) {
+            continue;
+        }
+
+        $created_at = isset($record['createdAt']) ? $record['createdAt'] : ($post['indexedAt'] ?? '');
+        $timestamp = $created_at ? strtotime($created_at) : 0;
+        if (!$timestamp) {
+            continue;
+        }
+
+        // Build post URL from URI: at://did:.../app.bsky.feed.post/{rkey}
+        $uri = $post['uri'] ?? '';
+        $rkey = $uri ? basename($uri) : '';
+        $post_url = ($rkey && !empty($post['author']['handle']))
+            ? 'https://bsky.app/profile/' . rawurlencode($post['author']['handle']) . '/post/' . rawurlencode($rkey)
+            : 'https://bsky.app/profile/' . rawurlencode($handle);
+
+        $title_parts = explode("\n", $content);
+        $title = trim($title_parts[0]);
+
+        $posts[] = array(
+            'platform'        => 'bluesky',
+            'date'            => $timestamp,
+            'title'           => $title,
+            'content'         => $content,
+            'link'            => $post_url,
+            'is_boost'        => $is_repost,
+            'favourites_count' => intval($post['likeCount'] ?? 0),
+            'reblogs_count'   => intval($post['repostCount'] ?? 0),
+            'replies_count'   => intval($post['replyCount'] ?? 0),
+        );
+    }
+
+    return $posts;
+}
+
 // Fetch and merge all feeds
 function eg_social_timeline_fetch_all_feeds() {
     $cached = get_transient('eg_social_timeline_cache');
@@ -958,24 +1099,30 @@ function eg_social_timeline_fetch_all_feeds() {
     
     // Get platform limits
     $mastodon_limit = isset($options['mastodon_limit']) ? intval($options['mastodon_limit']) : 20;
-    $diggita_limit = isset($options['diggita_limit']) ? intval($options['diggita_limit']) : 10;
-    $forgejo_limit = isset($options['forgejo_limit']) ? intval($options['forgejo_limit']) : 5;
-    
+    $diggita_limit  = isset($options['diggita_limit'])  ? intval($options['diggita_limit'])  : 10;
+    $forgejo_limit  = isset($options['forgejo_limit'])  ? intval($options['forgejo_limit'])  : 5;
+    $bluesky_limit  = isset($options['bluesky_limit'])  ? intval($options['bluesky_limit'])  : 10;
+
     // Fetch with limits
     if (!empty($options['mastodon_url'])) {
         $mastodon_posts = eg_social_timeline_fetch_mastodon($options['mastodon_url'], $mastodon_limit);
         $all_posts = array_merge($all_posts, $mastodon_posts);
     }
-    
+
     if (!empty($options['diggita_username'])) {
         $diggita_posts = eg_social_timeline_fetch_diggita($options['diggita_username'], $diggita_limit);
         $all_posts = array_merge($all_posts, $diggita_posts);
     }
-    
+
     if (!empty($options['forgejo_username'])) {
         $forgejo_instance = !empty($options['forgejo_instance']) ? $options['forgejo_instance'] : 'https://gitea.com';
         $forgejo_posts = eg_social_timeline_fetch_forgejo($options['forgejo_username'], $forgejo_instance, $forgejo_limit);
         $all_posts = array_merge($all_posts, $forgejo_posts);
+    }
+
+    if (!empty($options['bluesky_handle'])) {
+        $bluesky_posts = eg_social_timeline_fetch_bluesky($options['bluesky_handle'], $bluesky_limit);
+        $all_posts = array_merge($all_posts, $bluesky_posts);
     }
     
     usort($all_posts, function($a, $b) {
@@ -994,7 +1141,7 @@ add_shortcode('eg_social_timeline', 'eg_social_timeline_shortcode');
 function eg_social_timeline_shortcode($atts) {
     $options = get_option('eg_social_timeline_options');
     
-    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username'])) {
+    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username']) && empty($options['bluesky_handle'])) {
         if (current_user_can('manage_options')) {
             return '<div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
                 <strong>' . esc_html__('EG Social Timeline - Configurazione Richiesta', 'eg-social-timeline') . '</strong><br>

@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.3.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.4.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy) e **Forgejo/Gitea**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy), **Forgejo/Gitea** e **Bluesky**.
 
 ---
 
@@ -16,7 +16,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
   - **Mastodon** (e compatibili ActivityPub)
   - **Diggita** (Lemmy) con statistiche complete
   - **Forgejo/Gitea** (commit repository)
-  - **Bluesky** (in sviluppo)
+  - **Bluesky** (API pubblica ATP, nessuna autenticazione)
 - **Limiti Configurabili per Piattaforma**: Previene che una piattaforma monopolizzi la timeline
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
@@ -57,10 +57,12 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
    - **Mastodon**: URL completo profilo (es: `https://mastodon.uno/@emanuelegori`)
    - **Diggita**: Username (senza @)
    - **Forgejo**: Username + URL istanza (es: `https://git.emanuelegori.uno`)
-3. **NUOVO v1.3.0**: Configura limiti per piattaforma (opzionale):
+   - **Bluesky**: Handle (es: `emanuele.bsky.social`, senza @)
+3. Configura limiti per piattaforma (opzionale):
    - Max post Mastodon (default: 20, 0 = illimitato)
    - Max post Diggita (default: 10, 0 = illimitato)
    - Max commit Forgejo (default: 5, 0 = illimitato)
+   - Max post Bluesky (default: 10, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
 5. Salva
 
@@ -173,10 +175,26 @@ eg-social-timeline/
 - **Mastodon**: `/api/v1/accounts/{id}/statuses`
 - **Diggita**: RSS `/feeds/u/{username}.xml` (con parsing statistiche)
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
+- **Bluesky**: `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed` (pubblica, nessun token)
 
 ---
 
 ## Changelog
+
+### [1.4.0] - 2026-05-02
+
+#### Added
+- Integrazione Bluesky via API pubblica ATP (`app.bsky.feed.getAuthorFeed`)
+- Nuovo campo admin: Handle Bluesky (es. `emanuele.bsky.social`, senza @)
+- Nuovo campo admin: Max Post Bluesky (default: 10, range: 0-100)
+- Filtro piattaforma Bluesky nella timeline (CSS-only)
+- Statistiche Bluesky: like, repost, risposte
+- Supporto repost rispettando l'opzione "Includi Boost/Repost"
+- Rimozione automatica `@` iniziale dall'handle in fase di sanitizzazione
+
+#### Changed
+- Validazione "almeno un profilo" estesa a Bluesky
+- Messaggi di errore admin aggiornati
 
 ### [1.3.1] - 2026-04-06
 

@@ -4,11 +4,11 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita (Lemmy) e Forgejo/Gitea.
+Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita (Lemmy), Forgejo/Gitea e Bluesky.
 
 == Description ==
 
@@ -20,7 +20,8 @@ EG Social Timeline è un plugin WordPress che aggrega e mostra in ordine cronolo
 * Supporto Mastodon (e compatibili ActivityPub)
 * Supporto Diggita (Lemmy) con statistiche complete
 * Supporto Forgejo/Gitea per commit repository
-* **NUOVO v1.3.0**: Limiti configurabili per piattaforma
+* **NUOVO v1.4.0**: Integrazione Bluesky via API pubblica ATP
+* Limiti configurabili per piattaforma
 * Filtri CSS interattivi per mostrare/nascondere piattaforme
 * Sistema icone SVG modulare e personalizzabile
 * Cache intelligente configurabile
@@ -33,15 +34,26 @@ EG Social Timeline è un plugin WordPress che aggrega e mostra in ordine cronolo
 * **Mastodon**: Qualsiasi istanza compatibile ActivityPub
 * **Diggita**: Piattaforma Lemmy italiana
 * **Forgejo/Gitea**: Repository Git self-hosted
-* **Bluesky**: In sviluppo
+* **Bluesky**: API pubblica ATP, nessuna autenticazione richiesta
 
-= NUOVO nella v1.3.0 =
+= NUOVO nella v1.4.0 =
+
+Integrazione completa con **Bluesky** tramite API pubblica ATP:
+
+* Inserisci il tuo handle (es. `emanuele.bsky.social`) nelle impostazioni
+* Nessuna autenticazione o token richiesti
+* Statistiche complete: like, repost, risposte
+* Filtro piattaforma CSS-only nella timeline
+* Supporto repost configurabile
+
+= v1.3.0 =
 
 Configura limiti massimi per ciascuna piattaforma nelle impostazioni:
 
 * Max post Mastodon (default: 20, 0 = illimitato)
 * Max post Diggita (default: 10, 0 = illimitato)
 * Max commit Forgejo (default: 5, 0 = illimitato)
+* Max post Bluesky (default: 10, 0 = illimitato)
 
 Questo previene che una piattaforma molto attiva (es: Forgejo con molti commit) monopolizzi tutti gli slot disponibili nella timeline, garantendo un mix equilibrato di contenuti.
 
@@ -70,7 +82,7 @@ Con limite personalizzato:
 2. Attiva il plugin tramite il menu 'Plugin' in WordPress
 3. Vai su Impostazioni → EG Social Timeline
 4. Configura almeno un profilo social
-5. **NUOVO v1.3.0**: Configura opzionalmente i limiti per piattaforma
+5. Configura opzionalmente i limiti per piattaforma
 6. Inserisci lo shortcode `[eg_social_timeline]` dove desideri mostrare la timeline
 
 = Configurazione Minima =
@@ -78,8 +90,9 @@ Con limite personalizzato:
 * URL profilo Mastodon (es: https://mastodon.uno/@username)
 * OPPURE Username Diggita
 * OPPURE Username Forgejo + URL istanza
+* OPPURE Handle Bluesky (es: emanuele.bsky.social)
 
-= Configurazione Avanzata (v1.3.0+) =
+= Configurazione Avanzata =
 
 * Limiti post per piattaforma (previene monopolizzazione)
 * Durata cache (da 30 minuti a 24 ore)
@@ -90,7 +103,7 @@ Con limite personalizzato:
 
 = Quali piattaforme sono supportate? =
 
-Attualmente: Mastodon (e compatibili ActivityPub), Diggita (Lemmy), Forgejo/Gitea. Bluesky è in sviluppo.
+Mastodon (e compatibili ActivityPub), Diggita (Lemmy), Forgejo/Gitea, Bluesky.
 
 = Come funzionano i limiti per piattaforma (v1.3.0)? =
 
@@ -131,6 +144,14 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 5. Supporto dark mode automatico
 
 == Changelog ==
+
+= 1.4.0 - 2026-05-02 =
+* Added: Integrazione Bluesky via API pubblica ATP (nessuna autenticazione richiesta)
+* Added: Nuovo campo admin: Handle Bluesky (es. emanuele.bsky.social)
+* Added: Nuovo campo admin: Max Post Bluesky (default: 10, range: 0-100)
+* Added: Filtro piattaforma Bluesky nella timeline
+* Added: Statistiche Bluesky: like, repost, risposte
+* Changed: Validazione "almeno un profilo" estesa a Bluesky
 
 = 1.3.1 - 2026-04-06 =
 * Security: Aggiunto LIBXML_NONET al parsing XML Diggita (anti-XXE)
@@ -194,6 +215,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 * Added: Design responsive e dark mode
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Nuova integrazione Bluesky via API pubblica ATP. Inserisci il tuo handle nelle impostazioni per aggiungere i post Bluesky alla timeline. Nessuna autenticazione richiesta.
 
 = 1.3.1 =
 Fix sicurezza: protezione XXE su parsing RSS, sanitizzazione SVG inline, validazione anti-SSRF su URL API. Aggiornamento consigliato.
