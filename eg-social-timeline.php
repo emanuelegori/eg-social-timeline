@@ -1279,7 +1279,7 @@ function eg_social_timeline_shortcode($atts) {
                 </header>
                 <div class="timeline-content">
                     <div class="post-text">
-                        <?php echo wp_kses_post($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : esc_html($post['content'])); ?>
+                        <?php echo esc_html($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : strip_tags($post['content'])); ?>
                     </div>
                 </div>
                 <footer class="timeline-footer">
