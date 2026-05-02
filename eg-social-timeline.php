@@ -1008,7 +1008,7 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
     }
 
     $handle = ltrim($handle, '@');
-    $api_limit = ($limit > 0) ? min($limit, 100) : 10;
+    $api_limit = ($limit > 0) ? min($limit, 100) : 100;
 
     $api_url = 'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?' . http_build_query(array(
         'actor'  => $handle,
@@ -1046,7 +1046,10 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
             continue;
         }
 
-        $post = $item['post'];
+        $post = $item['post'] ?? null;
+        if (empty($post) || !is_array($post)) {
+            continue;
+        }
         $record = $post['record'] ?? array();
 
         $content = isset($record['text']) ? sanitize_text_field($record['text']) : '';
