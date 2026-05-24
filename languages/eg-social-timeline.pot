@@ -1,0 +1,376 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Emanuele Gori
+# This file is distributed under the same license as the EG Social Timeline package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: EG Social Timeline 1.4.1\n"
+"Report-Msgid-Bugs-To: gori.emanuele@gmail.com\n"
+"POT-Creation-Date: 2026-05-24 16:27+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1392
+#, php-format
+msgid "%s giorno fa"
+msgid_plural "%s giorni fa"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1386
+#, php-format
+msgid "%s minuto fa"
+msgid_plural "%s minuti fa"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1389
+#, php-format
+msgid "%s ora fa"
+msgid_plural "%s ore fa"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1337
+msgid "Bluesky"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1297
+msgid "Boost"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:634
+msgid "Cache svuotata con successo!"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1304
+msgid "Commenti"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:223
+msgid ""
+"Configura i tuoi profili social per mostrare una timeline unificata. Almeno "
+"un profilo è obbligatorio."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:551
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1181
+msgid "Configura ora"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:96
+msgid "Configurazione Profili Social"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:481
+msgid ""
+"Devi configurare almeno un profilo social (Mastodon, Diggita, Forgejo o "
+"Bluesky)."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1336
+msgid "Diggita"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1434
+msgid "Documentazione"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:190
+msgid "Durata Cache"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:58
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:59
+msgid "EG Social Timeline"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1179
+msgid "EG Social Timeline - Configurazione Richiesta"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:548
+msgid "EG Social Timeline richiede configurazione!"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:599
+#, php-format
+msgid "EG Social Timeline v%s"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:480
+msgid "Errore:"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1338
+msgid "Forgejo"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:135
+msgid "Handle Bluesky"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:305
+msgid "Handle del tuo profilo Bluesky (senza @). Esempio: emanuele.bsky.social"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:549
+msgid "Il plugin è attivo ma nessun profilo social è configurato."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1433
+msgid "Impostazioni"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:526
+msgid "Impostazioni salvate correttamente! Cache pulita."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:198
+msgid "Includi Boost/Repost"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:424
+msgid "Includi boost e repost nella timeline"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:582
+msgid "Inserisci nel contenuto dell'articolo:"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:607
+msgid "Licenza GPL-2.0-or-later"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:227
+msgid ""
+"Limita il numero massimo di post per ciascuna piattaforma. Questo previene "
+"che una piattaforma molto attiva (es: Forgejo) monopolizzi tutti gli slot "
+"disponibili. Imposta 0 per nessun limite."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:143
+msgid "Limiti Post per Piattaforma"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:214
+msgid "Lunghezza Testo Post"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1335
+msgid "Mastodon"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:166
+msgid "Max Commit Forgejo"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:174
+msgid "Max Post Bluesky"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:158
+msgid "Max Post Diggita"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:150
+msgid "Max Post Mastodon"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:206
+msgid "Mostra Statistiche"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:442
+msgid "Mostra conteggi like/boost/risposte"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1197
+msgid "Nessun post disponibile al momento."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1180
+msgid "Nessun profilo social configurato."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:182
+msgid "Numero Post da Mostrare"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:462
+msgid ""
+"Numero massimo di caratteri mostrati per ogni post (50–600). Imposta 0 per "
+"mostrare il testo completo senza limiti (sconsigliato: può compromettere il "
+"layout su mobile). Default: 300"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:373
+msgid ""
+"Numero massimo di commit Forgejo TOTALI da recuperare (0 = illimitato). "
+"Default: 5"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:322
+msgid ""
+"Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:356
+msgid ""
+"Numero massimo di post Diggita da recuperare (0 = illimitato). Default: 10"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:339
+msgid ""
+"Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:390
+msgid "Numero massimo di post da mostrare nella timeline (1-100). Default: 10"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:585
+msgid "Opzionale: limita il numero di post:"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:589
+msgid "Per forzare l'aggiornamento immediato dei feed:"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1290
+msgid "Preferiti"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1290
+msgid "Punti"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:606
+msgid "Repository"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1304
+msgid "Risposte"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:572
+msgid "Salva Impostazioni"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:427
+msgid "Se disabilitato, mostra solo post originali (nessun boost/reblog)."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:581
+msgid "Shortcode"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:602
+#, php-format
+msgid "Sviluppato da %s"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:588
+msgid "Svuota Cache Manualmente"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:593
+msgid "Svuota Cache Ora"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:409
+msgid ""
+"Tempo di cache dei feed. Cache più lunga = meno richieste ai server. "
+"Default: 1 ora"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:127
+msgid "URL Istanza Forgejo/Gitea"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:103
+msgid "URL Profilo Mastodon"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:241
+msgid ""
+"URL completo del tuo profilo pubblico Mastodon (o altre istanze Fediverso)."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:289
+msgid ""
+"URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:579
+msgid ""
+"Una volta configurato, puoi inserire la timeline nei tuoi articoli usando:"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:111
+msgid "Username Diggita"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:257
+msgid "Username Diggita (senza @)."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:119
+msgid "Username Forgejo/Gitea"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:273
+msgid "Username del tuo account Forgejo/Gitea (senza @)."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:578
+msgid "Utilizzo"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1318
+msgid "Vedi commit"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1320
+msgid "Vedi post originale"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:445
+msgid "Visualizza le statistiche di interazione sotto ogni post."
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:302
+msgid "es: emanuele.bsky.social"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:254
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:270
+msgid "es: emanuelegori"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:238
+msgid "es: https://mastodon.uno/@emanuelegori"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:401
+msgid "minuti"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:402
+msgid "ora"
+msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:403
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:404
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:405
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:406
+msgid "ore"
+msgstr ""

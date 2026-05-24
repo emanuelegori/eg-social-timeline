@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.4.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.4.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -180,6 +180,17 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.4.2] - 2026-05-24
+
+#### Added
+- Traduzioni italiano (`it_IT`) e inglese (`en_US`) con file `.pot`, `.po` e `.mo`
+
+#### Fixed
+- Link "Vedi post originale" / "Vedi commit" sempre allineato a destra nel footer, anche senza statistiche
+
+#### Changed
+- Cache ID account Mastodon estesa da 24 ore a 30 giorni
 
 ### [1.4.1] - 2026-05-02
 

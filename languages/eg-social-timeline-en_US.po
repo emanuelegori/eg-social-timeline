@@ -1,0 +1,354 @@
+# English translations for EG Social Timeline package.
+# Copyright (C) 2026 Emanuele Gori
+# This file is distributed under the same license as the EG Social Timeline package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EG Social Timeline 1.4.1\n"
+"Report-Msgid-Bugs-To: gori.emanuele@gmail.com\n"
+"POT-Creation-Date: 2026-05-24 16:27+0200\n"
+"PO-Revision-Date: 2026-05-24 16:27+0200\n"
+"Last-Translator: Emanuele Gori <gori.emanuele@gmail.com>\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: eg-social-timeline.php:1392
+#, php-format
+msgid "%s giorno fa"
+msgid_plural "%s giorni fa"
+msgstr[0] "%s day ago"
+msgstr[1] "%s days ago"
+
+#: eg-social-timeline.php:1386
+#, php-format
+msgid "%s minuto fa"
+msgid_plural "%s minuti fa"
+msgstr[0] "%s minute ago"
+msgstr[1] "%s minutes ago"
+
+#: eg-social-timeline.php:1389
+#, php-format
+msgid "%s ora fa"
+msgid_plural "%s ore fa"
+msgstr[0] "%s hour ago"
+msgstr[1] "%s hours ago"
+
+#: eg-social-timeline.php:1337
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#: eg-social-timeline.php:1297
+msgid "Boost"
+msgstr "Boost"
+
+#: eg-social-timeline.php:634
+msgid "Cache svuotata con successo!"
+msgstr "Cache cleared successfully!"
+
+#: eg-social-timeline.php:1304
+msgid "Commenti"
+msgstr "Comments"
+
+#: eg-social-timeline.php:223
+msgid "Configura i tuoi profili social per mostrare una timeline unificata. Almeno un profilo è obbligatorio."
+msgstr "Configure your social profiles to display a unified timeline. At least one profile is required."
+
+#: eg-social-timeline.php:551
+#: eg-social-timeline.php:1181
+msgid "Configura ora"
+msgstr "Configure now"
+
+#: eg-social-timeline.php:96
+msgid "Configurazione Profili Social"
+msgstr "Social Profiles Configuration"
+
+#: eg-social-timeline.php:481
+msgid "Devi configurare almeno un profilo social (Mastodon, Diggita, Forgejo o Bluesky)."
+msgstr "You must configure at least one social profile (Mastodon, Diggita, Forgejo or Bluesky)."
+
+#: eg-social-timeline.php:1336
+msgid "Diggita"
+msgstr "Diggita"
+
+#: eg-social-timeline.php:1434
+msgid "Documentazione"
+msgstr "Documentation"
+
+#: eg-social-timeline.php:190
+msgid "Durata Cache"
+msgstr "Cache Duration"
+
+#: eg-social-timeline.php:58
+#: eg-social-timeline.php:59
+msgid "EG Social Timeline"
+msgstr "EG Social Timeline"
+
+#: eg-social-timeline.php:1179
+msgid "EG Social Timeline - Configurazione Richiesta"
+msgstr "EG Social Timeline - Configuration Required"
+
+#: eg-social-timeline.php:548
+msgid "EG Social Timeline richiede configurazione!"
+msgstr "EG Social Timeline requires configuration!"
+
+#: eg-social-timeline.php:599
+#, php-format
+msgid "EG Social Timeline v%s"
+msgstr "EG Social Timeline v%s"
+
+#: eg-social-timeline.php:480
+msgid "Errore:"
+msgstr "Error:"
+
+#: eg-social-timeline.php:1338
+msgid "Forgejo"
+msgstr "Forgejo"
+
+#: eg-social-timeline.php:135
+msgid "Handle Bluesky"
+msgstr "Bluesky Handle"
+
+#: eg-social-timeline.php:305
+msgid "Handle del tuo profilo Bluesky (senza @). Esempio: emanuele.bsky.social"
+msgstr "Your Bluesky profile handle (without @). Example: emanuele.bsky.social"
+
+#: eg-social-timeline.php:549
+msgid "Il plugin è attivo ma nessun profilo social è configurato."
+msgstr "The plugin is active but no social profile is configured."
+
+#: eg-social-timeline.php:1433
+msgid "Impostazioni"
+msgstr "Settings"
+
+#: eg-social-timeline.php:526
+msgid "Impostazioni salvate correttamente! Cache pulita."
+msgstr "Settings saved successfully! Cache cleared."
+
+#: eg-social-timeline.php:198
+msgid "Includi Boost/Repost"
+msgstr "Include Boosts/Reposts"
+
+#: eg-social-timeline.php:424
+msgid "Includi boost e repost nella timeline"
+msgstr "Include boosts and reposts in the timeline"
+
+#: eg-social-timeline.php:582
+msgid "Inserisci nel contenuto dell'articolo:"
+msgstr "Insert into post content:"
+
+#: eg-social-timeline.php:607
+msgid "Licenza GPL-2.0-or-later"
+msgstr "License GPL-2.0-or-later"
+
+#: eg-social-timeline.php:227
+msgid "Limita il numero massimo di post per ciascuna piattaforma. Questo previene che una piattaforma molto attiva (es: Forgejo) monopolizzi tutti gli slot disponibili. Imposta 0 per nessun limite."
+msgstr "Limit the maximum number of posts per platform. This prevents a very active platform (e.g. Forgejo) from taking up all available slots. Set 0 for no limit."
+
+#: eg-social-timeline.php:143
+msgid "Limiti Post per Piattaforma"
+msgstr "Per-Platform Post Limits"
+
+#: eg-social-timeline.php:214
+msgid "Lunghezza Testo Post"
+msgstr "Post Text Length"
+
+#: eg-social-timeline.php:1335
+msgid "Mastodon"
+msgstr "Mastodon"
+
+#: eg-social-timeline.php:166
+msgid "Max Commit Forgejo"
+msgstr "Max Forgejo Commits"
+
+#: eg-social-timeline.php:174
+msgid "Max Post Bluesky"
+msgstr "Max Bluesky Posts"
+
+#: eg-social-timeline.php:158
+msgid "Max Post Diggita"
+msgstr "Max Diggita Posts"
+
+#: eg-social-timeline.php:150
+msgid "Max Post Mastodon"
+msgstr "Max Mastodon Posts"
+
+#: eg-social-timeline.php:206
+msgid "Mostra Statistiche"
+msgstr "Show Statistics"
+
+#: eg-social-timeline.php:442
+msgid "Mostra conteggi like/boost/risposte"
+msgstr "Show like/boost/reply counts"
+
+#: eg-social-timeline.php:1197
+msgid "Nessun post disponibile al momento."
+msgstr "No posts available at the moment."
+
+#: eg-social-timeline.php:1180
+msgid "Nessun profilo social configurato."
+msgstr "No social profile configured."
+
+#: eg-social-timeline.php:182
+msgid "Numero Post da Mostrare"
+msgstr "Number of Posts to Display"
+
+#: eg-social-timeline.php:462
+msgid "Numero massimo di caratteri mostrati per ogni post (50–600). Imposta 0 per mostrare il testo completo senza limiti (sconsigliato: può compromettere il layout su mobile). Default: 300"
+msgstr "Maximum number of characters shown per post (50–600). Set 0 to show full text without limits (not recommended: may break mobile layout). Default: 300"
+
+#: eg-social-timeline.php:373
+msgid "Numero massimo di commit Forgejo TOTALI da recuperare (0 = illimitato). Default: 5"
+msgstr "Maximum number of TOTAL Forgejo commits to fetch (0 = unlimited). Default: 5"
+
+#: eg-social-timeline.php:322
+msgid "Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10"
+msgstr "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10"
+
+#: eg-social-timeline.php:356
+msgid "Numero massimo di post Diggita da recuperare (0 = illimitato). Default: 10"
+msgstr "Maximum number of Diggita posts to fetch (0 = unlimited). Default: 10"
+
+#: eg-social-timeline.php:339
+msgid "Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20"
+msgstr "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20"
+
+#: eg-social-timeline.php:390
+msgid "Numero massimo di post da mostrare nella timeline (1-100). Default: 10"
+msgstr "Maximum number of posts to display in the timeline (1-100). Default: 10"
+
+#: eg-social-timeline.php:585
+msgid "Opzionale: limita il numero di post:"
+msgstr "Optional: limit the number of posts:"
+
+#: eg-social-timeline.php:589
+msgid "Per forzare l'aggiornamento immediato dei feed:"
+msgstr "To force an immediate feed refresh:"
+
+#: eg-social-timeline.php:1290
+msgid "Preferiti"
+msgstr "Favourites"
+
+#: eg-social-timeline.php:1290
+msgid "Punti"
+msgstr "Points"
+
+#: eg-social-timeline.php:606
+msgid "Repository"
+msgstr "Repository"
+
+#: eg-social-timeline.php:1304
+msgid "Risposte"
+msgstr "Replies"
+
+#: eg-social-timeline.php:572
+msgid "Salva Impostazioni"
+msgstr "Save Settings"
+
+#: eg-social-timeline.php:427
+msgid "Se disabilitato, mostra solo post originali (nessun boost/reblog)."
+msgstr "If disabled, shows only original posts (no boosts/reblogs)."
+
+#: eg-social-timeline.php:581
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: eg-social-timeline.php:602
+#, php-format
+msgid "Sviluppato da %s"
+msgstr "Developed by %s"
+
+#: eg-social-timeline.php:588
+msgid "Svuota Cache Manualmente"
+msgstr "Clear Cache Manually"
+
+#: eg-social-timeline.php:593
+msgid "Svuota Cache Ora"
+msgstr "Clear Cache Now"
+
+#: eg-social-timeline.php:409
+msgid "Tempo di cache dei feed. Cache più lunga = meno richieste ai server. Default: 1 ora"
+msgstr "Feed cache duration. Longer cache = fewer requests to servers. Default: 1 hour"
+
+#: eg-social-timeline.php:127
+msgid "URL Istanza Forgejo/Gitea"
+msgstr "Forgejo/Gitea Instance URL"
+
+#: eg-social-timeline.php:103
+msgid "URL Profilo Mastodon"
+msgstr "Mastodon Profile URL"
+
+#: eg-social-timeline.php:241
+msgid "URL completo del tuo profilo pubblico Mastodon (o altre istanze Fediverso)."
+msgstr "Full URL of your public Mastodon profile (or other Fediverse instances)."
+
+#: eg-social-timeline.php:289
+msgid "URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com"
+msgstr "Full URL of your Forgejo/Gitea instance. Default: https://gitea.com"
+
+#: eg-social-timeline.php:579
+msgid "Una volta configurato, puoi inserire la timeline nei tuoi articoli usando:"
+msgstr "Once configured, you can insert the timeline into your posts using:"
+
+#: eg-social-timeline.php:111
+msgid "Username Diggita"
+msgstr "Diggita Username"
+
+#: eg-social-timeline.php:257
+msgid "Username Diggita (senza @)."
+msgstr "Diggita username (without @)."
+
+#: eg-social-timeline.php:119
+msgid "Username Forgejo/Gitea"
+msgstr "Forgejo/Gitea Username"
+
+#: eg-social-timeline.php:273
+msgid "Username del tuo account Forgejo/Gitea (senza @)."
+msgstr "Your Forgejo/Gitea account username (without @)."
+
+#: eg-social-timeline.php:578
+msgid "Utilizzo"
+msgstr "Usage"
+
+#: eg-social-timeline.php:1318
+msgid "Vedi commit"
+msgstr "View commits"
+
+#: eg-social-timeline.php:1320
+msgid "Vedi post originale"
+msgstr "View original post"
+
+#: eg-social-timeline.php:445
+msgid "Visualizza le statistiche di interazione sotto ogni post."
+msgstr "Display interaction statistics below each post."
+
+#: eg-social-timeline.php:302
+msgid "es: emanuele.bsky.social"
+msgstr "e.g. emanuele.bsky.social"
+
+#: eg-social-timeline.php:254
+#: eg-social-timeline.php:270
+msgid "es: emanuelegori"
+msgstr "e.g. emanuelegori"
+
+#: eg-social-timeline.php:238
+msgid "es: https://mastodon.uno/@emanuelegori"
+msgstr "e.g. https://mastodon.social/@yourusername"
+
+#: eg-social-timeline.php:401
+msgid "minuti"
+msgstr "minutes"
+
+#: eg-social-timeline.php:402
+msgid "ora"
+msgstr "hour"
+
+#: eg-social-timeline.php:403
+#: eg-social-timeline.php:404
+#: eg-social-timeline.php:405
+#: eg-social-timeline.php:406
+msgid "ore"
+msgstr "hours"

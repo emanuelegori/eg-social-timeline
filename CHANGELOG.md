@@ -6,6 +6,19 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.2] - 2026-05-24
+
+### Added
+- Traduzioni italiano (`it_IT`) e inglese (`en_US`) con file `.pot`, `.po` e `.mo`
+
+### Fixed
+- Link "Vedi post originale" / "Vedi commit" sempre allineato a destra nel footer del post, anche in assenza di statistiche interazione
+
+### Changed
+- Cache ID account Mastodon estesa da 24 ore a 30 giorni (`MONTH_IN_SECONDS`): il dato non cambia mai durante la vita dell'account
+
+---
+
 ## [1.4.1] - 2026-05-02
 
 ### Added

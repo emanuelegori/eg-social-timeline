@@ -269,6 +269,7 @@
     font-size: 0.9em;
     font-weight: 500;
     transition: color 0.2s;
+    margin-left: auto;
 }
 
 .view-original:hover {

@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,11 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 
 == Changelog ==
 
+= 1.4.2 - 2026-05-24 =
+* Added: Traduzioni italiano e inglese (file .pot, .po, .mo)
+* Fixed: Link "Vedi post originale" / "Vedi commit" sempre a destra anche senza statistiche
+* Changed: Cache ID account Mastodon estesa a 30 giorni
+
 = 1.4.1 - 2026-05-02 =
 * Added: Lunghezza testo post configurabile da admin (default: 300, range: 50-600, 0 = testo completo)
 
@@ -218,6 +223,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 * Added: Design responsive e dark mode
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+Aggiunte traduzioni italiano/inglese. Fix allineamento link footer. Cache ID Mastodon estesa a 30 giorni.
 
 = 1.4.1 =
 Lunghezza testo post ora configurabile da admin (50-600 caratteri, 0 = testo completo).
