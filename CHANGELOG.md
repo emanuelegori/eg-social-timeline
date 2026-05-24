@@ -6,6 +6,13 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.4] - 2026-05-24
+
+### Fixed
+- Forgejo: il parametro `sort=recentupdate` non è supportato dall'endpoint `/users/{username}/repos` — sostituito con ordinamento client-side per `updated_at` decrescente tramite `usort()`
+
+---
+
 ## [1.4.3] - 2026-05-24
 
 ### Added

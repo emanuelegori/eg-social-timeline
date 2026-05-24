@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.4.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.4.4-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -180,6 +180,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.4.4] - 2026-05-24
+
+#### Fixed
+- Forgejo: ordinamento repo per `updated_at` lato client con `usort()` — il parametro `sort=recentupdate` non è supportato dall'endpoint `/users/{username}/repos`
 
 ### [1.4.3] - 2026-05-24
 

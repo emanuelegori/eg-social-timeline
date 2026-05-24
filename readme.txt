@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 5. Supporto dark mode automatico
 
 == Changelog ==
+
+= 1.4.4 - 2026-05-24 =
+* Fixed: Forgejo: ordinamento repo per updated_at lato client (sort=recentupdate non supportato dall'API)
 
 = 1.4.3 - 2026-05-24 =
 * Added: Supporto anteprime immagini (opzione admin, default disabilitato)
