@@ -950,9 +950,9 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
         return array();
     }
     
-    // Step 1: Get list of public repositories sorted by most recently updated
+    // Step 1: Get list of public repositories
     $repos_url = $instance_url . '/api/v1/users/' . sanitize_text_field($username) . '/repos'
-        . '?sort=recentupdate&limit=50';
+        . '?limit=50';
 
     $repos_response = wp_remote_get($repos_url, array(
         'timeout' => 15,
@@ -973,10 +973,14 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
         return array();
     }
 
-    // Filter to public repos only (already sorted by recentupdate)
+    // Filter to public repos only and sort by updated_at descending
     $public_repos = array_values(array_filter($repositories, function($repo) {
         return empty($repo['private']);
     }));
+
+    usort($public_repos, function($a, $b) {
+        return strtotime($b['updated_at']) - strtotime($a['updated_at']);
+    });
 
     if (empty($public_repos)) {
         return array();
