@@ -4,7 +4,7 @@ Tags: mastodon, fediverse, social, timeline, lemmy, forgejo, activitypub
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,12 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 
 == Changelog ==
 
+= 1.4.3 - 2026-05-24 =
+* Added: Supporto anteprime immagini (opzione admin, default disabilitato)
+* Added: Mastodon: estrazione prima immagine allegata con preview_url e testo alt
+* Fixed: Forgejo: repo ordinati per ultimo push (sort=recentupdate), fix esclusione repo recenti
+* Changed: Struttura post unificata con campi image_url e image_alt su tutte le piattaforme
+
 = 1.4.2 - 2026-05-24 =
 * Added: Traduzioni italiano e inglese (file .pot, .po, .mo)
 * Fixed: Link "Vedi post originale" / "Vedi commit" sempre a destra anche senza statistiche
@@ -223,6 +229,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 * Added: Design responsive e dark mode
 
 == Upgrade Notice ==
+
+= 1.4.3 =
+Anteprime immagini Mastodon (opzione admin). Fix importante Forgejo: i commit mostrati ora provengono dai repo più recentemente aggiornati.
 
 = 1.4.2 =
 Aggiunte traduzioni italiano/inglese. Fix allineamento link footer. Cache ID Mastodon estesa a 30 giorni.

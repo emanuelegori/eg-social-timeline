@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.4.2
+ * Version: 1.4.3
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.4.2');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.4.3');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -86,7 +86,8 @@ function eg_social_timeline_register_settings() {
                 'forgejo_limit' => 5,
                 'bluesky_handle' => '',
                 'bluesky_limit' => 10,
-                'truncate_length' => 300
+                'truncate_length' => 300,
+                'show_images' => false
             )
         )
     );
@@ -213,6 +214,14 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_truncate_length',
         __('Lunghezza Testo Post', 'eg-social-timeline'),
         'eg_social_timeline_truncate_length_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_show_images',
+        __('Mostra Anteprime Immagini', 'eg-social-timeline'),
+        'eg_social_timeline_show_images_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
     );
@@ -447,6 +456,24 @@ function eg_social_timeline_show_stats_callback() {
     <?php
 }
 
+function eg_social_timeline_show_images_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $show = !empty($options['show_images']);
+    ?>
+    <label>
+        <input type="checkbox"
+               id="eg_social_timeline_show_images"
+               name="eg_social_timeline_options[show_images]"
+               value="1"
+               <?php checked($show, 1); ?>>
+        <?php esc_html_e('Mostra la prima immagine allegata ai post (quando disponibile)', 'eg-social-timeline'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('Supportato da Mastodon e Pixelfed. Disabilitato per default: utile soprattutto se usi Pixelfed.', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
 function eg_social_timeline_truncate_length_callback() {
     $options = get_option('eg_social_timeline_options');
     $length = isset($options['truncate_length']) ? $options['truncate_length'] : 300;
@@ -514,6 +541,7 @@ function eg_social_timeline_sanitize_options($input) {
     
     $output['show_boosts'] = isset($input['show_boosts']) ? true : false;
     $output['show_stats'] = isset($input['show_stats']) ? true : false;
+    $output['show_images'] = isset($input['show_images']) ? true : false;
 
     $truncate = isset($input['truncate_length']) ? intval($input['truncate_length']) : 300;
     $output['truncate_length'] = ($truncate === 0) ? 0 : max(50, min(600, $truncate));
@@ -781,6 +809,19 @@ function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
         
         $post_url = $is_boost ? $content_data["url"] : $status["url"];
         
+        // Extract first image attachment
+        $image_url = '';
+        $image_alt = '';
+        if (!empty($content_data['media_attachments'])) {
+            foreach ($content_data['media_attachments'] as $attachment) {
+                if (isset($attachment['type']) && $attachment['type'] === 'image') {
+                    $image_url = isset($attachment['preview_url']) ? $attachment['preview_url'] : ($attachment['url'] ?? '');
+                    $image_alt = isset($attachment['description']) ? $attachment['description'] : '';
+                    break;
+                }
+            }
+        }
+
         $posts[] = array(
             'platform' => 'mastodon',
             'date' => strtotime($status['created_at']),
@@ -788,6 +829,8 @@ function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
             'content' => $content,
             'link' => $post_url,
             'is_boost' => $is_boost,
+            'image_url' => $image_url,
+            'image_alt' => $image_alt,
             'favourites_count' => isset($content_data['favourites_count']) ? intval($content_data['favourites_count']) : 0,
             'reblogs_count' => isset($content_data['reblogs_count']) ? intval($content_data['reblogs_count']) : 0,
             'replies_count' => isset($content_data['replies_count']) ? intval($content_data['replies_count']) : 0
@@ -882,6 +925,8 @@ function eg_social_timeline_fetch_diggita($username, $limit = 0) {
             'content' => $clean_content,
             'link' => (string) $item->link,
             'is_boost' => false,
+            'image_url' => '',
+            'image_alt' => '',
             'favourites_count' => $points,
             'reblogs_count' => 0,
             'replies_count' => $comments
@@ -905,54 +950,56 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
         return array();
     }
     
-    // Step 1: Get list of public repositories
-    $repos_url = $instance_url . '/api/v1/users/' . sanitize_text_field($username) . '/repos';
-    
+    // Step 1: Get list of public repositories sorted by most recently updated
+    $repos_url = $instance_url . '/api/v1/users/' . sanitize_text_field($username) . '/repos'
+        . '?sort=recentupdate&limit=50';
+
     $repos_response = wp_remote_get($repos_url, array(
         'timeout' => 15,
         'sslverify' => true
     ));
-    
+
     if (is_wp_error($repos_response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
             error_log('EG Social Timeline Forgejo Repos Error: ' . $repos_response->get_error_message());
         }
         return array();
     }
-    
+
     $repos_body = wp_remote_retrieve_body($repos_response);
     $repositories = json_decode($repos_body, true);
-    
+
     if (!is_array($repositories)) {
         return array();
     }
-    
-    // Filter to public repos only
-    $public_repos = array_filter($repositories, function($repo) {
+
+    // Filter to public repos only (already sorted by recentupdate)
+    $public_repos = array_values(array_filter($repositories, function($repo) {
         return empty($repo['private']);
-    });
-    
+    }));
+
     if (empty($public_repos)) {
         return array();
     }
-    
+
     // Calculate commits per repo based on total limit
     $repo_count = count($public_repos);
-    
+
     if ($limit > 0) {
-        // Distribute limit across repos (minimum 1 per repo if possible)
-        $commits_per_repo = max(1, intval(ceil($limit / $repo_count)));
+        $commits_per_repo = max(1, intval(ceil($limit / min($repo_count, $limit))));
         $total_limit = $limit;
+        // Only query the most recently updated repos we actually need
+        $public_repos = array_slice($public_repos, 0, min($repo_count, $limit));
     } else {
-        // No limit: default 5 per repo
+        // No limit: default 5 per repo, query all
         $commits_per_repo = 5;
         $total_limit = PHP_INT_MAX;
     }
-    
+
     $all_commits = array();
     $total_fetched = 0;
-    
-    // Step 2: Get commits from each public repository
+
+    // Step 2: Get commits from each selected repository
     foreach ($public_repos as $repo) {
         if ($total_fetched >= $total_limit) {
             break;
@@ -1018,6 +1065,8 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
                 'content' => $full_content,
                 'link' => $commits_page_url,
                 'is_boost' => false,
+                'image_url' => '',
+                'image_alt' => '',
                 'favourites_count' => 0,
                 'reblogs_count' => 0,
                 'replies_count' => 0
@@ -1109,6 +1158,8 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
             'content'         => $content,
             'link'            => $post_url,
             'is_boost'        => $is_repost,
+            'image_url'       => '',
+            'image_alt'       => '',
             'favourites_count' => intval($post['likeCount'] ?? 0),
             'reblogs_count'   => intval($post['repostCount'] ?? 0),
             'replies_count'   => intval($post['replyCount'] ?? 0),
@@ -1201,6 +1252,7 @@ function eg_social_timeline_shortcode($atts) {
     $posts = array_slice($posts, 0, $limit);
     
     $show_stats = !empty($options['show_stats']);
+    $show_images = !empty($options['show_images']);
     $truncate_length = isset($options['truncate_length']) ? intval($options['truncate_length']) : 300;
     
     ob_start();
@@ -1278,9 +1330,18 @@ function eg_social_timeline_shortcode($atts) {
                     </time>
                 </header>
                 <div class="timeline-content">
+                    <?php if (!empty($post['content'])): ?>
                     <div class="post-text">
                         <?php echo esc_html($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : strip_tags($post['content'])); ?>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($show_images && !empty($post['image_url'])): ?>
+                    <div class="post-image">
+                        <img src="<?php echo esc_url($post['image_url']); ?>"
+                             alt="<?php echo esc_attr(!empty($post['image_alt']) ? $post['image_alt'] : __('Immagine allegata', 'eg-social-timeline')); ?>"
+                             loading="lazy">
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <footer class="timeline-footer">
                     <?php if ($show_stats && ($post['favourites_count'] > 0 || $post['reblogs_count'] > 0 || $post['replies_count'] > 0)): ?>

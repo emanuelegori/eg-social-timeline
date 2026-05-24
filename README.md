@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.4.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.4.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -180,6 +180,19 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.4.3] - 2026-05-24
+
+#### Added
+- Supporto anteprime immagini con nuova opzione admin (default: disabilitato)
+- Mastodon: estrazione prima immagine da `media_attachments` con `preview_url` e testo alt
+- Attributo `loading="lazy"` sulle immagini
+
+#### Fixed
+- Forgejo: repo ordinati per ultimo push con `?sort=recentupdate`; interrogati solo i repo necessari (`min(repo_count, limit)`). Prima i repo più recenti venivano esclusi perché l'API restituiva i repo in ordine di creazione
+
+#### Changed
+- Struttura post unificata: campi `image_url` e `image_alt` presenti su tutte le piattaforme
 
 ### [1.4.2] - 2026-05-24
 

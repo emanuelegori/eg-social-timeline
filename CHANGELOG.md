@@ -6,6 +6,23 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.3] - 2026-05-24
+
+### Added
+- Supporto anteprime immagini: nuova opzione admin "Mostra Anteprime Immagini" (default: disabilitato)
+- Mastodon: estrazione prima immagine da `media_attachments` con `preview_url` e testo alt
+- Post senza testo ma con immagine: mostra solo l'immagine senza area testo vuota
+- Attributo `loading="lazy"` sulle immagini per prestazioni
+
+### Fixed
+- Forgejo: bug logica fetch repo — i repo venivano restituiti in ordine di creazione, causando l'esclusione dei repo più recentemente aggiornati. Fix: aggiunto `?sort=recentupdate` all'API e limitato il numero di repo interrogati a `min(repo_count, limit)`, garantendo che i commit più recenti provengano sempre dai repo più attivi
+
+### Changed
+- Forgejo: array `$public_repos` ora re-indicizzato con `array_values()` dopo il filtro
+- Tutte le piattaforme: campi `image_url` e `image_alt` aggiunti alla struttura del post (vuoti per Diggita, Forgejo, Bluesky — pronti per future integrazioni)
+
+---
+
 ## [1.4.2] - 2026-05-24
 
 ### Added

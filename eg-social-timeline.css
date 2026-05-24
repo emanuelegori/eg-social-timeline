@@ -240,6 +240,18 @@
     font-size: 0.95em;
 }
 
+/* Image */
+.post-image {
+    margin-top: 12px;
+}
+
+.post-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
 /* Footer */
 .timeline-footer {
     display: flex;
