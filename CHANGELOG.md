@@ -6,6 +6,13 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.5] - 2026-05-25
+
+### Security
+- Sanitizzazione `forgejo_instance`: aggiunta validazione HTTPS — URL non HTTPS vengono silenziosamente sostituiti dal default `https://gitea.com`
+
+---
+
 ## [1.4.4] - 2026-05-24
 
 ### Fixed

@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
- * Version: 1.4.4
+ * Version: 1.4.5
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.4.4');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.4.5');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -519,7 +519,12 @@ function eg_social_timeline_sanitize_options($input) {
     $output['bluesky_handle'] = $bluesky_handle;
     
     $forgejo_instance = isset($input['forgejo_instance']) ? esc_url_raw($input['forgejo_instance']) : 'https://gitea.com';
-    $output['forgejo_instance'] = !empty($forgejo_instance) ? $forgejo_instance : 'https://gitea.com';
+    // Accetta solo HTTPS — HTTP espone il token in chiaro e apre a SSRF su reti interne
+    if ( ! empty($forgejo_instance) && strpos($forgejo_instance, 'https://') === 0 ) {
+        $output['forgejo_instance'] = $forgejo_instance;
+    } else {
+        $output['forgejo_instance'] = 'https://gitea.com';
+    }
     
     $limit = isset($input['post_limit']) ? intval($input['post_limit']) : 10;
     $output['post_limit'] = max(1, min(100, $limit));
