@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.4.6] - 2026-05-25
+
+### Changed
+- readme.txt riscritto: struttura più chiara, rimossi riferimenti a versioni obsolete, liste con `-` invece di `* **bold**`
+- Tested up to aggiornato a WordPress 7.0
+- EG Forgejo Updater sostituisce Git Updater nelle istruzioni di installazione
+
+---
+
 ## [1.4.5] - 2026-05-25
 
 ### Security
