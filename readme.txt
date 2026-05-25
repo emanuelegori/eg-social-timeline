@@ -137,11 +137,9 @@ No! Usano solo CSS con checkbox, funzionano anche con JavaScript disabilitato.
 
 == Screenshots ==
 
-1. Timeline unificata con post da multiple piattaforme
-2. Filtri interattivi per mostrare/nascondere piattaforme
-3. Pannello impostazioni admin con limiti configurabili (v1.3.0)
-4. Vista mobile responsive
-5. Supporto dark mode automatico
+1. Timeline frontend unificata con post da Mastodon, Bluesky, Forgejo e Diggita
+2. Pannello impostazioni admin — configurazione profili social
+3. Pannello impostazioni admin — limiti post per piattaforma
 
 == Changelog ==
 

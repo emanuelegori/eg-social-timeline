@@ -28,6 +28,12 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ---
 
+## Screenshot
+
+![EG Social Timeline — frontend](assets/screenshot-1.png)
+
+---
+
 ## Installazione
 
 ### Automatica (WordPress)
@@ -65,6 +71,9 @@ Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da
    - Max post Bluesky (default: 10, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
 5. Salva
+
+![Configurazione profili](assets/screenshot-2.png)
+![Limiti post per piattaforma](assets/screenshot-3.png)
 
 ---
 
