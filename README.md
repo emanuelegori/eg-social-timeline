@@ -50,9 +50,9 @@ cd wp-content/plugins
 git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 ```
 
-### Git Updater (Consigliato)
+### EG Forgejo Updater (Consigliato)
 
-Installa [Git Updater](https://git-updater.com/) per aggiornamenti automatici da Gitea.
+Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgejo-updater) per aggiornamenti automatici da Forgejo.
 
 ---
 
