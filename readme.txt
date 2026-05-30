@@ -8,189 +8,189 @@ Stable tag: 1.4.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Timeline cronologica unificata delle tue attività pubbliche da Mastodon, Bluesky, Forgejo e Diggita. Zero JavaScript, zero tracking.
+Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
 
 == Description ==
 
-EG Social Timeline aggrega in ordine cronologico i tuoi post pubblici da quattro piattaforme decentralizzate e li mostra in un'unica timeline tramite shortcode.
+EG Social Timeline aggregates in chronological order your public posts from four decentralized platforms and displays them in a single timeline via shortcode.
 
-= Piattaforme supportate =
+= Supported platforms =
 
-- Mastodon (e teoricamente qualsiasi istanza compatibile ActivityPub, non testata)
-- Bluesky (API pubblica, nessuna autenticazione richiesta)
-- Forgejo e Gitea (commit dai tuoi repository pubblici)
-- Diggita (piattaforma Lemmy italiana)
+- Mastodon (and in theory any ActivityPub-compatible instance, untested)
+- Bluesky (public API, no authentication required)
+- Forgejo and Gitea (commits from your public repositories)
+- Diggita (Italian Lemmy platform)
 
-= Caratteristiche principali =
+= Key features =
 
-- Filtri per piattaforma interattivi, senza JavaScript
-- Anteprime immagini per i post Mastodon (opzionale)
-- Limiti configurabili per piattaforma, per un mix equilibrato
-- Statistiche interazioni: like, boost, commenti
-- Cache configurabile (30 minuti - 24 ore)
-- Design responsive con supporto dark mode automatico
-- Shortcode con parametro limit opzionale
-- Icone SVG modulari e personalizzabili
-- Privacy-friendly: solo dati pubblici, nessun tracker
+- Interactive per-platform filters, no JavaScript required
+- Image previews for Mastodon posts (optional)
+- Per-platform configurable limits for a balanced mix
+- Interaction stats: likes, boosts, comments
+- Configurable cache (30 minutes - 24 hours)
+- Responsive design with automatic dark mode support
+- Shortcode with optional limit parameter
+- Modular and customizable SVG icons
+- Privacy-friendly: public data only, no trackers
 
-= Utilizzo =
+= Usage =
 
-Configura i profili nelle impostazioni, poi inserisci lo shortcode:
+Configure the profiles in the settings, then insert the shortcode:
 
 `[eg_social_timeline]`
 
-Con limite personalizzato:
+With a custom limit:
 
 `[eg_social_timeline limit="20"]`
 
 = Privacy =
 
-- Recupera solo post pubblici dalle piattaforme configurate
-- Nessun tracking degli utenti
-- Nessun dato inviato a terze parti
-- Cache locale su database WordPress
-- Nessun cookie impostato dal plugin
+- Retrieves only public posts from the configured platforms
+- No user tracking
+- No data sent to third parties
+- Local cache in the WordPress database
+- No cookies set by the plugin
 
 == Installation ==
 
-1. Carica i file nella directory `/wp-content/plugins/eg-social-timeline/`
-2. Attiva il plugin dal menu Plugin di WordPress
-3. Vai su Impostazioni → EG Social Timeline
-4. Configura almeno un profilo social
-5. Inserisci `[eg_social_timeline]` nella pagina o articolo desiderato
+1. Upload the files to the `/wp-content/plugins/eg-social-timeline/` directory
+2. Activate the plugin from the WordPress Plugins menu
+3. Go to Settings → EG Social Timeline
+4. Configure at least one social profile
+5. Insert `[eg_social_timeline]` into the desired page or post
 
-= Aggiornamenti automatici =
+= Automatic updates =
 
-Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgejo-updater) per ricevere gli aggiornamenti automatici direttamente da WordPress, esattamente come i plugin del repository ufficiale.
+Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgejo-updater) to receive automatic updates directly inside WordPress, exactly like plugins from the official repository.
 
-= Configurazione minima =
+= Minimum configuration =
 
-- URL profilo Mastodon (es: https://mastodon.uno/@username)
-- OPPURE Handle Bluesky (es: emanuele.bsky.social)
-- OPPURE Username Forgejo + URL istanza
-- OPPURE Username Diggita
+- Mastodon profile URL (e.g. https://mastodon.uno/@username)
+- OR Bluesky handle (e.g. emanuele.bsky.social)
+- OR Forgejo username + instance URL
+- OR Diggita username
 
-= Configurazione avanzata =
+= Advanced configuration =
 
-- Limiti post per piattaforma (evita monopolizzazione)
-- Anteprime immagini per post con allegati (Mastodon)
-- Lunghezza testo per ogni post (50-600 caratteri, 0 = completo)
-- Includi o escludi boost e repost
-- Mostra o nascondi statistiche interazioni
-- Durata cache da 30 minuti a 24 ore
+- Per-platform post limits (avoids one platform monopolizing the timeline)
+- Image previews for posts with attachments (Mastodon)
+- Text length for each post (50-600 characters, 0 = full text)
+- Include or exclude boosts and reposts
+- Show or hide interaction stats
+- Cache duration from 30 minutes to 24 hours
 
 == Frequently Asked Questions ==
 
-= Quali piattaforme sono supportate? =
+= Which platforms are supported? =
 
-Mastodon (e istanze compatibili ActivityPub), Bluesky, Forgejo/Gitea e Diggita.
+Mastodon (and ActivityPub-compatible instances), Bluesky, Forgejo/Gitea and Diggita.
 
-= I filtri piattaforma richiedono JavaScript? =
+= Do the platform filters require JavaScript? =
 
-No. Usano esclusivamente CSS con il pattern checkbox/label, funzionano anche con JavaScript disabilitato nel browser.
+No. They use only CSS with the checkbox/label pattern and work even with JavaScript disabled in the browser.
 
-= Posso usare il plugin con una sola piattaforma? =
+= Can I use the plugin with a single platform? =
 
-Sì. Basta configurare almeno un profilo. Le piattaforme non configurate vengono semplicemente ignorate.
+Yes. Just configure at least one profile. Unconfigured platforms are simply ignored.
 
-= Come funzionano i limiti per piattaforma? =
+= How do the per-platform limits work? =
 
-Ogni piattaforma ha un limite configurabile di post da includere nella timeline. Questo evita che una piattaforma molto attiva (es: Forgejo con molti commit) occupi tutti gli slot disponibili, garantendo un mix equilibrato.
+Each platform has a configurable limit on the number of posts included in the timeline. This prevents a very active platform (e.g. Forgejo with many commits) from filling all available slots, ensuring a balanced mix.
 
-= I dati sono privati? =
+= Is data private? =
 
-Il plugin recupera solo contenuti pubblici. Non traccia gli utenti del sito né invia dati a servizi terzi.
+The plugin retrieves only public content. It does not track site visitors and does not send data to third-party services.
 
-= Come funziona la cache? =
+= How does the cache work? =
 
-I post vengono salvati temporaneamente per ridurre le chiamate alle API esterne. Puoi configurare la durata da 30 minuti a 24 ore. La cache viene svuotata automaticamente al salvataggio delle impostazioni.
+Posts are temporarily stored to reduce calls to the external APIs. You can configure the duration from 30 minutes to 24 hours. The cache is automatically cleared when settings are saved.
 
-= Posso personalizzare lo stile? =
+= Can I customize the style? =
 
-Sì. Le icone sono file SVG sostituibili nella cartella `social-icons/`. Puoi aggiungere CSS personalizzato dal tuo tema per modificare colori e layout.
+Yes. The icons are SVG files you can replace in the `social-icons/` folder. You can also add custom CSS from your theme to change colors and layout.
 
 == Screenshots ==
 
-1. Timeline frontend unificata con post da Mastodon, Bluesky, Forgejo e Diggita
-2. Pannello impostazioni admin — configurazione profili social
-3. Pannello impostazioni admin — limiti post per piattaforma
+1. Unified frontend timeline with posts from Mastodon, Bluesky, Forgejo and Diggita
+2. Admin settings panel — social profiles configuration
+3. Admin settings panel — per-platform post limits
 
 == Changelog ==
 
 = 1.4.6 - 2026-05-25 =
-* Changed: readme.txt riscritto — struttura più chiara, rimossi riferimenti a versioni obsolete
-* Changed: Tested up to aggiornato a WordPress 7.0
-* Changed: EG Forgejo Updater al posto di Git Updater nelle istruzioni di installazione
+* Changed: readme.txt rewritten — clearer structure, removed references to obsolete versions
+* Changed: Tested up to bumped to WordPress 7.0
+* Changed: EG Forgejo Updater replaces Git Updater in the installation instructions
 
 = 1.4.5 - 2026-05-25 =
-* Security: validazione HTTPS su URL istanza Forgejo in sanitizzazione
-* Added: screenshot frontend, configurazione e limiti post
+* Security: HTTPS validation on the Forgejo instance URL during sanitization
+* Added: frontend, configuration and post-limits screenshots
 
 = 1.4.4 - 2026-05-24 =
-* Fixed: Forgejo: ordinamento repo per data ultimo push (sort lato client)
+* Fixed: Forgejo: repo sorting by last push date (client-side sort)
 
 = 1.4.3 - 2026-05-24 =
-* Added: anteprime immagini Mastodon (opzione admin, default disabilitato)
-* Fixed: Forgejo: i commit provengono ora dai repo più recentemente aggiornati
+* Added: Mastodon image previews (admin option, disabled by default)
+* Fixed: Forgejo: commits now come from the most recently updated repositories
 
 = 1.4.2 - 2026-05-24 =
-* Added: traduzioni italiano e inglese (file .pot, .po, .mo)
-* Fixed: link "Vedi post originale" sempre allineato a destra
-* Changed: cache ID account Mastodon estesa a 30 giorni
+* Added: Italian and English translations (.pot, .po, .mo files)
+* Fixed: "View original post" link always right-aligned
+* Changed: Mastodon account ID cache extended to 30 days
 
 = 1.4.1 - 2026-05-02 =
-* Added: lunghezza testo post configurabile da admin (50-600, 0 = completo)
+* Added: post text length configurable from admin (50-600, 0 = full text)
 
 = 1.4.0 - 2026-05-02 =
-* Added: integrazione Bluesky via API pubblica ATP (nessuna autenticazione)
+* Added: Bluesky integration via the public ATP API (no authentication)
 
 = 1.3.1 - 2026-04-06 =
-* Security: protezione XXE, sanitizzazione SVG, validazione anti-SSRF
+* Security: XXE protection, SVG sanitization, anti-SSRF validation
 
 = 1.3.0 - 2026-01-11 =
-* Added: limiti configurabili per piattaforma
+* Added: per-platform configurable limits
 
 = 1.2.0 - 2026-01-11 =
-* Added: integrazione Forgejo/Gitea
+* Added: Forgejo/Gitea integration
 
 = 1.1.0 - 2026-01-10 =
-* Added: migrazione Mastodon a API v1, statistiche complete
+* Added: migrated Mastodon to API v1, full statistics
 
 = 1.0.0 - 2026-01-10 =
-* Release iniziale: Mastodon e Diggita
+* Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
 
 = 1.4.6 =
-Documentazione aggiornata. Nessuna modifica al codice.
+Documentation updated. No code changes.
 
 = 1.4.5 =
-Aggiornamento consigliato: fix sicurezza su URL istanza Forgejo.
+Recommended update: security fix on the Forgejo instance URL.
 
 = 1.4.4 =
-Fix Forgejo: i commit mostrati ora provengono dai repo più recentemente aggiornati.
+Forgejo fix: commits shown now come from the most recently updated repositories.
 
 = 1.4.3 =
-Anteprime immagini Mastodon disponibili (opzione admin). Fix importante per l'ordinamento commit Forgejo.
+Mastodon image previews available (admin option). Important fix for Forgejo commit ordering.
 
 = 1.4.2 =
-Traduzioni italiano/inglese. Fix allineamento link footer.
+Italian/English translations. Footer link alignment fix.
 
 = 1.4.1 =
-Lunghezza testo post configurabile da admin.
+Post text length configurable from admin.
 
 = 1.4.0 =
-Nuova integrazione Bluesky. Inserisci il tuo handle nelle impostazioni.
+New Bluesky integration. Enter your handle in the settings.
 
 = 1.3.1 =
-Fix sicurezza importanti. Aggiornamento consigliato.
+Important security fixes. Update recommended.
 
 = 1.3.0 =
-Limiti configurabili per piattaforma. Retrocompatibile con v1.2.x.
+Per-platform configurable limits. Backward-compatible with v1.2.x.
 
 == Privacy Policy ==
 
-EG Social Timeline recupera solo contenuti pubblici dalle piattaforme configurate. Non traccia gli utenti del sito, non invia dati a servizi terzi, non imposta cookie. La cache è locale nel database WordPress.
+EG Social Timeline retrieves only public content from the configured platforms. It does not track site visitors, does not send data to third-party services, and does not set cookies. The cache is local to the WordPress database.
 
 == Support ==
 
