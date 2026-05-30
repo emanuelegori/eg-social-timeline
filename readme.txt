@@ -188,6 +188,50 @@ Important security fixes. Update recommended.
 = 1.3.0 =
 Per-platform configurable limits. Backward-compatible with v1.2.x.
 
+== External services ==
+
+This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile field (Mastodon URL, Bluesky handle, Forgejo username + instance URL, or Diggita username). All requests are HTTP GET requests for public content; no user credentials are sent.
+
+Contacted services are cached locally for a configurable duration (30 minutes to 24 hours, default value depends on the admin setting) to minimize external traffic.
+
+= Mastodon =
+
+- **What**: the Mastodon (or ActivityPub-compatible) instance whose URL the user enters in the settings (e.g. `https://mastodon.uno/@username`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
+- **Endpoints**: `GET /api/v1/accounts/lookup` (account ID lookup, cached 30 days) and `GET /api/v1/accounts/{id}/statuses` (public statuses).
+- **Data sent**: only the public username/handle entered in the settings, as a URL parameter.
+- **Data received and stored**: public post metadata (text, date, link, media preview URL and alt text if image previews are enabled, like/boost/reply counts). Cached locally as a WordPress transient.
+- Mastodon is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= Bluesky =
+
+- **What**: the Bluesky public API at `https://public.api.bsky.app`.
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
+- **Endpoint**: `GET https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor={handle}`.
+- **Data sent**: only the public handle entered in the settings (e.g. `username.bsky.social`).
+- **Data received and stored**: public post metadata (text, date, link, like/repost/reply counts). Cached locally as a WordPress transient.
+- Terms of service: https://bsky.social/about/support/tos
+- Privacy policy: https://bsky.social/about/support/privacy-policy
+
+= Forgejo / Gitea =
+
+- **What**: the Forgejo or Gitea instance the user enters in the settings (e.g. `https://git.example.com`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
+- **Endpoints**: `GET /api/v1/users/{username}/repos` and `GET /api/v1/repos/{owner}/{repo}/commits` for the user's public repositories.
+- **Data sent**: only the public username entered in the settings, as a URL parameter.
+- **Data received and stored**: public commit metadata (message, date, repository name, commit hash and link). Cached locally as a WordPress transient.
+- Forgejo and Gitea are open-source git hosting platforms. Their terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= Diggita =
+
+- **What**: the Diggita RSS feed at `https://www.diggita.com`.
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
+- **Endpoint**: `GET https://www.diggita.com/feeds/u/{username}.xml`.
+- **Data sent**: only the public username entered in the settings, as part of the URL path.
+- **Data received and stored**: public post metadata (title, link, date, vote and comment counts) parsed from the public RSS feed. Cached locally as a WordPress transient.
+- Terms of service: https://www.diggita.com/regolamento
+- Privacy policy: https://www.diggita.com/privacy
+
 == Privacy Policy ==
 
 EG Social Timeline retrieves only public content from the configured platforms. It does not track site visitors, does not send data to third-party services, and does not set cookies. The cache is local to the WordPress database.
