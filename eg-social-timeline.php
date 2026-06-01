@@ -2,7 +2,7 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
- * Description: Mostra una timeline cronologica unificata delle tue attività social da Mastodon, Diggita, Forgejo e Bluesky
+ * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
  * Version: 1.4.6
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
