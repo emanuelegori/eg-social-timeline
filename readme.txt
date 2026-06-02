@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,15 +111,18 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Screenshots ==
 
-![Unified timeline — chronological feed from Mastodon, Bluesky, Forgejo and Diggita](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-1.png)
+![Unified timeline](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-1.png)
+Unified timeline — chronological feed from Mastodon, Bluesky, Forgejo and Diggita.
 
-![Admin settings — social profiles configuration](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-2.png)
+![Admin settings — profiles](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-2.png)
+Admin settings — social profiles configuration.
 
-![Admin settings — per-platform post limits](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-3.png)
+![Admin settings — limits](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-3.png)
+Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
-= 1.6.5 - 2026-06-02 =
+= 1.6.6 - 2026-06-02 =
 * Fixed: `translators:` comments added to all i18n strings with placeholders
 * Fixed: `strip_tags()` replaced with `wp_strip_all_tags()` (×4)
 * Fixed: `date()` replaced with `gmdate()` for timezone safety
@@ -174,7 +177,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Upgrade Notice ==
 
-= 1.6.5 =
+= 1.6.6 =
 Plugin Check compliance fixes. Update recommended.
 
 = 1.4.5 =
