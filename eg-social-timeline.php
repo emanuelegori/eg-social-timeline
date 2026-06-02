@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.5.3
+ * Version: 1.6.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.5.3');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.6.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -87,14 +87,14 @@ function eg_social_timeline_register_settings() {
     
     add_settings_section(
         'eg_social_timeline_main_section',
-        __('Configurazione Profili Social', 'eg-social-timeline'),
+        __('Social Profiles Configuration', 'eg-social-timeline'),
         'eg_social_timeline_main_section_callback',
         'eg-social-timeline'
     );
     
     add_settings_field(
         'eg_social_timeline_mastodon_url',
-        __('URL Profilo Mastodon', 'eg-social-timeline'),
+        __('Mastodon Profile URL', 'eg-social-timeline'),
         'eg_social_timeline_mastodon_url_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -102,7 +102,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_diggita_username',
-        __('Username Diggita', 'eg-social-timeline'),
+        __('Diggita Username', 'eg-social-timeline'),
         'eg_social_timeline_diggita_username_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -110,7 +110,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_forgejo_username',
-        __('Username Forgejo/Gitea', 'eg-social-timeline'),
+        __('Forgejo/Gitea Username', 'eg-social-timeline'),
         'eg_social_timeline_forgejo_username_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -118,7 +118,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_forgejo_instance',
-        __('URL Istanza Forgejo/Gitea', 'eg-social-timeline'),
+        __('Forgejo/Gitea Instance URL', 'eg-social-timeline'),
         'eg_social_timeline_forgejo_instance_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -126,7 +126,7 @@ function eg_social_timeline_register_settings() {
 
     add_settings_field(
         'eg_social_timeline_bluesky_handle',
-        __('Handle Bluesky', 'eg-social-timeline'),
+        __('Bluesky Handle', 'eg-social-timeline'),
         'eg_social_timeline_bluesky_handle_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -134,14 +134,14 @@ function eg_social_timeline_register_settings() {
 
     add_settings_section(
         'eg_social_timeline_limits_section',
-        __('Limiti Post per Piattaforma', 'eg-social-timeline'),
+        __('Per-Platform Post Limits', 'eg-social-timeline'),
         'eg_social_timeline_limits_section_callback',
         'eg-social-timeline'
     );
     
     add_settings_field(
         'eg_social_timeline_mastodon_limit',
-        __('Max Post Mastodon', 'eg-social-timeline'),
+        __('Max Mastodon Posts', 'eg-social-timeline'),
         'eg_social_timeline_mastodon_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
@@ -149,7 +149,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_diggita_limit',
-        __('Max Post Diggita', 'eg-social-timeline'),
+        __('Max Diggita Posts', 'eg-social-timeline'),
         'eg_social_timeline_diggita_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
@@ -157,7 +157,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_forgejo_limit',
-        __('Max Commit Forgejo', 'eg-social-timeline'),
+        __('Max Forgejo Commits', 'eg-social-timeline'),
         'eg_social_timeline_forgejo_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
@@ -165,7 +165,7 @@ function eg_social_timeline_register_settings() {
 
     add_settings_field(
         'eg_social_timeline_bluesky_limit',
-        __('Max Post Bluesky', 'eg-social-timeline'),
+        __('Max Bluesky Posts', 'eg-social-timeline'),
         'eg_social_timeline_bluesky_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
@@ -173,7 +173,7 @@ function eg_social_timeline_register_settings() {
 
     add_settings_field(
         'eg_social_timeline_post_limit',
-        __('Numero Post da Mostrare', 'eg-social-timeline'),
+        __('Number of Posts to Show', 'eg-social-timeline'),
         'eg_social_timeline_post_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -181,7 +181,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_cache_duration',
-        __('Durata Cache', 'eg-social-timeline'),
+        __('Cache Duration', 'eg-social-timeline'),
         'eg_social_timeline_cache_duration_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -189,7 +189,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_show_boosts',
-        __('Includi Boost/Repost', 'eg-social-timeline'),
+        __('Include Boosts/Reposts', 'eg-social-timeline'),
         'eg_social_timeline_show_boosts_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -197,7 +197,7 @@ function eg_social_timeline_register_settings() {
     
     add_settings_field(
         'eg_social_timeline_show_stats',
-        __('Mostra Statistiche', 'eg-social-timeline'),
+        __('Show Statistics', 'eg-social-timeline'),
         'eg_social_timeline_show_stats_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -205,7 +205,7 @@ function eg_social_timeline_register_settings() {
 
     add_settings_field(
         'eg_social_timeline_truncate_length',
-        __('Lunghezza Testo Post', 'eg-social-timeline'),
+        __('Post Text Length', 'eg-social-timeline'),
         'eg_social_timeline_truncate_length_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -213,7 +213,7 @@ function eg_social_timeline_register_settings() {
 
     add_settings_field(
         'eg_social_timeline_show_images',
-        __('Mostra Anteprime Immagini', 'eg-social-timeline'),
+        __('Show Image Previews', 'eg-social-timeline'),
         'eg_social_timeline_show_images_callback',
         'eg-social-timeline',
         'eg_social_timeline_main_section'
@@ -222,11 +222,11 @@ function eg_social_timeline_register_settings() {
 
 // Settings callbacks
 function eg_social_timeline_main_section_callback() {
-    echo '<p>' . esc_html__('Configura i tuoi profili social per mostrare una timeline unificata. Almeno un profilo è obbligatorio.', 'eg-social-timeline') . '</p>';
+    echo '<p>' . esc_html__('Configure your social profiles to display a unified timeline. At least one profile is required.', 'eg-social-timeline') . '</p>';
 }
 
 function eg_social_timeline_limits_section_callback() {
-    echo '<p>' . esc_html__('Limita il numero massimo di post per ciascuna piattaforma. Questo previene che una piattaforma molto attiva (es: Forgejo) monopolizzi tutti gli slot disponibili. Imposta 0 per nessun limite.', 'eg-social-timeline') . '</p>';
+    echo '<p>' . esc_html__('Limit the maximum number of posts per platform. This prevents a very active platform (e.g. Forgejo) from filling all available slots. Set 0 for no limit.', 'eg-social-timeline') . '</p>';
 }
 
 function eg_social_timeline_mastodon_url_callback() {
@@ -237,10 +237,10 @@ function eg_social_timeline_mastodon_url_callback() {
            id="eg_social_timeline_mastodon_url" 
            name="eg_social_timeline_options[mastodon_url]" 
            value="<?php echo esc_attr($url); ?>" 
-           placeholder="<?php echo esc_attr__('es: https://mastodon.uno/@emanuelegori', 'eg-social-timeline'); ?>"
+           placeholder="<?php echo esc_attr__('e.g. https://mastodon.social/@yourusername', 'eg-social-timeline'); ?>"
            class="regular-text">
     <p class="description">
-        <?php esc_html_e('URL completo del tuo profilo pubblico Mastodon (o altre istanze Fediverso).', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Full URL of your public Mastodon profile (or other Fediverse instances).', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -253,10 +253,10 @@ function eg_social_timeline_diggita_username_callback() {
            id="eg_social_timeline_diggita_username" 
            name="eg_social_timeline_options[diggita_username]" 
            value="<?php echo esc_attr($username); ?>" 
-           placeholder="<?php echo esc_attr__('es: emanuelegori', 'eg-social-timeline'); ?>"
+           placeholder="<?php echo esc_attr__('e.g. yourusername', 'eg-social-timeline'); ?>"
            class="regular-text">
     <p class="description">
-        <?php esc_html_e('Username Diggita (senza @).', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Diggita username (without @).', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -269,10 +269,10 @@ function eg_social_timeline_forgejo_username_callback() {
            id="eg_social_timeline_forgejo_username" 
            name="eg_social_timeline_options[forgejo_username]" 
            value="<?php echo esc_attr($username); ?>" 
-           placeholder="<?php echo esc_attr__('es: emanuelegori', 'eg-social-timeline'); ?>"
+           placeholder="<?php echo esc_attr__('e.g. yourusername', 'eg-social-timeline'); ?>"
            class="regular-text">
     <p class="description">
-        <?php esc_html_e('Username del tuo account Forgejo/Gitea (senza @).', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Your Forgejo/Gitea account username (without @).', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -288,7 +288,7 @@ function eg_social_timeline_forgejo_instance_callback() {
            placeholder="https://gitea.com"
            class="regular-text">
     <p class="description">
-        <?php esc_html_e('URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Full URL of your Forgejo/Gitea instance. Default: https://gitea.com', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -301,10 +301,10 @@ function eg_social_timeline_bluesky_handle_callback() {
            id="eg_social_timeline_bluesky_handle"
            name="eg_social_timeline_options[bluesky_handle]"
            value="<?php echo esc_attr($handle); ?>"
-           placeholder="<?php echo esc_attr__('es: emanuele.bsky.social', 'eg-social-timeline'); ?>"
+           placeholder="<?php echo esc_attr__('e.g. emanuele.bsky.social', 'eg-social-timeline'); ?>"
            class="regular-text">
     <p class="description">
-        <?php esc_html_e('Handle del tuo profilo Bluesky (senza @). Esempio: emanuele.bsky.social', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Your Bluesky handle (without @). Example: emanuele.bsky.social', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -321,7 +321,7 @@ function eg_social_timeline_bluesky_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -338,7 +338,7 @@ function eg_social_timeline_mastodon_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -355,7 +355,7 @@ function eg_social_timeline_diggita_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di post Diggita da recuperare (0 = illimitato). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Diggita posts to fetch (0 = unlimited). Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -372,7 +372,7 @@ function eg_social_timeline_forgejo_limit_callback() {
            max="50"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di commit Forgejo TOTALI da recuperare (0 = illimitato). Default: 5', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -389,7 +389,7 @@ function eg_social_timeline_post_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di post da mostrare nella timeline (1-100). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of posts to show in the timeline (1–100). Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -400,15 +400,15 @@ function eg_social_timeline_cache_duration_callback() {
     ?>
     <select id="eg_social_timeline_cache_duration" 
             name="eg_social_timeline_options[cache_duration]">
-        <option value="1800" <?php selected($duration, 1800); ?>>30 <?php esc_html_e('minuti', 'eg-social-timeline'); ?></option>
-        <option value="3600" <?php selected($duration, 3600); ?>>1 <?php esc_html_e('ora', 'eg-social-timeline'); ?></option>
-        <option value="7200" <?php selected($duration, 7200); ?>>2 <?php esc_html_e('ore', 'eg-social-timeline'); ?></option>
-        <option value="14400" <?php selected($duration, 14400); ?>>4 <?php esc_html_e('ore', 'eg-social-timeline'); ?></option>
-        <option value="28800" <?php selected($duration, 28800); ?>>8 <?php esc_html_e('ore', 'eg-social-timeline'); ?></option>
-        <option value="86400" <?php selected($duration, 86400); ?>>24 <?php esc_html_e('ore', 'eg-social-timeline'); ?></option>
+        <option value="1800" <?php selected($duration, 1800); ?>>30 <?php esc_html_e('minutes', 'eg-social-timeline'); ?></option>
+        <option value="3600" <?php selected($duration, 3600); ?>>1 <?php esc_html_e('hour', 'eg-social-timeline'); ?></option>
+        <option value="7200" <?php selected($duration, 7200); ?>>2 <?php esc_html_e('hours', 'eg-social-timeline'); ?></option>
+        <option value="14400" <?php selected($duration, 14400); ?>>4 <?php esc_html_e('hours', 'eg-social-timeline'); ?></option>
+        <option value="28800" <?php selected($duration, 28800); ?>>8 <?php esc_html_e('hours', 'eg-social-timeline'); ?></option>
+        <option value="86400" <?php selected($duration, 86400); ?>>24 <?php esc_html_e('hours', 'eg-social-timeline'); ?></option>
     </select>
     <p class="description">
-        <?php esc_html_e('Tempo di cache dei feed. Cache più lunga = meno richieste ai server. Default: 1 ora', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Feed cache duration. Longer cache = fewer requests to servers. Default: 1 hour', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -423,10 +423,10 @@ function eg_social_timeline_show_boosts_callback() {
                name="eg_social_timeline_options[show_boosts]" 
                value="1"
                <?php checked($show, 1); ?>>
-        <?php esc_html_e('Includi boost e repost nella timeline', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Include boosts and reposts in the timeline', 'eg-social-timeline'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Se disabilitato, mostra solo post originali (nessun boost/reblog).', 'eg-social-timeline'); ?>
+        <?php esc_html_e('If disabled, shows only original posts (no boosts/reblogs).', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -441,10 +441,10 @@ function eg_social_timeline_show_stats_callback() {
                name="eg_social_timeline_options[show_stats]" 
                value="1"
                <?php checked($show, 1); ?>>
-        <?php esc_html_e('Mostra conteggi like/boost/risposte', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Show like/boost/reply counts', 'eg-social-timeline'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Visualizza le statistiche di interazione sotto ogni post.', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Display interaction statistics below each post.', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -459,10 +459,10 @@ function eg_social_timeline_show_images_callback() {
                name="eg_social_timeline_options[show_images]"
                value="1"
                <?php checked($show, 1); ?>>
-        <?php esc_html_e('Mostra la prima immagine allegata ai post (quando disponibile)', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Show the first image attached to posts (when available)', 'eg-social-timeline'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Supportato da Mastodon e Pixelfed. Disabilitato per default: utile soprattutto se usi Pixelfed.', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Supported by Mastodon and Pixelfed. Disabled by default: most useful if you use Pixelfed.', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -479,7 +479,7 @@ function eg_social_timeline_truncate_length_callback() {
            max="600"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Numero massimo di caratteri mostrati per ogni post (50–600). Imposta 0 per mostrare il testo completo senza limiti (sconsigliato: può compromettere il layout su mobile). Default: 300', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of characters shown per post (50–600). Set 0 to show full text with no limit (not recommended: may break mobile layout). Default: 300', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -497,8 +497,8 @@ function eg_social_timeline_sanitize_options($input) {
         add_settings_error(
             'eg_social_timeline_options',
             'no_profiles',
-            '<strong>' . __('Errore:', 'eg-social-timeline') . '</strong> ' .
-            __('Devi configurare almeno un profilo social (Mastodon, Diggita, Forgejo o Bluesky).', 'eg-social-timeline'),
+            '<strong>' . __('Error:', 'eg-social-timeline') . '</strong> ' .
+            __('You must configure at least one social profile (Mastodon, Diggita, Forgejo or Bluesky).', 'eg-social-timeline'),
             'error'
         );
 
@@ -549,7 +549,7 @@ function eg_social_timeline_sanitize_options($input) {
     add_settings_error(
         'eg_social_timeline_options',
         'settings_updated',
-        __('Impostazioni salvate correttamente! Cache pulita.', 'eg-social-timeline'),
+        __('Settings saved successfully! Cache cleared.', 'eg-social-timeline'),
         'success'
     );
     
@@ -571,10 +571,10 @@ function eg_social_timeline_admin_notice() {
         ?>
         <div class="notice notice-error">
             <p>
-                <strong><?php esc_html_e('EG Social Timeline richiede configurazione!', 'eg-social-timeline'); ?></strong><br>
-                <?php esc_html_e('Il plugin è attivo ma nessun profilo social è configurato.', 'eg-social-timeline'); ?><br>
+                <strong><?php esc_html_e('EG Social Timeline requires configuration!', 'eg-social-timeline'); ?></strong><br>
+                <?php esc_html_e('The plugin is active but no social profile has been configured.', 'eg-social-timeline'); ?><br>
                 <a href="<?php echo esc_url(admin_url('options-general.php?page=eg-social-timeline')); ?>" class="button button-primary" style="margin-top: 10px;">
-                    <?php esc_html_e('Configura ora', 'eg-social-timeline'); ?>
+                    <?php esc_html_e('Configure now', 'eg-social-timeline'); ?>
                 </a>
             </p>
         </div>
@@ -595,14 +595,14 @@ function eg_social_timeline_settings_page() {
             <?php
             settings_fields('eg_social_timeline_settings');
             do_settings_sections('eg-social-timeline');
-            submit_button(__('Salva Impostazioni', 'eg-social-timeline'));
+            submit_button(__('Save Settings', 'eg-social-timeline'));
             ?>
         </form>
         
         <hr>
         
-        <h2><?php esc_html_e('Utilizzo', 'eg-social-timeline'); ?></h2>
-        <p><?php esc_html_e('Una volta configurato, puoi inserire la timeline nei tuoi articoli usando:', 'eg-social-timeline'); ?></p>
+        <h2><?php esc_html_e('Usage', 'eg-social-timeline'); ?></h2>
+        <p><?php esc_html_e('Once configured, you can insert the timeline in your posts using:', 'eg-social-timeline'); ?></p>
         
         <h3><?php esc_html_e('Shortcode', 'eg-social-timeline'); ?></h3>
         <p><?php esc_html_e('Inserisci nel contenuto dell\'articolo:', 'eg-social-timeline'); ?></p>
@@ -611,12 +611,12 @@ function eg_social_timeline_settings_page() {
         <p><?php esc_html_e('Opzionale: limita il numero di post:', 'eg-social-timeline'); ?></p>
         <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline limit="20"]</code></pre>
         
-        <h3><?php esc_html_e('Svuota Cache Manualmente', 'eg-social-timeline'); ?></h3>
+        <h3><?php esc_html_e('Flush Cache Manually', 'eg-social-timeline'); ?></h3>
         <p><?php esc_html_e('Per forzare l\'aggiornamento immediato dei feed:', 'eg-social-timeline'); ?></p>
         <form method="post" style="display: inline;">
             <?php wp_nonce_field('eg_social_timeline_clear_cache', 'eg_social_timeline_nonce'); ?>
             <input type="hidden" name="eg_social_timeline_clear_cache" value="1">
-            <button type="submit" class="button"><?php esc_html_e('Svuota Cache Ora', 'eg-social-timeline'); ?></button>
+            <button type="submit" class="button"><?php esc_html_e('Flush Cache Now', 'eg-social-timeline'); ?></button>
         </form>
         
         <hr>
@@ -629,12 +629,12 @@ function eg_social_timeline_settings_page() {
             <?php
             printf(
                 /* translators: %s: link HTML al sito dello sviluppatore */
-                esc_html__('Sviluppato da %s', 'eg-social-timeline'),
+                esc_html__('Developed by %s', 'eg-social-timeline'),
                 '<a href="https://emanuelegori.uno" target="_blank" rel="noopener noreferrer">Emanuele Gori</a>'
             );
             ?> | 
             <a href="https://git.emanuelegori.uno/emanuelegori/eg-social-timeline" target="_blank"><?php esc_html_e('Repository', 'eg-social-timeline'); ?></a> | 
-            <?php esc_html_e('Licenza GPL-2.0-or-later', 'eg-social-timeline'); ?>
+            <?php esc_html_e('License GPL-2.0-or-later', 'eg-social-timeline'); ?>
         </p>
     </div>
     <?php
@@ -661,7 +661,7 @@ function eg_social_timeline_handle_cache_clear() {
     add_settings_error(
         'eg_social_timeline_options',
         'cache_cleared',
-        __('Cache svuotata con successo!', 'eg-social-timeline'),
+        __('Cache flushed successfully!', 'eg-social-timeline'),
         'success'
     );
     
@@ -1233,9 +1233,9 @@ function eg_social_timeline_shortcode($atts) {
     if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username']) && empty($options['bluesky_handle'])) {
         if (current_user_can('manage_options')) {
             return '<div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
-                <strong>' . esc_html__('EG Social Timeline - Configurazione Richiesta', 'eg-social-timeline') . '</strong><br>
-                ' . esc_html__('Nessun profilo social configurato.', 'eg-social-timeline') . ' 
-                <a href="' . esc_url(admin_url('options-general.php?page=eg-social-timeline')) . '">' . esc_html__('Configura ora', 'eg-social-timeline') . '</a>
+                <strong>' . esc_html__('EG Social Timeline — Configuration Required', 'eg-social-timeline') . '</strong><br>
+                ' . esc_html__('No social profile configured.', 'eg-social-timeline') . ' 
+                <a href="' . esc_url(admin_url('options-general.php?page=eg-social-timeline')) . '">' . esc_html__('Configure now', 'eg-social-timeline') . '</a>
             </div>';
         }
         return '';
@@ -1251,7 +1251,7 @@ function eg_social_timeline_shortcode($atts) {
     
     if (empty($posts)) {
         return '<div class="eg-social-timeline-empty">' . 
-               esc_html__('Nessun post disponibile al momento.', 'eg-social-timeline') . 
+               esc_html__('No posts available at the moment.', 'eg-social-timeline') . 
                '</div>';
     }
     
@@ -1298,7 +1298,7 @@ function eg_social_timeline_shortcode($atts) {
         <div class="eg-timeline-filters">
             <div class="filters-header">
                 <span class="filters-icon">🔍</span>
-                <h3><?php esc_html_e( 'Filtra per piattaforma:', 'eg-social-timeline' ); ?></h3>
+                <h3><?php esc_html_e( 'Filter by platform:', 'eg-social-timeline' ); ?></h3>
             </div>
             
             <div class="filters-checkboxes">
@@ -1344,7 +1344,7 @@ function eg_social_timeline_shortcode($atts) {
                     <?php if ($show_images && !empty($post['image_url'])): ?>
                     <div class="post-image">
                         <img src="<?php echo esc_url($post['image_url']); ?>"
-                             alt="<?php echo esc_attr(!empty($post['image_alt']) ? $post['image_alt'] : __('Immagine allegata', 'eg-social-timeline')); ?>"
+                             alt="<?php echo esc_attr(!empty($post['image_alt']) ? $post['image_alt'] : __('Attached image', 'eg-social-timeline')); ?>"
                              loading="lazy">
                     </div>
                     <?php endif; ?>
@@ -1354,7 +1354,7 @@ function eg_social_timeline_shortcode($atts) {
                         <div class="post-stats">
                             <?php if ($post['favourites_count'] > 0): ?>
                                 <span class="stat-item stat-favourites" title="<?php 
-                                    echo esc_attr($post['platform'] === 'diggita' ? __('Punti', 'eg-social-timeline') : __('Preferiti', 'eg-social-timeline')); 
+                                    echo esc_attr($post['platform'] === 'diggita' ? __('Points', 'eg-social-timeline') : __('Favourites', 'eg-social-timeline')); 
                                 ?>">
                                     <?php echo $post['platform'] === 'diggita' ? '⭐' : '❤️'; ?> <?php echo esc_html($post['favourites_count']); ?>
                                 </span>
@@ -1368,7 +1368,7 @@ function eg_social_timeline_shortcode($atts) {
                             
                             <?php if ($post['replies_count'] > 0): ?>
                                 <span class="stat-item stat-replies" title="<?php 
-                                    echo esc_attr($post['platform'] === 'diggita' ? __('Commenti', 'eg-social-timeline') : __('Risposte', 'eg-social-timeline')); 
+                                    echo esc_attr($post['platform'] === 'diggita' ? __('Comments', 'eg-social-timeline') : __('Replies', 'eg-social-timeline')); 
                                 ?>">
                                     💬 <?php echo esc_html($post['replies_count']); ?>
                                 </span>
@@ -1382,9 +1382,9 @@ function eg_social_timeline_shortcode($atts) {
                        class="view-original">
                         <?php 
                         if ($post['platform'] === 'forgejo') {
-                            esc_html_e('Vedi commit', 'eg-social-timeline');
+                            esc_html_e('View commit', 'eg-social-timeline');
                         } else {
-                            esc_html_e('Vedi post originale', 'eg-social-timeline');
+                            esc_html_e('View original post', 'eg-social-timeline');
                         }
                         ?> →
                     </a>
@@ -1451,15 +1451,15 @@ function eg_social_timeline_format_date($timestamp) {
     if ($diff < 3600) {
         $mins = round($diff / 60);
         /* translators: %s: numero di minuti */
-        return sprintf(_n('%s minuto fa', '%s minuti fa', $mins, 'eg-social-timeline'), $mins);
+        return sprintf(_n('%s minute ago', '%s minutes ago', $mins, 'eg-social-timeline'), $mins);
     } elseif ($diff < 86400) {
         $hours = round($diff / 3600);
         /* translators: %s: numero di ore */
-        return sprintf(_n('%s ora fa', '%s ore fa', $hours, 'eg-social-timeline'), $hours);
+        return sprintf(_n('%s hour ago', '%s hours ago', $hours, 'eg-social-timeline'), $hours);
     } elseif ($diff < 604800) {
         $days = round($diff / 86400);
         /* translators: %s: numero di giorni */
-        return sprintf(_n('%s giorno fa', '%s giorni fa', $days, 'eg-social-timeline'), $days);
+        return sprintf(_n('%s day ago', '%s days ago', $days, 'eg-social-timeline'), $days);
     } else {
         return date_i18n(get_option('date_format'), $timestamp);
     }
