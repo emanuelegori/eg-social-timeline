@@ -117,7 +117,18 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Changelog ==
 
-= 1.5.0 - 2026-05-25 =
+= 1.5.0 - 2026-06-02 =
+* Fixed: `translators:` comments added to all i18n strings with placeholders
+* Fixed: `strip_tags()` replaced with `wp_strip_all_tags()` (×4)
+* Fixed: `date()` replaced with `gmdate()` for timezone safety
+* Fixed: `wp_unslash()` + `sanitize_text_field()` added to nonce verification
+* Fixed: `error_log()` calls marked with `phpcs:ignore` (already gated by `EG_SOCIAL_TIMELINE_DEBUG`)
+* Fixed: `phpcs:ignore` on SVG icon output (hardcoded, sanitized internally)
+* Fixed: `esc_html()` added to `EG_SOCIAL_TIMELINE_VERSION` constant output
+* Removed: `load_plugin_textdomain()` — not needed since WP 4.6+ with compiled `.mo` files
+* Changed: tags reduced to 5 (Plugin Check limit)
+
+= 1.4.6 - 2026-05-25 =
 * Changed: readme.txt rewritten — clearer structure, removed references to obsolete versions
 * Changed: Tested up to bumped to WordPress 7.0
 * Changed: EG Forgejo Updater replaces Git Updater in the installation instructions
@@ -162,7 +173,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 == Upgrade Notice ==
 
 = 1.5.0 =
-Documentation updated. No code changes.
+Plugin Check compliance fixes. Update recommended.
 
 = 1.4.5 =
 Recommended update: security fix on the Forgejo instance URL.
