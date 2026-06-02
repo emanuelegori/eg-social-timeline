@@ -374,3 +374,7 @@ msgstr ""
 #: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:406
 msgid "ore"
 msgstr ""
+
+#: /home/emanuele/Workspace/eg-social-timeline/eg-social-timeline.php:1301
+msgid "Filtra per piattaforma:"
+msgstr ""

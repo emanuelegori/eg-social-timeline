@@ -352,3 +352,7 @@ msgstr "hour"
 #: eg-social-timeline.php:406
 msgid "ore"
 msgstr "hours"
+
+#: eg-social-timeline.php:1301
+msgid "Filtra per piattaforma:"
+msgstr "Filter by platform:"
