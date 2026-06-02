@@ -1,7 +1,5 @@
 # EG Social Timeline
 
-> 🇬🇧 English · [🇮🇹 Italiano](README.it-IT.md)
-
 [![Version](https://img.shields.io/badge/Version-1.6.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)

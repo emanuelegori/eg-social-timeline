@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,7 +121,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Changelog ==
 
-= 1.6.2 - 2026-06-02 =
+= 1.6.3 - 2026-06-02 =
 * Fixed: `translators:` comments added to all i18n strings with placeholders
 * Fixed: `strip_tags()` replaced with `wp_strip_all_tags()` (×4)
 * Fixed: `date()` replaced with `gmdate()` for timezone safety
@@ -176,7 +176,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Upgrade Notice ==
 
-= 1.6.2 =
+= 1.6.3 =
 Plugin Check compliance fixes. Update recommended.
 
 = 1.4.5 =
