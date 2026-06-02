@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.6.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.6.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -189,6 +189,24 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.6.6] - 2026-06-02
+
+#### Fixed
+- translators: comments added to all i18n strings with placeholders
+- strip_tags() replaced with wp_strip_all_tags() (×4)
+- date() replaced with gmdate() for timezone safety
+- wp_unslash() + sanitize_text_field() added to nonce verification
+- error_log() calls marked with phpcs:ignore (already gated by EG_SOCIAL_TIMELINE_DEBUG)
+- phpcs:ignore on SVG icon output (hardcoded, sanitized internally)
+- esc_html() added to EG_SOCIAL_TIMELINE_VERSION constant output
+
+#### Removed
+- load_plugin_textdomain() — not needed since WP 4.6+ with compiled .mo files
+
+#### Changed
+- tags reduced to 5 (Plugin Check limit)
+
 
 ### [1.6.1] - 2026-06-02
 
