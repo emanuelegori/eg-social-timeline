@@ -2,7 +2,7 @@
 
 > 🇮🇹 Italiano · [🇬🇧 English](README.md)
 
-[![Versione](https://img.shields.io/badge/Versione-1.4.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.6.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -191,6 +191,56 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.6.1] - 2026-06-02
+
+#### Fixed
+- Action links ora usano msgid inglesi (`Settings`, `Documentation`) — tradotti correttamente in italiano via `it_IT.mo`
+- Aggiunto `rel="noopener noreferrer"` al link Documentazione
+
+### [1.6.0] - 2026-06-02
+
+#### Changed
+- **Refactoring i18n completo**: tutte le stringhe PHP ora hanno msgid in inglese (convenzione WordPress)
+- `it_IT.po`/`.mo` ricostruiti con traduzioni inglese→italiano corrette
+- `en_US.po`/`.mo` rimossi — l'inglese è ora il fallback nativo
+
+### [1.5.3] - 2026-06-02
+
+#### Fixed
+- "Filtra per piattaforma:" inserita in `esc_html_e()` e aggiunta a `it_IT.po`/`.mo`
+
+### [1.5.1] - 2026-06-02
+
+#### Fixed
+- Commento `translators:` spostato sulla riga immediatamente sopra `esc_html__()` (compliance PHPCS)
+- `readme.txt` tradotto in inglese (compliance Plugin Check)
+
+### [1.5.0] - 2026-06-02
+
+#### Fixed
+- Tutti i `strip_tags()` sostituiti con `wp_strip_all_tags()`
+- `date()` sostituito con `gmdate()` per correttezza timezone
+- Verifica nonce usa `wp_unslash()` + `sanitize_text_field()`
+- `error_log()` marcati con `phpcs:ignore` (già condizionati da `EG_SOCIAL_TIMELINE_DEBUG`)
+- `esc_html()` aggiunto alla costante `EG_SOCIAL_TIMELINE_VERSION`
+
+#### Removed
+- `load_plugin_textdomain()` — non necessario da WordPress 4.6+
+
+### [1.4.6] - 2026-05-25
+
+#### Changed
+- readme.txt riscritto con struttura più chiara
+- Tested up to aggiornato a WordPress 7.0
+
+### [1.4.5] - 2026-05-25
+
+#### Security
+- Validazione HTTPS sull'URL istanza Forgejo durante sanitizzazione
+
+#### Added
+- Screenshot frontend, configurazione e limiti per piattaforma
 
 ### [1.4.4] - 2026-05-24
 

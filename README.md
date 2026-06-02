@@ -2,7 +2,7 @@
 
 > 🇬🇧 English · [🇮🇹 Italiano](README.it-IT.md)
 
-[![Version](https://img.shields.io/badge/Version-1.4.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.6.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -191,6 +191,57 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.6.1] - 2026-06-02
+
+#### Fixed
+- Plugin action links now use English msgids (`Settings`, `Documentation`) — correctly translated to Italian via `it_IT.mo`
+- Added `rel="noopener noreferrer"` to the Documentation action link
+
+### [1.6.0] - 2026-06-02
+
+#### Changed
+- **Full i18n refactor**: all PHP strings now use English msgids (WordPress convention)
+- `it_IT.po`/`.mo` rebuilt with proper English→Italian translations
+- `en_US.po`/`.mo` removed — English is now the native fallback
+
+### [1.5.3] - 2026-06-02
+
+#### Fixed
+- "Filter by platform:" (`Filtra per piattaforma:`) wrapped in `esc_html_e()` and added to `it_IT.po`/`.mo`
+
+### [1.5.1] - 2026-06-02
+
+#### Fixed
+- `translators:` comment moved immediately above `esc_html__()` call (PHPCS compliance)
+- `readme.txt` translated to English (Plugin Check compliance)
+
+### [1.5.0] - 2026-06-02
+
+#### Fixed
+- All `strip_tags()` replaced with `wp_strip_all_tags()`
+- `date()` replaced with `gmdate()` for timezone safety
+- Nonce verification uses `wp_unslash()` + `sanitize_text_field()`
+- `error_log()` calls marked with `phpcs:ignore` (already gated by `EG_SOCIAL_TIMELINE_DEBUG`)
+- `esc_html()` added to `EG_SOCIAL_TIMELINE_VERSION` constant output
+
+#### Removed
+- `load_plugin_textdomain()` — no longer needed since WP 4.6+
+
+### [1.4.6] - 2026-05-25
+
+#### Changed
+- readme.txt rewritten with clearer structure
+- Tested up to bumped to WordPress 7.0
+- EG Forgejo Updater replaces Git Updater in installation instructions
+
+### [1.4.5] - 2026-05-25
+
+#### Security
+- HTTPS validation on the Forgejo instance URL during sanitization
+
+#### Added
+- Frontend, configuration and post-limits screenshots
 
 ### [1.4.4] - 2026-05-24
 
