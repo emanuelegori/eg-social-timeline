@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.6.0
+ * Version: 1.6.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.6.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.6.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1500,8 +1500,8 @@ function eg_social_timeline_enqueue_styles() {
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'eg_social_timeline_action_links');
 
 function eg_social_timeline_action_links($links) {
-    $settings_link = '<a href="' . esc_url(admin_url('options-general.php?page=eg-social-timeline')) . '">' . __('Impostazioni', 'eg-social-timeline') . '</a>';
-    $docs_link = '<a href="https://git.emanuelegori.uno/emanuelegori/eg-social-timeline" target="_blank">' . __('Documentazione', 'eg-social-timeline') . '</a>';
+    $settings_link = '<a href="' . esc_url(admin_url('options-general.php?page=eg-social-timeline')) . '">' . __('Settings', 'eg-social-timeline') . '</a>';
+    $docs_link = '<a href="https://git.emanuelegori.uno/emanuelegori/eg-social-timeline" target="_blank" rel="noopener noreferrer">' . __('Documentation', 'eg-social-timeline') . '</a>';
     
     array_unshift($links, $docs_link, $settings_link);
     

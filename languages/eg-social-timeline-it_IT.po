@@ -256,3 +256,9 @@ msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] "%s giorno fa"
 msgstr[1] "%s giorni fa"
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Documentation"
+msgstr "Documentazione"
