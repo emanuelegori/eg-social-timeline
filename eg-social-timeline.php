@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.4.6
+ * Version: 1.5.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,17 +38,10 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.4.6');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.5.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
-
-// Load text domain
-add_action('plugins_loaded', 'eg_social_timeline_load_textdomain');
-
-function eg_social_timeline_load_textdomain() {
-    load_plugin_textdomain('eg-social-timeline', false, dirname(plugin_basename(__FILE__)) . '/languages');
-}
 
 // Admin menu
 add_action('admin_menu', 'eg_social_timeline_admin_menu');
@@ -629,11 +622,15 @@ function eg_social_timeline_settings_page() {
         <hr>
         
         <p style="color: #666;">
-            <strong><?php printf(esc_html__('EG Social Timeline v%s', 'eg-social-timeline'), EG_SOCIAL_TIMELINE_VERSION); ?></strong><br>
-            <?php 
+            <strong><?php
+                /* translators: %s: numero versione plugin */
+                printf( esc_html__( 'EG Social Timeline v%s', 'eg-social-timeline' ), esc_html( EG_SOCIAL_TIMELINE_VERSION ) );
+            ?></strong><br>
+            <?php
+            /* translators: %s: link HTML al sito dello sviluppatore */
             printf(
                 esc_html__('Sviluppato da %s', 'eg-social-timeline'),
-                '<a href="https://emanuelegori.uno" target="_blank">Emanuele Gori</a>'
+                '<a href="https://emanuelegori.uno" target="_blank" rel="noopener noreferrer">Emanuele Gori</a>'
             );
             ?> | 
             <a href="https://git.emanuelegori.uno/emanuelegori/eg-social-timeline" target="_blank"><?php esc_html_e('Repository', 'eg-social-timeline'); ?></a> | 
@@ -655,7 +652,7 @@ function eg_social_timeline_handle_cache_clear() {
         return;
     }
     
-    if (!isset($_POST['eg_social_timeline_nonce']) || !wp_verify_nonce($_POST['eg_social_timeline_nonce'], 'eg_social_timeline_clear_cache')) {
+    if (!isset($_POST['eg_social_timeline_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['eg_social_timeline_nonce'])), 'eg_social_timeline_clear_cache')) {
         return;
     }
     
@@ -732,7 +729,7 @@ function eg_social_timeline_get_mastodon_account_id($profile_url) {
     
     if (is_wp_error($response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline: Mastodon account lookup error - ' . $response->get_error_message());
+            error_log('EG Social Timeline: Mastodon account lookup error - ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return false;
     }
@@ -758,7 +755,7 @@ function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
     
     if (!$account_id) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline: Could not get Mastodon account ID for ' . $profile_url);
+            error_log('EG Social Timeline: Could not get Mastodon account ID for ' . $profile_url); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return array();
     }
@@ -789,7 +786,7 @@ function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
     
     if (is_wp_error($response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Mastodon API Error: ' . $response->get_error_message());
+            error_log('EG Social Timeline Mastodon API Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return array();
     }
@@ -807,7 +804,7 @@ function eg_social_timeline_fetch_mastodon($profile_url, $limit = 0) {
         $is_boost = !empty($status['reblog']);
         $content_data = $is_boost ? $status['reblog'] : $status;
         
-        $content = strip_tags($content_data['content']);
+        $content = wp_strip_all_tags($content_data['content']);
         
         $title_parts = explode("\n", $content);
         $title = !empty($title_parts[0]) ? $title_parts[0] : '';
@@ -860,7 +857,7 @@ function eg_social_timeline_fetch_diggita($username, $limit = 0) {
     
     if (is_wp_error($response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Diggita Error: ' . $response->get_error_message());
+            error_log('EG Social Timeline Diggita Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return array();
     }
@@ -894,7 +891,7 @@ function eg_social_timeline_fetch_diggita($username, $limit = 0) {
         $description = str_replace(['<br>', '<br/>', '<br />'], "\n", $description);
         
         // Remove all HTML tags
-        $clean_text = strip_tags($description);
+        $clean_text = wp_strip_all_tags($description);
         
         // Split into lines and remove empty ones
         $lines = explode("\n", $clean_text);
@@ -966,7 +963,7 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
 
     if (is_wp_error($repos_response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Forgejo Repos Error: ' . $repos_response->get_error_message());
+            error_log('EG Social Timeline Forgejo Repos Error: ' . $repos_response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return array();
     }
@@ -1032,7 +1029,7 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
         
         if (is_wp_error($commits_response)) {
             if (EG_SOCIAL_TIMELINE_DEBUG) {
-                error_log('EG Social Timeline Forgejo Commits Error for ' . $repo_name . ': ' . $commits_response->get_error_message());
+                error_log('EG Social Timeline Forgejo Commits Error for ' . $repo_name . ': ' . $commits_response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             }
             continue;
         }
@@ -1110,7 +1107,7 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
 
     if (is_wp_error($response)) {
         if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline Bluesky Error: ' . $response->get_error_message());
+            error_log('EG Social Timeline Bluesky Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         }
         return array();
     }
@@ -1309,7 +1306,7 @@ function eg_social_timeline_shortcode($atts) {
                     <label for="filter-<?php echo esc_attr($platform); ?>" 
                            class="filter-checkbox-label">
                         <span class="platform-icon-small">
-                            <?php echo eg_social_timeline_get_icon($platform); ?>
+                            <?php echo eg_social_timeline_get_icon($platform); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitizzato internamente dalla funzione ?>
                         </span>
                         <?php 
                         $name = isset($platform_names[$platform]) ? $platform_names[$platform] : ucfirst($platform);
@@ -1326,7 +1323,7 @@ function eg_social_timeline_shortcode($atts) {
                      data-platform="<?php echo esc_attr($post['platform']); ?>">
                 <header class="timeline-header">
                     <span class="platform-icon platform-<?php echo esc_attr($post['platform']); ?>">
-                        <?php echo eg_social_timeline_get_icon($post['platform']); ?>
+                        <?php echo eg_social_timeline_get_icon($post['platform']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitizzato internamente dalla funzione ?>
                     </span>
                     <span class="platform-name"><?php echo esc_html(eg_social_timeline_get_platform_name($post['platform'])); ?></span>
                     
@@ -1334,14 +1331,14 @@ function eg_social_timeline_shortcode($atts) {
                         <span class="boost-badge">🔁 Boost</span>
                     <?php endif; ?>
                     
-                    <time datetime="<?php echo esc_attr(date('c', $post['date'])); ?>" class="post-date">
+                    <time datetime="<?php echo esc_attr(gmdate('c', $post['date'])); ?>" class="post-date">
                         <?php echo esc_html(eg_social_timeline_format_date($post['date'])); ?>
                     </time>
                 </header>
                 <div class="timeline-content">
                     <?php if (!empty($post['content'])): ?>
                     <div class="post-text">
-                        <?php echo esc_html($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : strip_tags($post['content'])); ?>
+                        <?php echo esc_html($truncate_length > 0 ? eg_social_timeline_truncate($post['content'], $truncate_length) : wp_strip_all_tags($post['content'])); ?>
                     </div>
                     <?php endif; ?>
                     <?php if ($show_images && !empty($post['image_url'])): ?>
@@ -1453,12 +1450,15 @@ function eg_social_timeline_format_date($timestamp) {
     
     if ($diff < 3600) {
         $mins = round($diff / 60);
+        /* translators: %s: numero di minuti */
         return sprintf(_n('%s minuto fa', '%s minuti fa', $mins, 'eg-social-timeline'), $mins);
     } elseif ($diff < 86400) {
         $hours = round($diff / 3600);
+        /* translators: %s: numero di ore */
         return sprintf(_n('%s ora fa', '%s ore fa', $hours, 'eg-social-timeline'), $hours);
     } elseif ($diff < 604800) {
         $days = round($diff / 86400);
+        /* translators: %s: numero di giorni */
         return sprintf(_n('%s giorno fa', '%s giorni fa', $days, 'eg-social-timeline'), $days);
     } else {
         return date_i18n(get_option('date_format'), $timestamp);
@@ -1466,7 +1466,7 @@ function eg_social_timeline_format_date($timestamp) {
 }
 
 function eg_social_timeline_truncate($text, $length = 200) {
-    $text = strip_tags($text);
+    $text = wp_strip_all_tags($text);
     
     if (mb_strlen($text) <= $length) {
         return $text;

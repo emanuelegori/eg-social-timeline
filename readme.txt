@@ -1,10 +1,10 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
-Tags: mastodon, bluesky, fediverse, forgejo, social, timeline, activitypub, privacy
+Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.6
+Stable tag: 1.5.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,7 +117,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Changelog ==
 
-= 1.4.6 - 2026-05-25 =
+= 1.5.0 - 2026-05-25 =
 * Changed: readme.txt rewritten — clearer structure, removed references to obsolete versions
 * Changed: Tested up to bumped to WordPress 7.0
 * Changed: EG Forgejo Updater replaces Git Updater in the installation instructions
@@ -161,7 +161,7 @@ Yes. The icons are SVG files you can replace in the `social-icons/` folder. You 
 
 == Upgrade Notice ==
 
-= 1.4.6 =
+= 1.5.0 =
 Documentation updated. No code changes.
 
 = 1.4.5 =
