@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.6.7] - 2026-06-18
+
+### Changed
+- Tradotte in inglese le ultime 3 stringhe sorgente rimaste in italiano nella sezione "Utilizzo" del pannello admin (il resto del plugin era già in inglese dalla 1.6.6).
+- Rigenerato il `.pot` con `wp i18n make-pot` e ri-allineata la traduzione italiana (`it_IT` .po/.mo) al sorgente attuale: aggiunte le stringhe mancanti, corretti i fuzzy errati e tradotta la Description.
+
+### Note
+- Nessuna modifica funzionale, al database o alle impostazioni.
+
 ## [1.4.6] - 2026-05-25
 
 ### Changed

@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,11 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.6.7 - 2026-06-18 =
+* Fixed: three leftover Italian source strings in the admin "Usage" section are now in English (the rest of the plugin was already English)
+* Translation sync: regenerated the `.pot` and re-aligned the Italian translation (`it_IT` .po/.mo) with the current source; added the missing strings and the Italian Description
+* No functional change, no database or settings change
 
 = 1.6.6 - 2026-06-02 =
 * Fixed: `translators:` comments added to all i18n strings with placeholders

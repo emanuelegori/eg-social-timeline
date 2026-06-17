@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.6.6
+ * Version: 1.6.7
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.6.6');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.6.7');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -605,14 +605,14 @@ function eg_social_timeline_settings_page() {
         <p><?php esc_html_e('Once configured, you can insert the timeline in your posts using:', 'eg-social-timeline'); ?></p>
         
         <h3><?php esc_html_e('Shortcode', 'eg-social-timeline'); ?></h3>
-        <p><?php esc_html_e('Inserisci nel contenuto dell\'articolo:', 'eg-social-timeline'); ?></p>
+        <p><?php esc_html_e('Insert in the article content:', 'eg-social-timeline'); ?></p>
         <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline]</code></pre>
         
-        <p><?php esc_html_e('Opzionale: limita il numero di post:', 'eg-social-timeline'); ?></p>
+        <p><?php esc_html_e('Optional: limit the number of posts:', 'eg-social-timeline'); ?></p>
         <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline limit="20"]</code></pre>
         
         <h3><?php esc_html_e('Flush Cache Manually', 'eg-social-timeline'); ?></h3>
-        <p><?php esc_html_e('Per forzare l\'aggiornamento immediato dei feed:', 'eg-social-timeline'); ?></p>
+        <p><?php esc_html_e('To force an immediate feed refresh:', 'eg-social-timeline'); ?></p>
         <form method="post" style="display: inline;">
             <?php wp_nonce_field('eg_social_timeline_clear_cache', 'eg_social_timeline_nonce'); ?>
             <input type="hidden" name="eg_social_timeline_clear_cache" value="1">
