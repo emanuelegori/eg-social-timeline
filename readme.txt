@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ EG Social Timeline aggregates in chronological order your public posts from five
 = Key features =
 
 - Interactive per-platform filters, no JavaScript required
-- Image previews for Mastodon posts and PeerTube video thumbnails (optional)
+- Image previews for Mastodon and Bluesky posts and PeerTube video thumbnails (optional)
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
@@ -75,7 +75,7 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 = Advanced configuration =
 
 - Per-platform post limits (avoids one platform monopolizing the timeline)
-- Image previews for posts with attachments (Mastodon) and PeerTube video thumbnails
+- Image previews for posts with attachments (Mastodon and Bluesky) and PeerTube video thumbnails
 - Text length for each post (50-600 characters, 0 = full text)
 - Include or exclude boosts and reposts
 - Show or hide interaction stats
@@ -123,6 +123,10 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.7.1 - 2026-07-05 =
+* Added: image previews for Bluesky posts, on par with Mastodon. The first image of a post (direct image embed or quote-post-with-media) is shown when the "Show Image Previews" option is enabled, including its alt text. External link-card thumbnails are intentionally ignored.
+* No new settings: reuses the existing "Show Image Previews" toggle.
 
 = 1.7.0 - 2026-07-05 =
 * Added: PeerTube integration via the public REST API (`/api/v1/accounts/{account}/videos`, no authentication). Configure your PeerTube account name and instance URL in the settings.
@@ -191,6 +195,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.7.1 =
+Bluesky posts now show image previews (when the option is enabled), like Mastodon.
+
 = 1.7.0 =
 New PeerTube integration. Enter your account name and instance URL in the settings.
 
@@ -242,7 +249,7 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
 - **Endpoint**: `GET https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor={handle}`.
 - **Data sent**: only the public handle entered in the settings (e.g. `username.bsky.social`).
-- **Data received and stored**: public post metadata (text, date, link, like/repost/reply counts). Cached locally as a WordPress transient.
+- **Data received and stored**: public post metadata (text, date, link, image preview URL and alt text if image previews are enabled, like/repost/reply counts). Cached locally as a WordPress transient.
 - Terms of service: https://bsky.social/about/support/tos
 - Privacy policy: https://bsky.social/about/support/privacy-policy
 

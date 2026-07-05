@@ -6,6 +6,14 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.7.1] - 2026-07-05
+
+### Added
+- Anteprime immagini per i post Bluesky, alla pari di Mastodon: viene mostrata la prima immagine del post (embed immagine diretto o quote-post con media) quando l'opzione "Show Image Previews" è attiva, incluso il testo alternativo. Le miniature delle card di link esterni sono ignorate di proposito.
+
+### Note
+- Nessuna nuova impostazione: riusa il toggle "Show Image Previews" esistente.
+
 ## [1.7.0] - 2026-07-05
 
 ### Added

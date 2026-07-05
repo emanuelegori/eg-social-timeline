@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.7.0
+ * Version: 1.7.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.7.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.7.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1246,6 +1246,26 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
         $title_parts = explode("\n", $content);
         $title = trim($title_parts[0]);
 
+        // Extract first image from the embed (parity with Mastodon media previews).
+        // Handles direct image embeds and quote-post-with-media; ignores external link cards.
+        $image_url = '';
+        $image_alt = '';
+        $embed = isset($post['embed']) && is_array($post['embed']) ? $post['embed'] : array();
+        $embed_type = isset($embed['$type']) ? $embed['$type'] : '';
+        $images = array();
+        if ($embed_type === 'app.bsky.embed.images#view' && !empty($embed['images'])) {
+            $images = $embed['images'];
+        } elseif ($embed_type === 'app.bsky.embed.recordWithMedia#view'
+            && isset($embed['media']['$type']) && $embed['media']['$type'] === 'app.bsky.embed.images#view'
+            && !empty($embed['media']['images'])) {
+            $images = $embed['media']['images'];
+        }
+        if (!empty($images) && is_array($images) && isset($images[0]) && is_array($images[0])) {
+            $first = $images[0];
+            $image_url = isset($first['thumb']) ? esc_url_raw($first['thumb']) : (isset($first['fullsize']) ? esc_url_raw($first['fullsize']) : '');
+            $image_alt = isset($first['alt']) ? sanitize_text_field($first['alt']) : '';
+        }
+
         $posts[] = array(
             'platform'        => 'bluesky',
             'date'            => $timestamp,
@@ -1253,8 +1273,8 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
             'content'         => $content,
             'link'            => $post_url,
             'is_boost'        => $is_repost,
-            'image_url'       => '',
-            'image_alt'       => '',
+            'image_url'       => $image_url,
+            'image_alt'       => $image_alt,
             'favourites_count' => intval($post['likeCount'] ?? 0),
             'reblogs_count'   => intval($post['repostCount'] ?? 0),
             'replies_count'   => intval($post['replyCount'] ?? 0),

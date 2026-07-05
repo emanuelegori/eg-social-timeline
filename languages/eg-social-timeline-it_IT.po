@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: EG Social Timeline 1.6.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-07-05T17:57:09+00:00\n"
+"POT-Creation-Date: 2026-07-05T20:19:18+00:00\n"
 "PO-Revision-Date: 2026-06-02\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -304,7 +304,7 @@ msgstr "EG Social Timeline richiede configurazione!"
 msgid "The plugin is active but no social profile has been configured."
 msgstr "Il plugin è attivo ma nessun profilo social è configurato."
 
-#: eg-social-timeline.php:666 eg-social-timeline.php:1421
+#: eg-social-timeline.php:666 eg-social-timeline.php:1441
 msgid "Configure now"
 msgstr "Configura ora"
 
@@ -367,104 +367,104 @@ msgstr "Licenza GPL-2.0-or-later"
 msgid "Cache flushed successfully!"
 msgstr "Cache svuotata!"
 
-#: eg-social-timeline.php:1419
+#: eg-social-timeline.php:1439
 msgid "EG Social Timeline — Configuration Required"
 msgstr "EG Social Timeline — Configurazione richiesta"
 
-#: eg-social-timeline.php:1420
+#: eg-social-timeline.php:1440
 msgid "No social profile configured."
 msgstr "Nessun profilo social configurato."
 
-#: eg-social-timeline.php:1437
+#: eg-social-timeline.php:1457
 msgid "No posts available at the moment."
 msgstr "Nessun post disponibile al momento."
 
-#: eg-social-timeline.php:1485
+#: eg-social-timeline.php:1505
 msgid "Filter by platform:"
 msgstr "Filtra per piattaforma:"
 
-#: eg-social-timeline.php:1531
+#: eg-social-timeline.php:1551
 msgid "Attached image"
 msgstr "Immagine allegata"
 
-#: eg-social-timeline.php:1541
+#: eg-social-timeline.php:1561
 msgid "Points"
 msgstr "Punti"
 
-#: eg-social-timeline.php:1541
+#: eg-social-timeline.php:1561
 msgid "Favourites"
 msgstr "Preferiti"
 
-#: eg-social-timeline.php:1548
+#: eg-social-timeline.php:1568
 msgid "Boost"
 msgstr "Boost"
 
-#: eg-social-timeline.php:1555
+#: eg-social-timeline.php:1575
 msgid "Comments"
 msgstr "Commenti"
 
-#: eg-social-timeline.php:1555
+#: eg-social-timeline.php:1575
 msgid "Replies"
 msgstr "Risposte"
 
-#: eg-social-timeline.php:1569
+#: eg-social-timeline.php:1589
 msgid "View commit"
 msgstr "Vedi commit"
 
-#: eg-social-timeline.php:1571
+#: eg-social-timeline.php:1591
 msgid "Watch video"
 msgstr "Guarda il video"
 
-#: eg-social-timeline.php:1573
+#: eg-social-timeline.php:1593
 msgid "View original post"
 msgstr "Vedi post originale"
 
-#: eg-social-timeline.php:1588
+#: eg-social-timeline.php:1608
 msgid "Mastodon"
 msgstr "Mastodon"
 
-#: eg-social-timeline.php:1589
+#: eg-social-timeline.php:1609
 msgid "Diggita"
 msgstr "Diggita"
 
-#: eg-social-timeline.php:1590
+#: eg-social-timeline.php:1610
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: eg-social-timeline.php:1591
+#: eg-social-timeline.php:1611
 msgid "Forgejo"
 msgstr "Forgejo"
 
-#: eg-social-timeline.php:1592
+#: eg-social-timeline.php:1612
 msgid "PeerTube"
 msgstr "PeerTube"
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:1642
+#: eg-social-timeline.php:1662
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] "%s minuto fa"
 msgstr[1] "%s minuti fa"
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:1646
+#: eg-social-timeline.php:1666
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] "%s ora fa"
 msgstr[1] "%s ore fa"
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:1650
+#: eg-social-timeline.php:1670
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] "%s giorno fa"
 msgstr[1] "%s giorni fa"
 
-#: eg-social-timeline.php:1691
+#: eg-social-timeline.php:1711
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: eg-social-timeline.php:1692
+#: eg-social-timeline.php:1712
 msgid "Documentation"
 msgstr "Documentazione"
 
