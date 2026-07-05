@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.7.2 - 2026-07-05 =
+* Fixed: image previews now fill the card width uniformly across all platforms. Small source images (e.g. Mastodon `preview_url` thumbnails) were rendered at their natural, reduced size while larger ones (Bluesky, PeerTube) filled the card; added `width: 100%` to `.post-image img` so all previews are consistent.
+
 = 1.7.1 - 2026-07-05 =
 * Added: image previews for Bluesky posts, on par with Mastodon. The first image of a post (direct image embed or quote-post-with-media) is shown when the "Show Image Previews" option is enabled, including its alt text. External link-card thumbnails are intentionally ignored.
 * No new settings: reuses the existing "Show Image Previews" toggle.
@@ -194,6 +197,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.7.2 =
+Image previews now fill the card width consistently across all platforms.
 
 = 1.7.1 =
 Bluesky posts now show image previews (when the option is enabled), like Mastodon.

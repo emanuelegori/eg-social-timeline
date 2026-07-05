@@ -6,6 +6,11 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.7.2] - 2026-07-05
+
+### Fixed
+- Le anteprime immagini ora riempiono la larghezza della card in modo uniforme su tutte le piattaforme. Le immagini sorgente piccole (es. le miniature `preview_url` di Mastodon) venivano mostrate alla loro dimensione naturale ridotta, mentre quelle più grandi (Bluesky, PeerTube) riempivano la card; aggiunto `width: 100%` a `.post-image img` per renderle coerenti.
+
 ## [1.7.1] - 2026-07-05
 
 ### Added
