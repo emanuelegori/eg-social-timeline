@@ -104,6 +104,7 @@
 #filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
 #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
+#filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
 #filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
     background: white;
     color: transparent;
@@ -115,6 +116,7 @@
 #filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
 #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
+#filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
 #filter-blog:not(:checked) ~ * label[for="filter-blog"] {
     opacity: 0.6;
     background: #F5F5F5;
@@ -159,6 +161,7 @@
 #filter-diggita:checked ~ .timeline-diggita,
 #filter-bluesky:checked ~ .timeline-bluesky,
 #filter-forgejo:checked ~ .timeline-forgejo,
+#filter-peertube:checked ~ .timeline-peertube,
 #filter-blog:checked ~ .timeline-blog {
     display: block !important;
 }
@@ -294,6 +297,7 @@
 .platform-diggita .platform-icon svg { color: #FF6B35; }
 .platform-bluesky .platform-icon svg { color: #0085FF; }
 .platform-forgejo .platform-icon svg { color: #609926; }
+.platform-peertube .platform-icon svg { color: #F1680D; }
 
 /* ==============================================
    DARK MODE
@@ -338,6 +342,7 @@
     #filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
     #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
     #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
+    #filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
     #filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
         background: #1E1E1E;
         border-color: #3A3A3A;
@@ -347,6 +352,7 @@
     #filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
     #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
     #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
+    #filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
     #filter-blog:not(:checked) ~ * label[for="filter-blog"] {
         background: #252525;
     }

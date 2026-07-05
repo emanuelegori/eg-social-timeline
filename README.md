@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.6.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.7.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon**, **Diggita** (Lemmy), **Forgejo/Gitea** and **Bluesky**.
+WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon**, **Diggita** (Lemmy), **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
 
 ---
 
@@ -17,6 +17,7 @@ WordPress plugin to display a unified chronological timeline of your social acti
   - **Diggita** (Lemmy) with full statistics
   - **Forgejo/Gitea** (repository commits)
   - **Bluesky** (public ATP API, no authentication required)
+  - **PeerTube** (public REST API, videos from your account)
 - **Per-platform limits**: prevents a single platform from monopolizing the timeline
 - **Interactive filters**: pure-CSS filter system to show/hide platforms
 - **Modular icon system**: SVG icons loaded from files, easy to customize
@@ -64,11 +65,13 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
    - **Diggita**: username (without @)
    - **Forgejo**: username + instance URL (e.g. `https://git.emanuelegori.uno`)
    - **Bluesky**: handle (e.g. `emanuele.bsky.social`, without @)
+   - **PeerTube**: account name + instance URL (e.g. `emanuelegori` + `https://peertube.uno`)
 3. Configure per-platform limits (optional):
    - Max Mastodon posts (default: 20, 0 = unlimited)
    - Max Diggita posts (default: 10, 0 = unlimited)
    - Max Forgejo commits (default: 5, 0 = unlimited)
    - Max Bluesky posts (default: 10, 0 = unlimited)
+   - Max PeerTube videos (default: 5, 0 = unlimited)
 4. Adjust cache and display settings
 5. Save
 

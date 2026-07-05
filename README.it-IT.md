@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.6.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.7.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy), **Forgejo/Gitea** e **Bluesky**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy), **PeerTube**, **Forgejo/Gitea** e **Bluesky**.
 
 ---
 
@@ -17,6 +17,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
   - **Diggita** (Lemmy) con statistiche complete
   - **Forgejo/Gitea** (commit repository)
   - **Bluesky** (API pubblica ATP, nessuna autenticazione)
+  - **PeerTube** (API REST pubblica, video dal tuo account)
 - **Limiti Configurabili per Piattaforma**: Previene che una piattaforma monopolizzi la timeline
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
@@ -64,11 +65,13 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    - **Diggita**: Username (senza @)
    - **Forgejo**: Username + URL istanza (es: `https://git.emanuelegori.uno`)
    - **Bluesky**: Handle (es: `emanuele.bsky.social`, senza @)
+   - **PeerTube**: Nome account + URL istanza (es: `emanuelegori` + `https://peertube.uno`)
 3. Configura limiti per piattaforma (opzionale):
    - Max post Mastodon (default: 20, 0 = illimitato)
    - Max post Diggita (default: 10, 0 = illimitato)
    - Max commit Forgejo (default: 5, 0 = illimitato)
    - Max post Bluesky (default: 10, 0 = illimitato)
+   - Max video PeerTube (default: 5, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
 5. Salva
 

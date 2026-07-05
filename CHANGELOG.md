@@ -6,6 +6,19 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.7.0] - 2026-07-05
+
+### Added
+- Integrazione PeerTube tramite l'API REST pubblica (`GET /api/v1/accounts/{account}/videos`, senza autenticazione): basta indicare nome account e URL dell'istanza nelle impostazioni.
+- Anteprime con le miniature dei video PeerTube (rispettano l'opzione "Show Image Previews") ed etichetta dedicata del link "Watch video".
+- Limite per piattaforma dei video PeerTube (default 5), filtro di piattaforma, icona e colore brand dedicati.
+
+### Security
+- L'URL dell'istanza PeerTube è accettato solo su HTTPS, con validazione anti-SSRF (rifiuta host privati/riservati).
+
+### Changed
+- Rigenerato il `.pot` e allineata la traduzione italiana (`it_IT` .po/.mo) alle nuove stringhe.
+
 ## [1.6.7] - 2026-06-18
 
 ### Changed

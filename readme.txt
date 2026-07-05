@@ -4,27 +4,28 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.6.7
+Stable tag: 1.7.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
+Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Diggita. Zero JavaScript, zero tracking.
 
 == Description ==
 
-EG Social Timeline aggregates in chronological order your public posts from four decentralized platforms and displays them in a single timeline via shortcode.
+EG Social Timeline aggregates in chronological order your public posts from five decentralized platforms and displays them in a single timeline via shortcode.
 
 = Supported platforms =
 
 - Mastodon (and in theory any ActivityPub-compatible instance, untested)
 - Bluesky (public API, no authentication required)
+- PeerTube (public REST API, videos from your account)
 - Forgejo and Gitea (commits from your public repositories)
 - Diggita (Italian Lemmy platform)
 
 = Key features =
 
 - Interactive per-platform filters, no JavaScript required
-- Image previews for Mastodon posts (optional)
+- Image previews for Mastodon posts and PeerTube video thumbnails (optional)
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
@@ -67,13 +68,14 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 - Mastodon profile URL (e.g. https://mastodon.uno/@username)
 - OR Bluesky handle (e.g. emanuele.bsky.social)
+- OR PeerTube account + instance URL (e.g. yourname + https://peertube.uno)
 - OR Forgejo username + instance URL
 - OR Diggita username
 
 = Advanced configuration =
 
 - Per-platform post limits (avoids one platform monopolizing the timeline)
-- Image previews for posts with attachments (Mastodon)
+- Image previews for posts with attachments (Mastodon) and PeerTube video thumbnails
 - Text length for each post (50-600 characters, 0 = full text)
 - Include or exclude boosts and reposts
 - Show or hide interaction stats
@@ -83,7 +85,7 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 = Which platforms are supported? =
 
-Mastodon (and ActivityPub-compatible instances), Bluesky, Forgejo/Gitea and Diggita.
+Mastodon (and ActivityPub-compatible instances), Bluesky, PeerTube, Forgejo/Gitea and Diggita.
 
 = Do the platform filters require JavaScript? =
 
@@ -121,6 +123,13 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.7.0 - 2026-07-05 =
+* Added: PeerTube integration via the public REST API (`/api/v1/accounts/{account}/videos`, no authentication). Configure your PeerTube account name and instance URL in the settings.
+* Added: PeerTube video thumbnails shown as image previews (respects the "Show Image Previews" option) and a dedicated "Watch video" link label.
+* Added: per-platform limit for PeerTube videos (default 5), platform filter, brand icon and color.
+* Security: PeerTube instance URL accepted over HTTPS only, with anti-SSRF validation (rejects private/reserved hosts).
+* Translation sync: regenerated the `.pot` and aligned the Italian translation (`it_IT` .po/.mo) with the new strings.
 
 = 1.6.7 - 2026-06-18 =
 * Fixed: three leftover Italian source strings in the admin "Usage" section are now in English (the rest of the plugin was already English)
@@ -182,6 +191,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.7.0 =
+New PeerTube integration. Enter your account name and instance URL in the settings.
+
 = 1.6.6 =
 Plugin Check compliance fixes. Update recommended.
 
@@ -211,7 +223,7 @@ Per-platform configurable limits. Backward-compatible with v1.2.x.
 
 == External services ==
 
-This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile field (Mastodon URL, Bluesky handle, Forgejo username + instance URL, or Diggita username). All requests are HTTP GET requests for public content; no user credentials are sent.
+This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile field (Mastodon URL, Bluesky handle, PeerTube account + instance URL, Forgejo username + instance URL, or Diggita username). All requests are HTTP GET requests for public content; no user credentials are sent.
 
 Contacted services are cached locally for a configurable duration (30 minutes to 24 hours, default value depends on the admin setting) to minimize external traffic.
 
@@ -233,6 +245,15 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Data received and stored**: public post metadata (text, date, link, like/repost/reply counts). Cached locally as a WordPress transient.
 - Terms of service: https://bsky.social/about/support/tos
 - Privacy policy: https://bsky.social/about/support/privacy-policy
+
+= PeerTube =
+
+- **What**: the PeerTube instance the user enters in the settings (e.g. `https://peertube.uno`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
+- **Endpoint**: `GET /api/v1/accounts/{account}/videos` for the account's public videos.
+- **Data sent**: only the public account name entered in the settings, as part of the URL path.
+- **Data received and stored**: public video metadata (title, description, date, link, thumbnail URL and like count). Cached locally as a WordPress transient.
+- PeerTube is decentralized federated video hosting: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
 
 = Forgejo / Gitea =
 

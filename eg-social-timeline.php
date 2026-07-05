@@ -2,8 +2,8 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
- * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.6.7
+ * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Diggita. Zero JavaScript, zero tracking.
+ * Version: 1.7.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.6.7');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.7.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -79,6 +79,9 @@ function eg_social_timeline_register_settings() {
                 'forgejo_limit' => 5,
                 'bluesky_handle' => '',
                 'bluesky_limit' => 10,
+                'peertube_handle' => '',
+                'peertube_instance' => '',
+                'peertube_limit' => 5,
                 'truncate_length' => 300,
                 'show_images' => false
             )
@@ -132,6 +135,22 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_main_section'
     );
 
+    add_settings_field(
+        'eg_social_timeline_peertube_handle',
+        __('PeerTube Account', 'eg-social-timeline'),
+        'eg_social_timeline_peertube_handle_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_peertube_instance',
+        __('PeerTube Instance URL', 'eg-social-timeline'),
+        'eg_social_timeline_peertube_instance_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_main_section'
+    );
+
     add_settings_section(
         'eg_social_timeline_limits_section',
         __('Per-Platform Post Limits', 'eg-social-timeline'),
@@ -167,6 +186,14 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_bluesky_limit',
         __('Max Bluesky Posts', 'eg-social-timeline'),
         'eg_social_timeline_bluesky_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_peertube_limit',
+        __('Max PeerTube Videos', 'eg-social-timeline'),
+        'eg_social_timeline_peertube_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
     );
@@ -309,6 +336,38 @@ function eg_social_timeline_bluesky_handle_callback() {
     <?php
 }
 
+function eg_social_timeline_peertube_handle_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $handle = isset($options['peertube_handle']) ? $options['peertube_handle'] : '';
+    ?>
+    <input type="text"
+           id="eg_social_timeline_peertube_handle"
+           name="eg_social_timeline_options[peertube_handle]"
+           value="<?php echo esc_attr($handle); ?>"
+           placeholder="<?php echo esc_attr__('e.g. yourusername', 'eg-social-timeline'); ?>"
+           class="regular-text">
+    <p class="description">
+        <?php esc_html_e('Your PeerTube account name (without @ and without the instance domain).', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_peertube_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $instance = isset($options['peertube_instance']) ? $options['peertube_instance'] : '';
+    ?>
+    <input type="url"
+           id="eg_social_timeline_peertube_instance"
+           name="eg_social_timeline_options[peertube_instance]"
+           value="<?php echo esc_attr($instance); ?>"
+           placeholder="https://peertube.example"
+           class="regular-text">
+    <p class="description">
+        <?php esc_html_e('Full URL of your PeerTube instance (HTTPS only). Example: https://peertube.uno', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
 function eg_social_timeline_bluesky_limit_callback() {
     $options = get_option('eg_social_timeline_options');
     $limit = isset($options['bluesky_limit']) ? $options['bluesky_limit'] : 10;
@@ -373,6 +432,23 @@ function eg_social_timeline_forgejo_limit_callback() {
            class="small-text">
     <p class="description">
         <?php esc_html_e('Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_peertube_limit_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $limit = isset($options['peertube_limit']) ? $options['peertube_limit'] : 5;
+    ?>
+    <input type="number"
+           id="eg_social_timeline_peertube_limit"
+           name="eg_social_timeline_options[peertube_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -492,13 +568,14 @@ function eg_social_timeline_sanitize_options($input) {
     $diggita_username = isset($input['diggita_username']) ? sanitize_text_field($input['diggita_username']) : '';
     $forgejo_username = isset($input['forgejo_username']) ? sanitize_text_field($input['forgejo_username']) : '';
     $bluesky_handle = isset($input['bluesky_handle']) ? sanitize_text_field(ltrim($input['bluesky_handle'], '@')) : '';
+    $peertube_handle = isset($input['peertube_handle']) ? sanitize_text_field(ltrim($input['peertube_handle'], '@')) : '';
 
-    if (empty($mastodon_url) && empty($diggita_username) && empty($forgejo_username) && empty($bluesky_handle)) {
+    if (empty($mastodon_url) && empty($diggita_username) && empty($forgejo_username) && empty($bluesky_handle) && empty($peertube_handle)) {
         add_settings_error(
             'eg_social_timeline_options',
             'no_profiles',
             '<strong>' . __('Error:', 'eg-social-timeline') . '</strong> ' .
-            __('You must configure at least one social profile (Mastodon, Diggita, Forgejo or Bluesky).', 'eg-social-timeline'),
+            __('You must configure at least one social profile (Mastodon, Diggita, Forgejo, Bluesky or PeerTube).', 'eg-social-timeline'),
             'error'
         );
 
@@ -510,6 +587,7 @@ function eg_social_timeline_sanitize_options($input) {
     $output['diggita_username'] = $diggita_username;
     $output['forgejo_username'] = $forgejo_username;
     $output['bluesky_handle'] = $bluesky_handle;
+    $output['peertube_handle'] = $peertube_handle;
     
     $forgejo_instance = isset($input['forgejo_instance']) ? esc_url_raw($input['forgejo_instance']) : 'https://gitea.com';
     // Accetta solo HTTPS — HTTP espone il token in chiaro e apre a SSRF su reti interne
@@ -533,6 +611,17 @@ function eg_social_timeline_sanitize_options($input) {
 
     $bluesky_limit = isset($input['bluesky_limit']) ? intval($input['bluesky_limit']) : 10;
     $output['bluesky_limit'] = max(0, min(100, $bluesky_limit));
+
+    $peertube_instance = isset($input['peertube_instance']) ? esc_url_raw($input['peertube_instance']) : '';
+    // Accetta solo HTTPS — evita SSRF su reti interne (endpoint API pubblico, nessun token)
+    if ( ! empty($peertube_instance) && strpos($peertube_instance, 'https://') === 0 ) {
+        $output['peertube_instance'] = $peertube_instance;
+    } else {
+        $output['peertube_instance'] = '';
+    }
+
+    $peertube_limit = isset($input['peertube_limit']) ? intval($input['peertube_limit']) : 5;
+    $output['peertube_limit'] = max(0, min(100, $peertube_limit));
 
     $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
@@ -1175,6 +1264,94 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
     return $posts;
 }
 
+// Fetch PeerTube videos via the public REST API (no authentication)
+function eg_social_timeline_fetch_peertube($handle, $instance_url, $limit = 0) {
+    if (empty($handle) || empty($instance_url)) {
+        return array();
+    }
+
+    // HTTPS only + anti-SSRF (public API, no token, must not hit internal hosts)
+    if (strpos($instance_url, 'https://') !== 0 || !eg_social_timeline_is_public_url($instance_url)) {
+        return array();
+    }
+
+    $handle = ltrim($handle, '@');
+    $api_limit = ($limit > 0) ? min($limit, 100) : 100;
+
+    $api_url = rtrim($instance_url, '/') . '/api/v1/accounts/' . rawurlencode($handle) . '/videos?' . http_build_query(array(
+        'count' => $api_limit,
+        'sort'  => '-publishedAt',
+    ));
+
+    $response = wp_remote_get($api_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline PeerTube Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+        }
+        return array();
+    }
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (empty($data['data']) || !is_array($data['data'])) {
+        return array();
+    }
+
+    $base = rtrim($instance_url, '/');
+    $posts = array();
+
+    foreach ($data['data'] as $video) {
+        if (!is_array($video)) {
+            continue;
+        }
+
+        $name = isset($video['name']) ? sanitize_text_field($video['name']) : '';
+        if (empty($name)) {
+            continue;
+        }
+
+        $published = isset($video['publishedAt']) ? $video['publishedAt'] : '';
+        $timestamp = $published ? strtotime($published) : 0;
+        if (!$timestamp) {
+            continue;
+        }
+
+        $video_url = !empty($video['url']) ? esc_url_raw($video['url']) : '';
+        if (empty($video_url) && !empty($video['uuid'])) {
+            $video_url = $base . '/videos/watch/' . rawurlencode($video['uuid']);
+        }
+
+        // Thumbnail path is relative to the instance (e.g. /lazy-static/thumbnails/xxx.jpg)
+        $image_url = '';
+        if (!empty($video['thumbnailPath'])) {
+            $image_url = $base . '/' . ltrim($video['thumbnailPath'], '/');
+        }
+
+        $description = isset($video['description']) ? sanitize_text_field($video['description']) : '';
+        $content = $description !== '' ? $name . "\n\n" . $description : $name;
+
+        $posts[] = array(
+            'platform'        => 'peertube',
+            'date'            => $timestamp,
+            'title'           => $name,
+            'content'         => $content,
+            'link'            => $video_url,
+            'is_boost'        => false,
+            'image_url'       => $image_url,
+            'image_alt'       => $name,
+            'favourites_count' => intval($video['likes'] ?? 0),
+            'reblogs_count'   => 0,
+            'replies_count'   => 0,
+        );
+    }
+
+    return $posts;
+}
+
 // Fetch and merge all feeds
 function eg_social_timeline_fetch_all_feeds() {
     $cached = get_transient('eg_social_timeline_cache');
@@ -1191,6 +1368,7 @@ function eg_social_timeline_fetch_all_feeds() {
     $diggita_limit  = isset($options['diggita_limit'])  ? intval($options['diggita_limit'])  : 10;
     $forgejo_limit  = isset($options['forgejo_limit'])  ? intval($options['forgejo_limit'])  : 5;
     $bluesky_limit  = isset($options['bluesky_limit'])  ? intval($options['bluesky_limit'])  : 10;
+    $peertube_limit = isset($options['peertube_limit']) ? intval($options['peertube_limit']) : 5;
 
     // Fetch with limits
     if (!empty($options['mastodon_url'])) {
@@ -1213,7 +1391,12 @@ function eg_social_timeline_fetch_all_feeds() {
         $bluesky_posts = eg_social_timeline_fetch_bluesky($options['bluesky_handle'], $bluesky_limit);
         $all_posts = array_merge($all_posts, $bluesky_posts);
     }
-    
+
+    if (!empty($options['peertube_handle']) && !empty($options['peertube_instance'])) {
+        $peertube_posts = eg_social_timeline_fetch_peertube($options['peertube_handle'], $options['peertube_instance'], $peertube_limit);
+        $all_posts = array_merge($all_posts, $peertube_posts);
+    }
+
     usort($all_posts, function($a, $b) {
         return $b['date'] - $a['date'];
     });
@@ -1230,7 +1413,7 @@ add_shortcode('eg_social_timeline', 'eg_social_timeline_shortcode');
 function eg_social_timeline_shortcode($atts) {
     $options = get_option('eg_social_timeline_options');
     
-    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username']) && empty($options['bluesky_handle'])) {
+    if (empty($options['mastodon_url']) && empty($options['diggita_username']) && empty($options['forgejo_username']) && empty($options['bluesky_handle']) && empty($options['peertube_handle'])) {
         if (current_user_can('manage_options')) {
             return '<div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 20px 0;">
                 <strong>' . esc_html__('EG Social Timeline — Configuration Required', 'eg-social-timeline') . '</strong><br>
@@ -1282,6 +1465,7 @@ function eg_social_timeline_shortcode($atts) {
             'diggita' => 'Diggita',
             'bluesky' => 'Bluesky',
             'forgejo' => 'Forgejo',
+            'peertube' => 'PeerTube',
             'blog' => 'Blog'
         );
         ?>
@@ -1383,6 +1567,8 @@ function eg_social_timeline_shortcode($atts) {
                         <?php 
                         if ($post['platform'] === 'forgejo') {
                             esc_html_e('View commit', 'eg-social-timeline');
+                        } elseif ($post['platform'] === 'peertube') {
+                            esc_html_e('Watch video', 'eg-social-timeline');
                         } else {
                             esc_html_e('View original post', 'eg-social-timeline');
                         }
@@ -1402,7 +1588,8 @@ function eg_social_timeline_get_platform_name($platform) {
         'mastodon' => __('Mastodon', 'eg-social-timeline'),
         'diggita' => __('Diggita', 'eg-social-timeline'),
         'bluesky' => __('Bluesky', 'eg-social-timeline'),
-        'forgejo' => __('Forgejo', 'eg-social-timeline')
+        'forgejo' => __('Forgejo', 'eg-social-timeline'),
+        'peertube' => __('PeerTube', 'eg-social-timeline')
     );
     
     return isset($names[$platform]) ? $names[$platform] : $platform;
@@ -1415,6 +1602,7 @@ function eg_social_timeline_get_icon($platform) {
         'diggita' => 'diggita.svg',
         'bluesky' => 'bluesky.svg',
         'forgejo' => 'forgejo.svg',
+        'peertube' => 'peertube.svg',
         'blog' => 'blog.svg'
     );
     
