@@ -193,6 +193,58 @@ eg-social-timeline/
 
 ## Changelog
 
+### [1.7.2] - 2026-07-05
+
+#### Fixed
+- Le anteprime immagini ora riempiono la larghezza della card in modo uniforme su tutte le piattaforme — le immagini sorgente piccole (es. le miniature `preview_url` di Mastodon) venivano mostrate alla loro dimensione naturale ridotta mentre quelle più grandi (Bluesky, PeerTube) riempivano la card; aggiunto `width: 100%` a `.post-image img`
+
+### [1.7.1] - 2026-07-05
+
+#### Added
+- Anteprime immagini per i post Bluesky, alla pari di Mastodon: viene mostrata la prima immagine del post (embed immagine diretto o quote-post con media) quando l'opzione "Show Image Previews" è attiva, testo alternativo incluso. Le miniature delle card di link esterni sono ignorate di proposito
+
+#### Note
+- Nessuna nuova impostazione: riusa il toggle "Show Image Previews" esistente
+
+### [1.7.0] - 2026-07-05
+
+#### Added
+- Integrazione PeerTube tramite l'API REST pubblica (`GET /api/v1/accounts/{account}/videos`, senza autenticazione): basta indicare nome account e URL dell'istanza nelle impostazioni
+- Anteprime con le miniature dei video PeerTube (rispettano l'opzione "Show Image Previews") ed etichetta dedicata del link "Watch video"
+- Limite per piattaforma dei video PeerTube (default 5), filtro di piattaforma, icona e colore brand dedicati
+
+#### Security
+- L'URL dell'istanza PeerTube è accettato solo su HTTPS, con validazione anti-SSRF (rifiuta host privati/riservati)
+
+#### Changed
+- Rigenerato il `.pot` e allineata la traduzione italiana (`it_IT` .po/.mo) alle nuove stringhe
+
+### [1.6.7] - 2026-06-18
+
+#### Changed
+- Tradotte in inglese le ultime 3 stringhe sorgente rimaste in italiano nella sezione "Utilizzo" del pannello admin (il resto del plugin era già in inglese dalla 1.6.6)
+- Rigenerato il `.pot` con `wp i18n make-pot` e ri-allineata la traduzione italiana (`it_IT` .po/.mo) al sorgente attuale: aggiunte le stringhe mancanti, corretti i fuzzy errati e tradotta la Description
+
+#### Note
+- Nessuna modifica funzionale, al database o alle impostazioni
+
+### [1.6.6] - 2026-06-02
+
+#### Fixed
+- Commenti `translators:` aggiunti a tutte le stringhe i18n con placeholder
+- `strip_tags()` sostituita con `wp_strip_all_tags()` (×4)
+- `date()` sostituita con `gmdate()` per sicurezza sui fusi orari
+- `wp_unslash()` + `sanitize_text_field()` aggiunte alla verifica del nonce
+- Chiamate `error_log()` marcate con `phpcs:ignore` (già protette da `EG_SOCIAL_TIMELINE_DEBUG`)
+- `phpcs:ignore` sull'output delle icone SVG (hardcoded, sanitizzate internamente)
+- `esc_html()` aggiunta all'output della costante `EG_SOCIAL_TIMELINE_VERSION`
+
+#### Removed
+- `load_plugin_textdomain()` — non necessaria da WP 4.6+ con file `.mo` compilati
+
+#### Changed
+- Tag ridotti a 5 (limite Plugin Check)
+
 ### [1.6.1] - 2026-06-02
 
 #### Fixed

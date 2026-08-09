@@ -193,6 +193,41 @@ eg-social-timeline/
 
 ## Changelog
 
+### [1.7.2] - 2026-07-05
+
+#### Fixed
+- Image previews now fill the card width consistently across all platforms — small source images (e.g. Mastodon `preview_url` thumbnails) were rendered at their reduced natural size while larger ones (Bluesky, PeerTube) filled the card; added `width: 100%` to `.post-image img`
+
+### [1.7.1] - 2026-07-05
+
+#### Added
+- Image previews for Bluesky posts, on par with Mastodon: the first post image (direct image embed or quote-post with media) is shown when "Show Image Previews" is enabled, alt text included. Thumbnails of external link cards are intentionally ignored
+
+#### Note
+- No new settings: reuses the existing "Show Image Previews" toggle
+
+### [1.7.0] - 2026-07-05
+
+#### Added
+- PeerTube integration through the public REST API (`GET /api/v1/accounts/{account}/videos`, no authentication required): just set the account name and instance URL in the settings
+- Thumbnail previews for PeerTube videos (honouring the "Show Image Previews" option) and a dedicated "Watch video" link label
+- Per-platform limit for PeerTube videos (default 5), platform filter, dedicated icon and brand colour
+
+#### Security
+- The PeerTube instance URL is accepted over HTTPS only, with anti-SSRF validation (private/reserved hosts rejected)
+
+#### Changed
+- Regenerated the `.pot` and realigned the Italian translation (`it_IT` .po/.mo) with the new strings
+
+### [1.6.7] - 2026-06-18
+
+#### Changed
+- Translated to English the last 3 source strings still in Italian in the "Usage" section of the admin panel (the rest of the plugin was already in English since 1.6.6)
+- Regenerated the `.pot` with `wp i18n make-pot` and realigned the Italian translation (`it_IT` .po/.mo) with the current source: added missing strings, fixed wrong fuzzy entries and translated the Description
+
+#### Note
+- No functional, database or settings changes
+
 ### [1.6.6] - 2026-06-02
 
 #### Fixed

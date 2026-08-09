@@ -41,6 +41,59 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 ### Note
 - Nessuna modifica funzionale, al database o alle impostazioni.
 
+## [1.6.6] - 2026-06-02
+
+### Fixed
+- Commenti `translators:` aggiunti a tutte le stringhe i18n con placeholder.
+- `strip_tags()` sostituita con `wp_strip_all_tags()` (×4).
+- `date()` sostituita con `gmdate()` per sicurezza sui fusi orari.
+- `wp_unslash()` + `sanitize_text_field()` aggiunte alla verifica del nonce.
+- Chiamate `error_log()` marcate con `phpcs:ignore` (già protette da `EG_SOCIAL_TIMELINE_DEBUG`).
+- `phpcs:ignore` sull'output delle icone SVG (hardcoded, sanitizzate internamente).
+- `esc_html()` aggiunta all'output della costante `EG_SOCIAL_TIMELINE_VERSION`.
+
+### Removed
+- `load_plugin_textdomain()` — non necessaria da WP 4.6+ con file `.mo` compilati.
+
+### Changed
+- Tag ridotti a 5 (limite Plugin Check).
+
+## [1.6.1] - 2026-06-02
+
+### Fixed
+- Gli action links ora usano msgid inglesi (`Settings`, `Documentation`), tradotti correttamente in italiano via `it_IT.mo`.
+- Aggiunto `rel="noopener noreferrer"` al link Documentazione.
+
+## [1.6.0] - 2026-06-02
+
+### Changed
+- **Refactoring i18n completo**: tutte le stringhe PHP ora hanno msgid in inglese (convenzione WordPress).
+- `it_IT.po`/`.mo` ricostruiti con traduzioni inglese→italiano corrette.
+- `en_US.po`/`.mo` rimossi — l'inglese è ora il fallback nativo.
+
+## [1.5.3] - 2026-06-02
+
+### Fixed
+- "Filtra per piattaforma:" inserita in `esc_html_e()` e aggiunta a `it_IT.po`/`.mo`.
+
+## [1.5.1] - 2026-06-02
+
+### Fixed
+- Commento `translators:` spostato sulla riga immediatamente sopra `esc_html__()` (compliance PHPCS).
+- `readme.txt` tradotto in inglese (compliance Plugin Check).
+
+## [1.5.0] - 2026-06-02
+
+### Fixed
+- Tutti i `strip_tags()` sostituiti con `wp_strip_all_tags()`.
+- `date()` sostituito con `gmdate()` per correttezza sui fusi orari.
+- La verifica del nonce usa `wp_unslash()` + `sanitize_text_field()`.
+- Chiamate `error_log()` marcate con `phpcs:ignore` (già condizionate da `EG_SOCIAL_TIMELINE_DEBUG`).
+- `esc_html()` aggiunta alla costante `EG_SOCIAL_TIMELINE_VERSION`.
+
+### Removed
+- `load_plugin_textdomain()` — non necessaria da WordPress 4.6+.
+
 ## [1.4.6] - 2026-05-25
 
 ### Changed
