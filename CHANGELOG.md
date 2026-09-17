@@ -6,6 +6,24 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.9.0] - 2026-09-17
+
+### Changed
+- **Tutte le piattaforme si configurano allo stesso modo**: URL dell'istanza + nome utente. Mastodon chiedeva l'URL completo del profilo mentre Forgejo e PeerTube chiedevano due campi separati, senza alcuna ragione tecnica: il codice spezzava quell'URL nelle stesse due informazioni due righe dopo (`preg_match` in `get_mastodon_account_id`).
+- **Diggita diventa supporto Lemmy generico.** Il fetcher parlava già Lemmy — `/feeds/u/{username}.xml` è il formato dei feed utente Lemmy, e il feed stesso si presenta come "diggita lemmy social" — ma con il dominio inchiodato nel codice. Ora l'istanza è un'impostazione e funziona qualsiasi istanza Lemmy. Il nome sulle schede viene dal dominio: `diggita.com` resta "Diggita", `lemmy.ml` è "Lemmy", `sh.itjust.works` è "Itjust" (un sottodominio corto viene saltato).
+- Le impostazioni delle versioni precedenti vengono convertite alla lettura: l'URL Mastodon viene spezzato, Diggita diventa un'istanza Lemmy, i limiti per piattaforma sono riportati. L'opzione non viene riscritta: il database si allinea al primo salvataggio.
+- Il vero logo Lemmy sostituisce un segnaposto disegnato a mano, e si aggiunge l'icona Pleroma (entrambe da Simple Icons, CC0).
+
+### Added
+- **Rilevamento del software** di un'istanza del fediverso via `/.well-known/nodeinfo` (in cache 7 giorni): Pleroma e Akkoma ottengono nome e icona propri invece di quelli di Mastodon, che sarebbe come marchiare Forgejo col logo di GitHub. L'href del documento nodeinfo viene accettato solo se punta allo stesso host dell'istanza, altrimenti sarebbe un SSRF servito su richiesta.
+- Salvando un'istanza che non espone l'API pubblica arriva una spiegazione invece del silenzio. Misurato sul campo: **Mastodon** e **Pleroma/Akkoma** rispondono al lookup senza autenticazione; **GoToSocial** e **Friendica** rispondono 401; **Misskey** e **Sharkey** usano un'API propria; **Pixelfed** risponde al lookup ma reindirizza gli stati al login.
+- **Esito per piattaforma nelle impostazioni**: dopo ogni aggiornamento della cache il plugin registra quanti contenuti ha portato ciascuna piattaforma configurata e mostra un avviso per quelle vuote, con il motivo quando lo conosce (istanza che richiede autenticazione, account non trovato, feed Lemmy chiesto all'istanza sbagliata).
+
+### Fixed
+- Il parser del profilo accettava **solo** la forma `/@utente`: un indirizzo legittimo come `/users/utente` non corrispondeva, `fetch_mastodon()` restituiva un array vuoto e Mastodon spariva dalla timeline **senza un avviso**, perché il log stava dietro `EG_SOCIAL_TIMELINE_DEBUG` che è `false` nei pacchetti. Ora riconosce anche `/users/utente` e `@utente@istanza`.
+- Nel parser il delimitatore della regex era `#` e la classe conteneva `[^/?#]`: il carattere chiudeva l'espressione in anticipo (`Unknown modifier ']'`) e ogni URL veniva rifiutato. Trovato dai test prima del rilascio.
+- Gli URL delle istanze vengono normalizzati e validati in un solo punto (`normalize_instance()`): solo HTTPS, host privati e riservati rifiutati.
+
 ## [1.8.1] - 2026-09-17
 
 ### Fixed

@@ -1,14 +1,14 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
-Tags: mastodon, bluesky, forgejo, social, timeline
+Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Diggita. Zero JavaScript, zero tracking.
+Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
 
 == Description ==
 
@@ -16,11 +16,13 @@ EG Social Timeline aggregates in chronological order your public posts from five
 
 = Supported platforms =
 
-- Mastodon (and in theory any ActivityPub-compatible instance, untested)
+- Mastodon, and the Mastodon-compatible Pleroma and Akkoma (public accounts API, no authentication)
 - Bluesky (public API, no authentication required)
 - PeerTube (public REST API, videos from your account)
 - Forgejo and Gitea (commits from your public repositories)
-- Diggita (Italian Lemmy platform)
+- Lemmy, on any instance (public user RSS feed; Diggita is one of them)
+
+Every platform is configured the same way: the instance URL plus your username. Bluesky is the exception, because its public API lives at a single address for everyone.
 
 = Key features =
 
@@ -68,11 +70,11 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 = Minimum configuration =
 
-- Mastodon profile URL (e.g. https://mastodon.uno/@username)
-- OR Bluesky handle (e.g. emanuele.bsky.social)
-- OR PeerTube account + instance URL (e.g. yourname + https://peertube.uno)
-- OR Forgejo username + instance URL
-- OR Diggita username
+- Mastodon, Pleroma or Akkoma: instance URL + username (e.g. https://mastodon.uno + username)
+- OR Lemmy: instance URL + username (e.g. https://diggita.com + username)
+- OR PeerTube: instance URL + account (e.g. https://peertube.uno + yourname)
+- OR Forgejo/Gitea: instance URL + username
+- OR Bluesky: handle alone (e.g. emanuele.bsky.social)
 
 = Advanced configuration =
 
@@ -91,7 +93,15 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 = Which platforms are supported? =
 
-Mastodon (and ActivityPub-compatible instances), Bluesky, PeerTube, Forgejo/Gitea and Diggita.
+Mastodon, Pleroma, Akkoma, Bluesky, PeerTube, Forgejo/Gitea and Lemmy (any instance).
+
+= Does the Mastodon field work with every fediverse server? =
+
+No, and it is worth knowing why. The plugin reads the public accounts API (`/api/v1/accounts/lookup` and `/api/v1/accounts/{id}/statuses`), which Mastodon, Pleroma and Akkoma serve without authentication. GoToSocial and Friendica answer those endpoints with HTTP 401, Misskey and Sharkey use a different API, and Pixelfed answers the lookup but redirects the statuses endpoint to its login page. When you save an instance running one of those, the settings page says so instead of leaving you with a platform that never appears.
+
+= A platform I configured does not show up. Where do I look? =
+
+The settings page. After each cache refresh the plugin records what every configured platform returned, and shows a warning for the ones that came back empty, with the reason when it knows it: an instance requiring authentication, an account not found, a Lemmy feed requested on an instance where that account is not registered.
 
 = Do the platform filters require JavaScript? =
 
@@ -128,7 +138,7 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 == Screenshots ==
 
 ![Unified timeline](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-1.png)
-Unified timeline — chronological feed from Mastodon, Bluesky, Forgejo and Diggita.
+Unified timeline — chronological feed from Mastodon, Bluesky, Forgejo and Lemmy.
 
 ![Admin settings — profiles](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-2.png)
 Admin settings — social profiles configuration.
@@ -137,6 +147,16 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.9.0 - 2026-09-17 =
+* Changed: every platform is now configured the same way, instance URL plus username. Mastodon used to ask for a full profile URL while Forgejo and PeerTube asked for two separate fields, with no technical reason: the code split that URL into the very same two values a couple of lines later.
+* Changed: Diggita becomes generic Lemmy support. The fetcher already spoke Lemmy — `/feeds/u/{username}.xml` is the Lemmy user feed — with the domain hardcoded; now the instance is a setting, so any Lemmy instance works. The platform name on the cards comes from the instance domain, so diggita.com still reads "Diggita" while lemmy.ml reads "Lemmy".
+* Added: the software of a fediverse instance is detected via `/.well-known/nodeinfo` (cached 7 days), so Pleroma and Akkoma get their own name and icon instead of Mastodon's. Saving an instance that runs GoToSocial, Friendica, Misskey, Sharkey, Firefish, Iceshrimp or Pixelfed now returns an explanation, because those do not serve the public API this plugin reads.
+* Added: the settings page reports what each configured platform returned on the last refresh, with the reason when a platform came back empty. Until now a wrong URL or an instance requiring authentication made a platform vanish with no message at all, because the only log was behind a debug constant that ships disabled.
+* Fixed: the profile URL parser accepted only the `/@user` form, so a perfectly valid `/users/user` address silently produced nothing. It now also reads `/users/user` and `@user@instance`, and it is used to migrate the old setting.
+* Fixed: instance URLs are normalized and validated in one place, HTTPS only, rejecting private and reserved hosts.
+* Changed: settings saved with earlier versions are converted on read — the Mastodon URL is split, Diggita becomes a Lemmy instance, per-platform limits are carried over — and the database is rewritten on your first save.
+* Changed: the real Lemmy logo replaces a hand-drawn placeholder, and the Pleroma icon is added (both from Simple Icons, CC0).
 
 = 1.8.1 - 2026-09-17 =
 * Fixed: contrast is now measured on the color you choose instead of being inferred from a color scheme. In 1.8.0 a dark card background left the post text, the borders and the icons dark on dark. The plugin now computes the WCAG contrast ratio of the chosen background and moves text, borders, badges, links and icons to the palette that contrasts more.
@@ -232,6 +252,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.9.0 =
+Every platform is configured the same way now: instance URL + username. Diggita becomes generic Lemmy support (your settings are migrated), Pleroma and Akkoma get their own name and icon, and a platform that returns nothing is reported in the settings instead of vanishing silently.
+
 = 1.8.1 =
 Fixes 1.8.0: contrast is measured on the color you pick, so a dark card background no longer leaves dark text and dark icons on it. The Appearance section is simpler — no more Color Scheme, one colour per background — and card backgrounds can now be transparent.
 
@@ -276,15 +299,15 @@ Per-platform configurable limits. Backward-compatible with v1.2.x.
 
 == External services ==
 
-This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile field (Mastodon URL, Bluesky handle, PeerTube account + instance URL, Forgejo username + instance URL, or Diggita username). All requests are HTTP GET requests for public content; no user credentials are sent.
+This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile (instance URL + username for Mastodon/Pleroma/Akkoma, Lemmy, PeerTube or Forgejo/Gitea, or a Bluesky handle). All requests are HTTP GET requests for public content; no user credentials are sent.
 
 Contacted services are cached locally for a configurable duration (30 minutes to 24 hours, default value depends on the admin setting) to minimize external traffic.
 
 = Mastodon =
 
-- **What**: the Mastodon (or ActivityPub-compatible) instance whose URL the user enters in the settings (e.g. `https://mastodon.uno/@username`).
+- **What**: the Mastodon, Pleroma or Akkoma instance whose URL the user enters in the settings (e.g. `https://mastodon.uno`).
 - **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
-- **Endpoints**: `GET /api/v1/accounts/lookup` (account ID lookup, cached 30 days) and `GET /api/v1/accounts/{id}/statuses` (public statuses).
+- **Endpoints**: `GET /.well-known/nodeinfo` and the linked nodeinfo document (to read which software the instance runs, cached 7 days), `GET /api/v1/accounts/lookup` (account ID lookup, cached 30 days) and `GET /api/v1/accounts/{id}/statuses` (public statuses).
 - **Data sent**: only the public username/handle entered in the settings, as a URL parameter.
 - **Data received and stored**: public post metadata (text, date, link, media preview URL and alt text if image previews are enabled, like/boost/reply counts). Cached locally as a WordPress transient.
 - Mastodon is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
@@ -317,15 +340,14 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Data received and stored**: public commit metadata (message, date, repository name, commit hash and link). Cached locally as a WordPress transient.
 - Forgejo and Gitea are open-source git hosting platforms. Their terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
 
-= Diggita =
+= Lemmy =
 
-- **What**: the Diggita RSS feed at `https://www.diggita.com`.
+- **What**: the Lemmy instance the user enters in the settings (e.g. `https://diggita.com`).
 - **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
-- **Endpoint**: `GET https://www.diggita.com/feeds/u/{username}.xml`.
+- **Endpoint**: `GET /feeds/u/{username}.xml`, the public user RSS feed. It exists only on the instance where the account is registered.
 - **Data sent**: only the public username entered in the settings, as part of the URL path.
 - **Data received and stored**: public post metadata (title, link, date, vote and comment counts) parsed from the public RSS feed. Cached locally as a WordPress transient.
-- Terms of service: https://www.diggita.com/regolamento
-- Privacy policy: https://www.diggita.com/privacy
+- Lemmy is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance. For Diggita: https://www.diggita.com/regolamento and https://www.diggita.com/privacy
 
 == Privacy Policy ==
 

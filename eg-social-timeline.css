@@ -36,7 +36,8 @@
     --egst-light-brand: #6364FF;
     --egst-light-icon-mono: #374151;
     --egst-light-icon-mastodon: #6364FF;
-    --egst-light-icon-diggita: #FF6B35;
+    --egst-light-icon-lemmy: #1A1A1A;
+    --egst-light-icon-pleroma: #E08A2E;
     --egst-light-icon-bluesky: #0085FF;
     --egst-light-icon-forgejo: #609926;
     --egst-light-icon-peertube: #F1680D;
@@ -70,7 +71,8 @@
     --egst-dark-brand: #8B8DFF;
     --egst-dark-icon-mono: #E5E7EB;
     --egst-dark-icon-mastodon: #8B8DFF;
-    --egst-dark-icon-diggita: #FF9470;
+    --egst-dark-icon-lemmy: #E0E0E0;
+    --egst-dark-icon-pleroma: #FBA457;
     --egst-dark-icon-bluesky: #4DA6FF;
     --egst-dark-icon-forgejo: #8FCB4F;
     --egst-dark-icon-peertube: #FF9248;
@@ -110,7 +112,8 @@
     --egst-brand: var(--egst-light-brand);
     --egst-icon-mono: var(--egst-light-icon-mono);
     --egst-icon-mastodon: var(--egst-light-icon-mastodon);
-    --egst-icon-diggita: var(--egst-light-icon-diggita);
+    --egst-icon-lemmy: var(--egst-light-icon-lemmy);
+    --egst-icon-pleroma: var(--egst-light-icon-pleroma);
     --egst-icon-bluesky: var(--egst-light-icon-bluesky);
     --egst-icon-forgejo: var(--egst-light-icon-forgejo);
     --egst-icon-peertube: var(--egst-light-icon-peertube);
@@ -132,7 +135,8 @@
     --egst-chip-brand: var(--egst-light-brand);
     --egst-chip-icon-mono: var(--egst-light-icon-mono);
     --egst-chip-icon-mastodon: var(--egst-light-icon-mastodon);
-    --egst-chip-icon-diggita: var(--egst-light-icon-diggita);
+    --egst-chip-icon-lemmy: var(--egst-light-icon-lemmy);
+    --egst-chip-icon-pleroma: var(--egst-light-icon-pleroma);
     --egst-chip-icon-bluesky: var(--egst-light-icon-bluesky);
     --egst-chip-icon-forgejo: var(--egst-light-icon-forgejo);
     --egst-chip-icon-peertube: var(--egst-light-icon-peertube);
@@ -250,7 +254,7 @@
 
 /* Quando unchecked, nascondi check */
 #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"]::before,
-#filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
+#filter-lemmy:not(:checked) ~ * label[for="filter-lemmy"]::before,
 #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
@@ -262,7 +266,7 @@
 
 /* Label unchecked styling */
 #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"],
-#filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
+#filter-lemmy:not(:checked) ~ * label[for="filter-lemmy"],
 #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
@@ -307,7 +311,7 @@
 
 /* Mostra SOLO quando checked */
 #filter-mastodon:checked ~ .timeline-mastodon,
-#filter-diggita:checked ~ .timeline-diggita,
+#filter-lemmy:checked ~ .timeline-lemmy,
 #filter-bluesky:checked ~ .timeline-bluesky,
 #filter-forgejo:checked ~ .timeline-forgejo,
 #filter-peertube:checked ~ .timeline-peertube,
@@ -462,8 +466,8 @@
 /* Stile "colori delle piattaforme": selettori per slug, come i filtri. */
 .egst-icons-brand .platform-mastodon .platform-icon svg { color: var(--egst-icon-mastodon); }
 .egst-icons-brand label[for="filter-mastodon"] .platform-icon-small svg { color: var(--egst-chip-icon-mastodon); }
-.egst-icons-brand .platform-diggita .platform-icon svg { color: var(--egst-icon-diggita); }
-.egst-icons-brand label[for="filter-diggita"] .platform-icon-small svg { color: var(--egst-chip-icon-diggita); }
+.egst-icons-brand .platform-lemmy .platform-icon svg { color: var(--egst-icon-lemmy); }
+.egst-icons-brand label[for="filter-lemmy"] .platform-icon-small svg { color: var(--egst-chip-icon-lemmy); }
 .egst-icons-brand .platform-bluesky .platform-icon svg { color: var(--egst-icon-bluesky); }
 .egst-icons-brand label[for="filter-bluesky"] .platform-icon-small svg { color: var(--egst-chip-icon-bluesky); }
 .egst-icons-brand .platform-forgejo .platform-icon svg { color: var(--egst-icon-forgejo); }
@@ -472,6 +476,15 @@
 .egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-chip-icon-peertube); }
 .egst-icons-brand .platform-blog .platform-icon svg { color: var(--egst-icon-blog); }
 .egst-icons-brand label[for="filter-blog"] .platform-icon-small svg { color: var(--egst-chip-icon-blog); }
+
+/* Software rilevato via nodeinfo: la piattaforma resta "mastodon" per i
+   filtri, ma Pleroma e Akkoma hanno icona e colore propri. Stessa
+   specificita' delle regole per slug qui sopra, quindi contano perche'
+   vengono dopo. */
+.egst-icons-brand .egst-sw-pleroma .platform-icon svg,
+.egst-icons-brand .egst-sw-akkoma .platform-icon svg { color: var(--egst-icon-pleroma); }
+.egst-icons-brand label.egst-sw-pleroma .platform-icon-small svg,
+.egst-icons-brand label.egst-sw-akkoma .platform-icon-small svg { color: var(--egst-chip-icon-pleroma); }
 
 /* Stile "un solo colore": le icone prendono il colore del testo della
    superficie su cui stanno, quindi vanno in contrasto da sole. */

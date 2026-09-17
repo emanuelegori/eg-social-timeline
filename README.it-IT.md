@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.8.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.9.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon**, **Diggita** (Lemmy), **PeerTube**, **Forgejo/Gitea** e **Bluesky**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon** (anche Pleroma e Akkoma), **Lemmy**, **PeerTube**, **Forgejo/Gitea** e **Bluesky**.
 
 ---
 
@@ -13,8 +13,8 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 - **Timeline Unificata**: Aggrega post da multiple piattaforme in ordine cronologico
 - **Piattaforme Supportate**:
-  - **Mastodon** (e compatibili ActivityPub)
-  - **Diggita** (Lemmy) con statistiche complete
+  - **Mastodon**, più Pleroma e Akkoma che ne condividono l'API
+  - **Lemmy**, qualsiasi istanza, con statistiche complete
   - **Forgejo/Gitea** (commit repository)
   - **Bluesky** (API pubblica ATP, nessuna autenticazione)
   - **PeerTube** (API REST pubblica, video dal tuo account)
@@ -62,14 +62,14 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
 
 1. Vai su **Impostazioni → EG Social Timeline**
 2. Configura almeno un profilo:
-   - **Mastodon**: URL completo profilo (es: `https://mastodon.uno/@emanuelegori`)
-   - **Diggita**: Username (senza @)
-   - **Forgejo**: Username + URL istanza (es: `https://git.emanuelegori.uno`)
-   - **Bluesky**: Handle (es: `emanuele.bsky.social`, senza @)
-   - **PeerTube**: Nome account + URL istanza (es: `emanuelegori` + `https://peertube.uno`)
+   - **Mastodon / Pleroma / Akkoma**: URL istanza + username (es: `https://mastodon.uno` + `emanuelegori`)
+   - **Lemmy**: URL istanza + username (es: `https://diggita.com` + `emanuelegori`)
+   - **Forgejo / Gitea**: URL istanza + username (es: `https://git.emanuelegori.uno`)
+   - **PeerTube**: URL istanza + account (es: `https://peertube.uno` + `emanuelegori`)
+   - **Bluesky**: solo handle (es: `emanuele.bsky.social`, senza @) — la sua API pubblica è la stessa per tutti
 3. Configura limiti per piattaforma (opzionale):
    - Max post Mastodon (default: 20, 0 = illimitato)
-   - Max post Diggita (default: 10, 0 = illimitato)
+   - Max post Lemmy (default: 10, 0 = illimitato)
    - Max commit Forgejo (default: 5, 0 = illimitato)
    - Max post Bluesky (default: 10, 0 = illimitato)
    - Max video PeerTube (default: 5, 0 = illimitato)
@@ -118,7 +118,7 @@ Sistema filtri CSS integrato:
 ```
 ┌──────────────────────────────────────┐
 │ Filtra per piattaforma:              │
-│ ☑ Mastodon (12) ☑ Diggita (8)       │
+│ ☑ Mastodon (12) ☑ Lemmy (8)         │
 │ ☑ Forgejo (5)   ☐ Bluesky (2)       │
 └──────────────────────────────────────┘
 ```
@@ -136,10 +136,11 @@ Le icone sono file SVG in `social-icons/`:
 ```
 social-icons/
 ├── mastodon.svg
-├── diggita.svg
+├── pleroma.svg      # usata per Pleroma e Akkoma
+├── lemmy.svg
 ├── forgejo.svg
-├── bluesky.svg
-└── blog.svg
+├── peertube.svg
+└── bluesky.svg
 ```
 
 **Per personalizzare:**
@@ -201,7 +202,8 @@ eg-social-timeline/
 ├── eg-social-timeline.css     # Stili
 ├── social-icons/              # Icone SVG
 │   ├── mastodon.svg
-│   ├── diggita.svg
+│   ├── pleroma.svg
+│   ├── lemmy.svg
 │   ├── forgejo.svg
 │   └── bluesky.svg
 ├── languages/                 # Traduzioni
@@ -212,14 +214,32 @@ eg-social-timeline/
 
 ### API Utilizzate
 
-- **Mastodon**: `/api/v1/accounts/{id}/statuses`
-- **Diggita**: RSS `/feeds/u/{username}.xml` (con parsing statistiche)
+- **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, più `/.well-known/nodeinfo` per distinguere il software
+- **Lemmy**: RSS `/feeds/u/{username}.xml` (con parsing statistiche), su qualsiasi istanza
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 - **Bluesky**: `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed` (pubblica, nessun token)
 
 ---
 
 ## Changelog
+
+### [1.9.0] - 2026-09-17
+
+#### Changed
+- **Tutte le piattaforme si configurano allo stesso modo**: URL istanza + nome utente. Mastodon chiedeva l'URL completo del profilo mentre Forgejo e PeerTube chiedevano due campi, senza ragione tecnica: il codice spezzava quell'URL nelle stesse due informazioni due righe dopo.
+- **Diggita diventa supporto Lemmy generico.** Il fetcher parlava già Lemmy (`/feeds/u/{username}.xml` è il formato dei feed utente Lemmy) ma col dominio inchiodato; ora l'istanza è un'impostazione. Il nome sulle schede viene dal dominio: `diggita.com` resta "Diggita", `lemmy.ml` è "Lemmy".
+- Le impostazioni delle versioni precedenti vengono convertite alla lettura; il database si allinea al primo salvataggio.
+- Il vero logo Lemmy sostituisce un segnaposto disegnato a mano, e si aggiunge l'icona Pleroma (Simple Icons, CC0).
+
+#### Added
+- Rilevamento del software dell'istanza via `/.well-known/nodeinfo` (in cache 7 giorni): Pleroma e Akkoma hanno nome e icona propri. L'href di nodeinfo viene seguito solo se punta allo stesso host dell'istanza.
+- Spiegazione esplicita quando si salva un'istanza il cui software non serve l'API pubblica. Comportamento misurato: Mastodon e Pleroma/Akkoma rispondono al lookup senza autenticazione, GoToSocial e Friendica rispondono 401, Misskey e Sharkey usano un'API propria, Pixelfed reindirizza gli stati al login.
+- Le impostazioni riportano cosa ha restituito ogni piattaforma configurata all'ultimo aggiornamento, col motivo quando è tornata vuota.
+
+#### Fixed
+- Il parser del profilo accettava solo la forma `/@utente`: un indirizzo valido come `/users/utente` non produceva nulla in silenzio, perché l'unico log stava dietro una costante di debug disattivata nei pacchetti. Ora legge anche `/users/utente` e `@utente@istanza`.
+- In quel parser il delimitatore della regex era `#` mentre la classe conteneva `[^/?#]`: il carattere chiudeva l'espressione in anticipo e ogni URL veniva rifiutato. Trovato dai test prima del rilascio.
+- Gli URL delle istanze vengono normalizzati e validati in un solo punto: solo HTTPS, host privati e riservati rifiutati.
 
 ### [1.8.1] - 2026-09-17
 

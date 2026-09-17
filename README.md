@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.8.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.9.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon**, **Diggita** (Lemmy), **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
+WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
 
 ---
 
@@ -13,8 +13,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
 
 - **Unified Timeline**: aggregates posts from multiple platforms in chronological order
 - **Supported platforms**:
-  - **Mastodon** (and ActivityPub-compatible servers)
-  - **Diggita** (Lemmy) with full statistics
+  - **Mastodon**, plus the Mastodon-compatible **Pleroma** and **Akkoma**
+  - **Lemmy**, any instance, with full statistics
   - **Forgejo/Gitea** (repository commits)
   - **Bluesky** (public ATP API, no authentication required)
   - **PeerTube** (public REST API, videos from your account)
@@ -62,14 +62,14 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 1. Go to **Settings → EG Social Timeline**
 2. Configure at least one profile:
-   - **Mastodon**: full profile URL (e.g. `https://mastodon.uno/@emanuelegori`)
-   - **Diggita**: username (without @)
-   - **Forgejo**: username + instance URL (e.g. `https://git.emanuelegori.uno`)
-   - **Bluesky**: handle (e.g. `emanuele.bsky.social`, without @)
-   - **PeerTube**: account name + instance URL (e.g. `emanuelegori` + `https://peertube.uno`)
+   - **Mastodon / Pleroma / Akkoma**: instance URL + username (e.g. `https://mastodon.uno` + `emanuelegori`)
+   - **Lemmy**: instance URL + username (e.g. `https://diggita.com` + `emanuelegori`)
+   - **Forgejo / Gitea**: instance URL + username (e.g. `https://git.emanuelegori.uno`)
+   - **PeerTube**: instance URL + account (e.g. `https://peertube.uno` + `emanuelegori`)
+   - **Bluesky**: handle alone (e.g. `emanuele.bsky.social`, without @) — its public API is the same for everyone
 3. Configure per-platform limits (optional):
    - Max Mastodon posts (default: 20, 0 = unlimited)
-   - Max Diggita posts (default: 10, 0 = unlimited)
+   - Max Lemmy posts (default: 10, 0 = unlimited)
    - Max Forgejo commits (default: 5, 0 = unlimited)
    - Max Bluesky posts (default: 10, 0 = unlimited)
    - Max PeerTube videos (default: 5, 0 = unlimited)
@@ -118,7 +118,7 @@ Built-in CSS filter system:
 ```
 ┌──────────────────────────────────────┐
 │ Filter by platform:                  │
-│ ☑ Mastodon (12) ☑ Diggita (8)       │
+│ ☑ Mastodon (12) ☑ Lemmy (8)         │
 │ ☑ Forgejo (5)   ☐ Bluesky (2)       │
 └──────────────────────────────────────┘
 ```
@@ -136,10 +136,11 @@ Icons are SVG files inside `social-icons/`:
 ```
 social-icons/
 ├── mastodon.svg
-├── diggita.svg
+├── pleroma.svg      # used for Pleroma and Akkoma
+├── lemmy.svg
 ├── forgejo.svg
-├── bluesky.svg
-└── blog.svg
+├── peertube.svg
+└── bluesky.svg
 ```
 
 **To customize:**
@@ -201,7 +202,8 @@ eg-social-timeline/
 ├── eg-social-timeline.css     # Styles
 ├── social-icons/              # SVG icons
 │   ├── mastodon.svg
-│   ├── diggita.svg
+│   ├── pleroma.svg
+│   ├── lemmy.svg
 │   ├── forgejo.svg
 │   └── bluesky.svg
 ├── languages/                 # Translations
@@ -212,14 +214,32 @@ eg-social-timeline/
 
 ### APIs used
 
-- **Mastodon**: `/api/v1/accounts/{id}/statuses`
-- **Diggita**: RSS `/feeds/u/{username}.xml` (with stats parsing)
+- **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, and `/.well-known/nodeinfo` to tell the software apart
+- **Lemmy**: RSS `/feeds/u/{username}.xml` (with stats parsing), on any instance
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 - **Bluesky**: `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed` (public, no token required)
 
 ---
 
 ## Changelog
+
+### [1.9.0] - 2026-09-17
+
+#### Changed
+- **Every platform is configured the same way**: instance URL + username. Mastodon asked for a full profile URL while Forgejo and PeerTube asked for two fields, with no technical reason — the code split that URL into the same two values a couple of lines later.
+- **Diggita becomes generic Lemmy support.** The fetcher already spoke Lemmy (`/feeds/u/{username}.xml` is the Lemmy user feed) with the domain hardcoded; the instance is now a setting. The name on the cards comes from the instance domain: diggita.com stays "Diggita", lemmy.ml reads "Lemmy".
+- Settings from earlier versions are converted on read; the database is rewritten on your first save.
+- The real Lemmy logo replaces a hand-drawn placeholder, and the Pleroma icon is added (Simple Icons, CC0).
+
+#### Added
+- Instance software detection via `/.well-known/nodeinfo` (cached 7 days), so Pleroma and Akkoma get their own name and icon. The nodeinfo href is followed only when it points at the same host as the instance.
+- A clear explanation when you save an instance whose software does not serve the public API: measured behaviour — Mastodon and Pleroma/Akkoma answer the lookup unauthenticated, GoToSocial and Friendica return 401, Misskey and Sharkey use their own API, Pixelfed redirects the statuses endpoint to its login page.
+- The settings page reports what each configured platform returned on the last refresh, with the reason when it came back empty.
+
+#### Fixed
+- The profile parser accepted only the `/@user` form, so a valid `/users/user` address silently produced nothing — the only log sat behind a debug constant disabled in releases. It now reads `/users/user` and `@user@instance` too.
+- In that parser the regex delimiter was `#` while the character class contained `[^/?#]`, closing the pattern early and rejecting every URL. Caught by the tests before release.
+- Instance URLs are normalized and validated in one place: HTTPS only, private and reserved hosts rejected.
 
 ### [1.8.1] - 2026-09-17
 
@@ -500,6 +520,6 @@ See the [LICENSE](LICENSE.md) file for full details.
 ## Acknowledgements
 
 - The Mastodon community for the well-documented API
-- Diggita.com for the Italian Lemmy platform
+- The Lemmy project, and Diggita.com for the Italian instance
 - Forgejo/Gitea for the excellent API
 - The WordPress community
