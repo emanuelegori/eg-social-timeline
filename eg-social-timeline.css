@@ -1,19 +1,181 @@
 /* ==============================================
    EG SOCIAL TIMELINE - STILI
+   ==============================================
+
+   Tutti i colori passano da custom properties definite sul wrapper
+   .eg-social-timeline. Lo schema viene scelto in Impostazioni e arriva
+   come classe sul wrapper:
+
+     .egst-scheme-light  -> sempre chiaro (default del plugin)
+     .egst-scheme-dark   -> sempre scuro
+     .egst-scheme-auto   -> segue prefers-color-scheme del browser
+
+   I colori personalizzati (sfondo timeline / sfondo schede) sovrascrivono
+   i token via CSS inline generato dal PHP, quindi qui non vanno toccati.
+   ============================================== */
+
+/* ---------- Token: schema chiaro (default) ---------- */
+.eg-social-timeline {
+    --egst-canvas: transparent;
+    --egst-canvas-padding: 24px;
+    --egst-canvas-radius: 16px;
+
+    --egst-brand: #6364FF;
+
+    --egst-card-bg: #FFFFFF;
+    --egst-card-border: #E5E7EB;
+    --egst-card-border-hover: #D1D5DB;
+    --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    --egst-heading: #374151;
+    --egst-text: #374151;
+    --egst-muted: #9CA3AF;
+    --egst-stat: #6B7280;
+
+    --egst-link: #6364FF;
+    --egst-link-hover: #4F46E5;
+    --egst-badge-bg: #EEF2FF;
+    --egst-badge-text: #6364FF;
+
+    --egst-empty-bg: #F5F5F5;
+    --egst-empty-text: #666666;
+
+    --egst-filters-bg: #F8F9FF;
+    --egst-filters-border: #E0E2FF;
+    --egst-filters-shadow: 0 2px 8px rgba(99, 100, 255, 0.08);
+    --egst-filters-title: #2C3E50;
+    --egst-chip-bg: #FFFFFF;
+    --egst-chip-bg-hover: #FAFBFF;
+    --egst-chip-bg-off: #F5F5F5;
+    --egst-chip-border: #E0E0E0;
+    --egst-chip-text: #2C3E50;
+    --egst-count: #7F8C8D;
+
+    --egst-icon-mono: #374151;
+    --egst-icon-mastodon: #6364FF;
+    --egst-icon-diggita: #FF6B35;
+    --egst-icon-bluesky: #0085FF;
+    --egst-icon-forgejo: #609926;
+    --egst-icon-peertube: #F1680D;
+    --egst-icon-blog: #6364FF;
+}
+
+/* ---------- Token: schema scuro ----------
+   Lo stesso blocco vale per lo schema scuro forzato e per lo schema auto
+   quando il browser chiede il tema scuro. Le due copie sono inevitabili in
+   CSS puro: una @media non si puo' raggruppare con un selettore di classe.
+   Se aggiungi un token qui, aggiungilo anche nella copia sotto. */
+.eg-social-timeline.egst-scheme-dark {
+    --egst-brand: #8B8DFF;
+
+    --egst-card-bg: #1F2937;
+    --egst-card-border: #374151;
+    --egst-card-border-hover: #4B5563;
+    --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    --egst-heading: #E5E7EB;
+    --egst-text: #D1D5DB;
+    --egst-muted: #6B7280;
+    --egst-stat: #9CA3AF;
+
+    --egst-link: #A5B4FC;
+    --egst-link-hover: #C7D2FE;
+    --egst-badge-bg: #312E81;
+    --egst-badge-text: #A5B4FC;
+
+    --egst-empty-bg: #1F2937;
+    --egst-empty-text: #9CA3AF;
+
+    --egst-filters-bg: #2A2A2A;
+    --egst-filters-border: #3A3A3A;
+    --egst-filters-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --egst-filters-title: #E0E0E0;
+    --egst-chip-bg: #1E1E1E;
+    --egst-chip-bg-hover: #333333;
+    --egst-chip-bg-off: #252525;
+    --egst-chip-border: #3A3A3A;
+    --egst-chip-text: #E0E0E0;
+    --egst-count: #9CA3AF;
+
+    --egst-icon-mono: #E5E7EB;
+    --egst-icon-mastodon: #8B8DFF;
+    --egst-icon-diggita: #FF9470;
+    --egst-icon-bluesky: #4DA6FF;
+    --egst-icon-forgejo: #8FCB4F;
+    --egst-icon-peertube: #FF9248;
+    --egst-icon-blog: #A5B4FC;
+}
+
+@media (prefers-color-scheme: dark) {
+    .eg-social-timeline.egst-scheme-auto {
+        --egst-brand: #8B8DFF;
+
+        --egst-card-bg: #1F2937;
+        --egst-card-border: #374151;
+        --egst-card-border-hover: #4B5563;
+        --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+        --egst-heading: #E5E7EB;
+        --egst-text: #D1D5DB;
+        --egst-muted: #6B7280;
+        --egst-stat: #9CA3AF;
+
+        --egst-link: #A5B4FC;
+        --egst-link-hover: #C7D2FE;
+        --egst-badge-bg: #312E81;
+        --egst-badge-text: #A5B4FC;
+
+        --egst-empty-bg: #1F2937;
+        --egst-empty-text: #9CA3AF;
+
+        --egst-filters-bg: #2A2A2A;
+        --egst-filters-border: #3A3A3A;
+        --egst-filters-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --egst-filters-title: #E0E0E0;
+        --egst-chip-bg: #1E1E1E;
+        --egst-chip-bg-hover: #333333;
+        --egst-chip-bg-off: #252525;
+        --egst-chip-border: #3A3A3A;
+        --egst-chip-text: #E0E0E0;
+        --egst-count: #9CA3AF;
+
+        --egst-icon-mono: #E5E7EB;
+        --egst-icon-mastodon: #8B8DFF;
+        --egst-icon-diggita: #FF9470;
+        --egst-icon-bluesky: #4DA6FF;
+        --egst-icon-forgejo: #8FCB4F;
+        --egst-icon-peertube: #FF9248;
+        --egst-icon-blog: #A5B4FC;
+    }
+}
+
+/* ==============================================
+   CONTENITORE
    ============================================== */
 
 .eg-social-timeline {
     max-width: 800px;
     margin: 40px auto;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--egst-canvas);
+}
+
+/* Padding e angoli arrotondati solo se il contenitore ha uno sfondo suo,
+   altrimenti la timeline resta appoggiata al layout del tema. */
+.eg-social-timeline.egst-has-canvas {
+    padding: var(--egst-canvas-padding);
+    border-radius: var(--egst-canvas-radius);
 }
 
 .eg-social-timeline-empty {
     text-align: center;
     padding: 60px 20px;
-    background: #F5F5F5;
+    background: var(--egst-empty-bg);
     border-radius: 12px;
-    color: #666;
+    color: var(--egst-empty-text);
     font-size: 1.1em;
 }
 
@@ -29,12 +191,12 @@
 }
 
 .eg-timeline-filters {
-    background: #F8F9FF;
-    border: 2px solid #E0E2FF;
+    background: var(--egst-filters-bg);
+    border: 2px solid var(--egst-filters-border);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 32px;
-    box-shadow: 0 2px 8px rgba(99, 100, 255, 0.08);
+    box-shadow: var(--egst-filters-shadow);
 }
 
 .filters-header {
@@ -43,7 +205,7 @@
     gap: 8px;
     margin-bottom: 12px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #E0E2FF;
+    border-bottom: 1px solid var(--egst-filters-border);
 }
 
 .filters-icon {
@@ -54,7 +216,7 @@
     margin: 0;
     font-size: 0.95em;
     font-weight: 600;
-    color: #2C3E50;
+    color: var(--egst-filters-title);
 }
 
 .filters-checkboxes {
@@ -68,15 +230,15 @@
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    background: white;
-    border: 2px solid #E0E0E0;
+    background: var(--egst-chip-bg);
+    border: 2px solid var(--egst-chip-border);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     font-weight: 500;
     font-size: 0.85em;
-    color: #2C3E50;
+    color: var(--egst-chip-text);
     height: 34px;
     white-space: nowrap;
 }
@@ -89,10 +251,10 @@
     justify-content: center;
     width: 16px;
     height: 16px;
-    border: 2px solid #6364FF;
+    border: 2px solid var(--egst-brand);
     border-radius: 4px;
-    background: #6364FF;
-    color: white;
+    background: var(--egst-brand);
+    color: #FFFFFF;
     font-weight: bold;
     font-size: 11px;
     flex-shrink: 0;
@@ -106,9 +268,9 @@
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
 #filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
-    background: white;
+    background: var(--egst-chip-bg);
     color: transparent;
-    border-color: #E0E0E0;
+    border-color: var(--egst-chip-border);
 }
 
 /* Label unchecked styling */
@@ -119,12 +281,12 @@
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
 #filter-blog:not(:checked) ~ * label[for="filter-blog"] {
     opacity: 0.6;
-    background: #F5F5F5;
+    background: var(--egst-chip-bg-off);
 }
 
 .filter-checkbox-label:hover {
-    border-color: #6364FF;
-    background: #FAFBFF;
+    border-color: var(--egst-brand);
+    background: var(--egst-chip-bg-hover);
 }
 
 .platform-icon-small {
@@ -143,7 +305,7 @@
 
 .post-count {
     font-size: 0.9em;
-    color: #7F8C8D;
+    color: var(--egst-count);
     font-weight: 400;
 }
 
@@ -171,22 +333,22 @@
    ============================================== */
 
 .timeline-item {
-    background: white;
-    border: 1px solid #E5E7EB;
+    background: var(--egst-card-bg);
+    border: 1px solid var(--egst-card-border);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--egst-card-shadow);
     transition: all 0.2s ease;
 }
 
 .timeline-item:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: #D1D5DB;
+    box-shadow: var(--egst-card-shadow-hover);
+    border-color: var(--egst-card-border-hover);
 }
 
 .timeline-item.is-boost {
-    border-left: 4px solid #6364FF;
+    border-left: 4px solid var(--egst-brand);
 }
 
 /* Header */
@@ -214,12 +376,12 @@
 .platform-name {
     font-weight: 600;
     font-size: 0.95em;
-    color: #374151;
+    color: var(--egst-heading);
 }
 
 .boost-badge {
-    background: #EEF2FF;
-    color: #6364FF;
+    background: var(--egst-badge-bg);
+    color: var(--egst-badge-text);
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.75em;
@@ -228,7 +390,7 @@
 
 .post-date {
     margin-left: auto;
-    color: #9CA3AF;
+    color: var(--egst-muted);
     font-size: 0.85em;
 }
 
@@ -238,7 +400,7 @@
 }
 
 .post-text {
-    color: #374151;
+    color: var(--egst-text);
     line-height: 1.6;
     font-size: 0.95em;
 }
@@ -276,11 +438,11 @@
     align-items: center;
     gap: 4px;
     font-size: 0.85em;
-    color: #6B7280;
+    color: var(--egst-stat);
 }
 
 .view-original {
-    color: #6364FF;
+    color: var(--egst-link);
     text-decoration: none;
     font-size: 0.9em;
     font-weight: 500;
@@ -289,116 +451,42 @@
 }
 
 .view-original:hover {
-    color: #4F46E5;
+    color: var(--egst-link-hover);
     text-decoration: underline;
 }
 
-/* Platform colors */
-.platform-mastodon .platform-icon svg { color: #6364FF; }
-.platform-diggita .platform-icon svg { color: #FF6B35; }
-.platform-bluesky .platform-icon svg { color: #0085FF; }
-.platform-forgejo .platform-icon svg { color: #609926; }
-.platform-peertube .platform-icon svg { color: #F1680D; }
-
 /* ==============================================
-   DARK MODE
-   ============================================== */
+   ICONE PIATTAFORMA
+   ==============================================
+   Le icone Simple Icons non portano un attributo fill, quindi senza questa
+   regola il path resta nero (valore iniziale di fill) e il color qui sotto
+   sarebbe inerte: nero su scheda scura = icona invisibile. */
 
-@media (prefers-color-scheme: dark) {
-    .eg-social-timeline-empty {
-        background: #1F2937;
-        color: #9CA3AF;
-    }
-    
-    .eg-timeline-filters {
-        background: #2A2A2A;
-        border-color: #3A3A3A;
-    }
-    
-    .filters-header {
-        border-bottom-color: #3A3A3A;
-    }
-    
-    .filters-header h3 {
-        color: #E0E0E0;
-    }
-    
-    .filter-checkbox-label {
-        background: #1E1E1E;
-        border-color: #3A3A3A;
-        color: #E0E0E0;
-    }
-    
-    .filter-checkbox-label:hover {
-        background: #333;
-        border-color: #8B8DFF;
-    }
-    
-    .filter-checkbox-label::before {
-        border-color: #8B8DFF;
-        background: #8B8DFF;
-    }
-    
-    #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"]::before,
-    #filter-diggita:not(:checked) ~ * label[for="filter-diggita"]::before,
-    #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
-    #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
-    #filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
-    #filter-blog:not(:checked) ~ * label[for="filter-blog"]::before {
-        background: #1E1E1E;
-        border-color: #3A3A3A;
-    }
-    
-    #filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"],
-    #filter-diggita:not(:checked) ~ * label[for="filter-diggita"],
-    #filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
-    #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
-    #filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
-    #filter-blog:not(:checked) ~ * label[for="filter-blog"] {
-        background: #252525;
-    }
-    
-    .timeline-item {
-        background: #1F2937;
-        border-color: #374151;
-    }
-    
-    .timeline-item:hover {
-        border-color: #4B5563;
-    }
-    
-    .timeline-item.is-boost {
-        border-left-color: #8B8DFF;
-    }
-    
-    .platform-name {
-        color: #E5E7EB;
-    }
-    
-    .boost-badge {
-        background: #312E81;
-        color: #A5B4FC;
-    }
-    
-    .post-date {
-        color: #6B7280;
-    }
-    
-    .post-text {
-        color: #D1D5DB;
-    }
-    
-    .stat-item {
-        color: #9CA3AF;
-    }
-    
-    .view-original {
-        color: #A5B4FC;
-    }
-    
-    .view-original:hover {
-        color: #C7D2FE;
-    }
+.platform-icon svg,
+.platform-icon-small svg {
+    fill: currentColor;
+}
+
+/* Stile "brand": colore ufficiale della piattaforma, sia sulla scheda sia
+   sul chip del filtro. Selettori per slug, come i filtri. */
+.egst-icons-brand .platform-mastodon .platform-icon svg,
+.egst-icons-brand label[for="filter-mastodon"] .platform-icon-small svg { color: var(--egst-icon-mastodon); }
+.egst-icons-brand .platform-diggita .platform-icon svg,
+.egst-icons-brand label[for="filter-diggita"] .platform-icon-small svg { color: var(--egst-icon-diggita); }
+.egst-icons-brand .platform-bluesky .platform-icon svg,
+.egst-icons-brand label[for="filter-bluesky"] .platform-icon-small svg { color: var(--egst-icon-bluesky); }
+.egst-icons-brand .platform-forgejo .platform-icon svg,
+.egst-icons-brand label[for="filter-forgejo"] .platform-icon-small svg { color: var(--egst-icon-forgejo); }
+.egst-icons-brand .platform-peertube .platform-icon svg,
+.egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-icon-peertube); }
+.egst-icons-brand .platform-blog .platform-icon svg,
+.egst-icons-brand label[for="filter-blog"] .platform-icon-small svg { color: var(--egst-icon-blog); }
+
+/* Stile "monocromatico": le icone seguono il colore del testo, quindi vanno
+   in contrasto con lo sfondo della scheda da sole (bianche sul tema scuro). */
+.egst-icons-mono .platform-icon svg,
+.egst-icons-mono .platform-icon-small svg {
+    color: var(--egst-icon-mono);
 }
 
 /* ==============================================
@@ -409,75 +497,79 @@
     .eg-social-timeline {
         margin: 20px auto;
     }
-    
+
+    .eg-social-timeline.egst-has-canvas {
+        padding: 16px;
+    }
+
     .eg-timeline-filters {
         padding: 12px;
     }
-    
+
     .filters-header h3 {
         font-size: 0.9em;
     }
-    
+
     .filters-checkboxes {
         gap: 8px;
     }
-    
+
     .filter-checkbox-label {
         padding: 5px 10px;
         font-size: 0.8em;
     }
-    
+
     .filter-checkbox-label::before {
         width: 14px;
         height: 14px;
         font-size: 10px;
     }
-    
+
     .platform-icon-small {
         width: 14px;
         height: 14px;
     }
-    
+
     .platform-icon-small svg {
         width: 14px;
         height: 14px;
     }
-    
+
     .timeline-item {
         padding: 16px;
         margin-bottom: 16px;
     }
-    
+
     .timeline-header {
         gap: 8px;
     }
-    
+
     .platform-name {
         font-size: 0.9em;
     }
-    
+
     .post-date {
         font-size: 0.8em;
     }
-    
+
     .post-text {
         font-size: 0.9em;
     }
-    
+
     .timeline-footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     .post-stats {
         gap: 12px;
     }
-    
+
     .stat-item {
         font-size: 0.8em;
     }
-    
+
     .view-original {
         font-size: 0.85em;
     }

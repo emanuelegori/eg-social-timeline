@@ -2,9 +2,9 @@
 Contributors: emanuelegori
 Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.2
+Stable tag: 1.8.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,9 @@ EG Social Timeline aggregates in chronological order your public posts from five
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
-- Responsive design with automatic dark mode support
+- Selectable color scheme: always light, always dark or follow the visitor browser
+- Configurable timeline background, independent from the card background
+- Responsive design
 - Shortcode with optional limit parameter
 - Modular and customizable SVG icons
 - Privacy-friendly: public data only, no trackers
@@ -80,6 +82,10 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 - Include or exclude boosts and reposts
 - Show or hide interaction stats
 - Cache duration from 30 minutes to 24 hours
+- Color scheme: always light (default), always dark, or follow the visitor browser
+- Timeline background: transparent, neutral preset or custom colors (one for the light scheme, one for the dark scheme)
+- Card background: automatic or custom colors, so the cards can stand out against the timeline background
+- Platform icon style: brand colors or monochrome (monochrome icons follow the text color, so they turn white on dark cards)
 
 == Frequently Asked Questions ==
 
@@ -107,9 +113,13 @@ The plugin retrieves only public content. It does not track site visitors and do
 
 Posts are temporarily stored to reduce calls to the external APIs. You can configure the duration from 30 minutes to 24 hours. The cache is automatically cleared when settings are saved.
 
+= Why does the timeline look dark on my light theme? =
+
+Up to version 1.7.2 the timeline always followed the `prefers-color-scheme` setting of the visitor browser, so it turned dark even on a light theme. Since 1.8.0 the color scheme is chosen in Settings and defaults to "Always light". Pick "Follow the visitor browser" to get the previous behaviour back.
+
 = Can I customize the style? =
 
-Yes. The icons are SVG files you can replace in the `social-icons/` folder. You can also add custom CSS from your theme to change colors and layout.
+Yes. Settings → EG Social Timeline → Appearance covers the color scheme, the timeline and card backgrounds and the icon style. Every color in the stylesheet comes from a custom property (`--egst-*`) declared on the `.eg-social-timeline` container, so a few lines of theme CSS are enough to retheme the whole timeline. The icons are SVG files you can replace in the `social-icons/` folder.
 
 == Screenshots ==
 
@@ -123,6 +133,16 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.8.0 - 2026-09-17 =
+* New "Appearance" settings section: color scheme (always light, always dark or follow the visitor browser), timeline background, card background and platform icon style.
+* The timeline background is now configurable independently from the card background, with a separate color for the light and the dark scheme.
+* Fixed: platform icons were always rendered black. The Simple Icons SVG files carry no `fill` attribute, so the `color` rules in the stylesheet had no effect and the icons became invisible on dark cards. Icons now use `fill: currentColor`, are colored per platform on the filter chips too, and use lightened brand colors on the dark scheme.
+* Changed: the dark theme is no longer forced by the browser. The default is "Always light"; the `prefers-color-scheme` media query only applies when you choose "Follow the visitor browser".
+* Changed: every color moved to custom properties (`--egst-*`) declared on the timeline container, so custom CSS can retheme the plugin from a single place.
+* Changed: the "no posts available" message is now wrapped in the timeline container and inherits the chosen colors.
+* Accessibility: the `<title>` element of the SVG icons is no longer stripped by sanitization, so each icon keeps its accessible name.
+* Tested up to WordPress 7.1.
 
 = 1.7.2 - 2026-07-05 =
 * Fixed: image previews now fill the card width uniformly across all platforms. Small source images (e.g. Mastodon `preview_url` thumbnails) were rendered at their natural, reduced size while larger ones (Bluesky, PeerTube) filled the card; added `width: 100%` to `.post-image img` so all previews are consistent.
@@ -197,6 +217,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+New Appearance section: color scheme, timeline and card backgrounds, icon style. Heads up: the timeline no longer turns dark just because the browser is dark — the default is now "Always light". Also fixes icons that were always black.
 
 = 1.7.2 =
 Image previews now fill the card width consistently across all platforms.

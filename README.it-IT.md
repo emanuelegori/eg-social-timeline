@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.7.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.8.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -24,7 +24,8 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
 - **Statistiche Interazioni**: Mostra like, boost e commenti per ogni post
 - **Responsive**: Design ottimizzato per desktop, tablet e mobile
-- **Dark Mode**: Supporto automatico tema scuro
+- **Schema Colori**: Sempre chiaro (default), sempre scuro oppure segue il browser del visitatore
+- **Sfondi Configurabili**: Sfondo della timeline indipendente da quello delle schede, con colori distinti per chiaro e scuro
 - **Privacy-Friendly**: Solo dati pubblici, nessun tracking
 
 ---
@@ -73,7 +74,12 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    - Max post Bluesky (default: 10, 0 = illimitato)
    - Max video PeerTube (default: 5, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
-5. Salva
+5. Regola la sezione **Aspetto** (opzionale):
+   - Schema colori: sempre chiaro (default), sempre scuro oppure segue il browser del visitatore
+   - Sfondo timeline: trasparente (default), preset neutro o colori personalizzati
+   - Sfondo schede: automatico (default) o colori personalizzati
+   - Stile icone piattaforma: colori brand (default) o monocromatico
+6. Salva
 
 ![Configurazione profili](assets/screenshot-2.png)
 ![Limiti post per piattaforma](assets/screenshot-3.png)
@@ -141,14 +147,31 @@ social-icons/
 
 ### CSS Personalizzato
 
-Crea `wp-content/themes/tuo-tema/eg-social-timeline-custom.css`:
+Tutti i colori arrivano da custom properties dichiarate sul contenitore `.eg-social-timeline`: puoi ridefinire il tema intervenendo sui token, senza inseguire ogni singola regola.
 
 ```css
-/* Cambia colore primario */
-.eg-timeline-filters {
-    border-color: #YOUR_COLOR;
+/* Ridefinisci lo schema chiaro */
+.eg-social-timeline.egst-scheme-light {
+    --egst-canvas: #f0f4ff;        /* sfondo dietro le schede */
+    --egst-card-bg: #ffffff;       /* sfondo scheda           */
+    --egst-card-border: #d8deff;
+    --egst-text: #1f2937;          /* testo dei post          */
+    --egst-brand: #6364ff;         /* checkbox, accento boost */
+    --egst-icon-mastodon: #563acc; /* un token per piattaforma */
 }
 
+/* Gli stessi token per lo schema scuro */
+.eg-social-timeline.egst-scheme-dark {
+    --egst-canvas: #0b1020;
+    --egst-card-bg: #1f2937;
+}
+```
+
+L'elenco completo dei token è in testa a `eg-social-timeline.css`. La classe `egst-scheme-auto` porta i token applicati quando è il browser a chiedere il tema scuro.
+
+Le regole normali continuano a funzionare:
+
+```css
 /* Personalizza card post */
 .timeline-item {
     background: #YOUR_BG;
@@ -192,6 +215,25 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.8.0] - 2026-09-17
+
+#### Added
+- Nuova sezione **Aspetto** nelle impostazioni: schema colori (sempre chiaro / sempre scuro / segue il browser del visitatore), sfondo della timeline, sfondo delle schede e stile delle icone di piattaforma.
+- Lo sfondo della timeline si imposta in modo indipendente da quello delle schede, con colori distinti per schema chiaro e scuro.
+- Stile icone selezionabile: colori brand oppure monocromatico (le icone monocromatiche seguono il colore del testo, quindi diventano bianche sulle schede scure).
+
+#### Fixed
+- Le icone delle piattaforme erano sempre nere: i file SVG Simple Icons non hanno l'attributo `fill`, quindi le regole `color:` restavano inerti e sulle schede scure le icone diventavano invisibili. Ora le icone usano `fill: currentColor`, hanno il colore di piattaforma anche sui chip dei filtri e varianti brand schiarite sullo schema scuro.
+
+#### Changed
+- ⚠️ **Il tema scuro non è più imposto dal browser.** Il default è ora "sempre chiaro": la `@media (prefers-color-scheme: dark)` si applica solo scegliendo "segue il browser del visitatore", opzione che ripristina il comportamento della 1.7.2.
+- Tutti i colori passano da custom properties (`--egst-*`) dichiarate sul contenitore `.eg-social-timeline`: un CSS personalizzato può ridefinire il tema in un punto solo.
+- Il messaggio "nessun post disponibile" è racchiuso nel contenitore della timeline e ne eredita i colori.
+- `readme.txt`: `Tested up to` allineato a WordPress 7.1.
+
+#### Accessibility
+- L'elemento `<title>` delle icone SVG non viene più rimosso dalla sanitizzazione kses, così ogni icona conserva il proprio nome accessibile.
 
 ### [1.7.2] - 2026-07-05
 

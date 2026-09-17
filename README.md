@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.7.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.8.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -24,7 +24,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Smart cache**: reduces API requests with a configurable cache
 - **Interaction stats**: shows likes, boosts and comments for each post
 - **Responsive**: design optimized for desktop, tablet and mobile
-- **Dark Mode**: automatic dark theme support
+- **Color scheme**: always light (default), always dark, or follow the visitor browser
+- **Configurable backgrounds**: timeline background independent from the card background, with separate light and dark colors
 - **Privacy-friendly**: public data only, no tracking
 
 ---
@@ -73,7 +74,12 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
    - Max Bluesky posts (default: 10, 0 = unlimited)
    - Max PeerTube videos (default: 5, 0 = unlimited)
 4. Adjust cache and display settings
-5. Save
+5. Adjust the **Appearance** section (optional):
+   - Color scheme: always light (default), always dark, or follow the visitor browser
+   - Timeline background: transparent (default), neutral preset or custom colors
+   - Card background: automatic (default) or custom colors
+   - Platform icon style: brand colors (default) or monochrome
+6. Save
 
 ![Profile configuration](assets/screenshot-2.png)
 ![Per-platform post limits](assets/screenshot-3.png)
@@ -141,14 +147,31 @@ social-icons/
 
 ### Custom CSS
 
-Create `wp-content/themes/your-theme/eg-social-timeline-custom.css`:
+Every color comes from a custom property declared on the `.eg-social-timeline` container, so you can retheme the whole timeline by redefining the tokens instead of overriding each rule:
 
 ```css
-/* Change primary color */
-.eg-timeline-filters {
-    border-color: #YOUR_COLOR;
+/* Retheme the light scheme */
+.eg-social-timeline.egst-scheme-light {
+    --egst-canvas: #f0f4ff;        /* background behind the cards */
+    --egst-card-bg: #ffffff;       /* card background            */
+    --egst-card-border: #d8deff;
+    --egst-text: #1f2937;          /* post text                  */
+    --egst-brand: #6364ff;         /* checkboxes, boost accent   */
+    --egst-icon-mastodon: #563acc; /* one token per platform     */
 }
 
+/* Same tokens for the dark scheme */
+.eg-social-timeline.egst-scheme-dark {
+    --egst-canvas: #0b1020;
+    --egst-card-bg: #1f2937;
+}
+```
+
+The full token list is at the top of `eg-social-timeline.css`. The `egst-scheme-auto` class carries the tokens applied when the browser asks for a dark theme.
+
+Plain rules still work, of course:
+
+```css
 /* Customize post cards */
 .timeline-item {
     background: #YOUR_BG;
@@ -192,6 +215,25 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.8.0] - 2026-09-17
+
+#### Added
+- New **Appearance** settings section: color scheme (always light / always dark / follow the visitor browser), timeline background, card background and platform icon style.
+- The timeline background is configurable independently from the card background, with separate colors for the light and the dark scheme.
+- Selectable icon style: brand colors or monochrome (monochrome icons follow the text color, so they turn white on dark cards).
+
+#### Fixed
+- Platform icons were always black: the Simple Icons SVG files carry no `fill` attribute, so the `color` rules had no effect and the icons became invisible on dark cards. Icons now use `fill: currentColor`, are colored per platform on the filter chips too, and use lightened brand colors on the dark scheme.
+
+#### Changed
+- ⚠️ **The dark theme is no longer forced by the browser.** The default is now "always light": the `prefers-color-scheme` media query applies only when you choose "follow the visitor browser". Pick that option to restore the 1.7.2 behaviour.
+- Every color moved to custom properties (`--egst-*`) declared on the `.eg-social-timeline` container, so custom CSS can retheme the plugin from a single place.
+- The "no posts available" message is now wrapped in the timeline container and inherits the chosen colors.
+- `readme.txt`: `Tested up to` bumped to WordPress 7.1.
+
+#### Accessibility
+- The `<title>` element of the SVG icons is no longer stripped by sanitization, so each icon keeps its accessible name.
 
 ### [1.7.2] - 2026-07-05
 

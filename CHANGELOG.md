@@ -6,6 +6,25 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.8.0] - 2026-09-17
+
+### Added
+- Nuova sezione **Aspetto** nelle impostazioni: schema colori (sempre chiaro / sempre scuro / segue il browser del visitatore), sfondo della timeline, sfondo delle schede e stile delle icone di piattaforma.
+- Lo sfondo del contenitore della timeline si imposta in modo indipendente da quello delle schede, con una coppia di colori distinti per schema chiaro e scuro (preset trasparente/neutro oppure colori personalizzati).
+- Stile icone selezionabile: colori brand oppure monocromatico (le icone monocromatiche seguono il colore del testo, quindi diventano bianche sulle schede scure).
+
+### Fixed
+- Le icone delle piattaforme erano **sempre nere**: i file SVG Simple Icons non hanno l'attributo `fill`, quindi le regole `color:` del foglio di stile restavano inerti e sulle schede scure le icone diventavano invisibili. Aggiunto `fill: currentColor`, colore per piattaforma anche sui chip dei filtri e varianti brand schiarite sullo schema scuro.
+
+### Changed
+- ⚠️ **Il tema scuro non è più imposto dal browser.** Il default è ora "sempre chiaro": la `@media (prefers-color-scheme: dark)` si applica solo scegliendo "segue il browser del visitatore". Per riavere il comportamento della 1.7.2 impostare Schema colori = "Segue il browser del visitatore".
+- Tutti i colori del CSS passano da custom properties (`--egst-*`) dichiarate sul contenitore `.eg-social-timeline`: un CSS personalizzato può ridefinire il tema in un punto solo invece di inseguire ogni singola regola. I due blocchi di token scuri (classe e media query) sono volutamente duplicati: in CSS puro una `@media` non si può raggruppare con un selettore di classe.
+- Il messaggio "nessun post disponibile" è racchiuso nel contenitore della timeline, così eredita i colori scelti.
+- `readme.txt`: `Tested up to` allineato a WordPress 7.1.
+
+### Accessibility
+- L'elemento `<title>` delle icone SVG non viene più rimosso dalla sanitizzazione kses, così ogni icona conserva il proprio nome accessibile.
+
 ## [1.7.2] - 2026-07-05
 
 ### Fixed
