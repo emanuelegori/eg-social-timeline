@@ -6,6 +6,18 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.10.0] - 2026-09-17
+
+### Added
+- **Pixelfed**, tramite il feed **Atom** pubblico del profilo (`/users/{nome}.atom`): foto, didascalie, date e link. Nessuna statistica, perché il feed non la porta. L'API Mastodon non è utilizzabile: risponde al lookup dell'account ma reindirizza l'endpoint degli stati alla pagina di login. Il parser è dedicato (`feed/entry` con namespace `media:`), diverso dal parser RSS 2.0 di Lemmy. Nuovo slug con tutti i punti per-slug: filtro CSS, token icona chiaro/scuro, `$icons`, icona `pixelfed.svg` (Simple Icons, CC0).
+- **L'indirizzo completo del profilo è accettato in ogni campo** e viene spezzato in istanza + nome: `https://lemmy.ml/u/nome`, `https://mastodon.uno/@nome`, `/users/nome`, `nome@istanza`, `https://peertube.tv/c/nome@host/videos`, `https://pixelfed.uno/nome`, `https://bsky.app/profile/handle`. Un URL di sola istanza (`https://lemmy.ml`) non viene interpretato come profilo.
+- Quando il nome porta con sé la propria origine (un canale PeerTube remoto visto da un'altra istanza) il plugin interroga **quella** istanza invece di chi la federa: il risultato non dipende dallo stato della federazione.
+- **Tabella "Profili configurati"** nelle impostazioni: per ogni piattaforma mostra cosa vede il plugin (istanza, software, account o canale, numero di contenuti) e l'esito dell'ultimo recupero. Le verifiche girano al salvataggio e si possono ripetere col pulsante **Verifica profili**; la pagina non interroga nulla mentre si carica, altrimenti aprirla costerebbe cinque o sei richieste HTTP e sarebbe ostaggio dei timeout.
+
+### Fixed
+- **Canali PeerTube.** Su PeerTube i video stanno quasi sempre in un **canale**, non nell'account, e i due usano endpoint diversi (`/api/v1/video-channels/` e `/api/v1/accounts/`): il plugin conosceva solo il secondo, quindi un canale non restituiva nulla. Misurato sul caso reale: `tube.tchncs.de/api/v1/accounts/s3nnet/videos` → 404, `tube.tchncs.de/api/v1/video-channels/s3nnet/videos` → 200 con 147 video. Ora il tipo si ricava dall'indirizzo quando lo incolli, altrimenti si scopre una volta e resta in cache.
+- Messaggi di errore specifici al posto dell'invito generico a ricontrollare: "su %s non esiste né un account né un canale di nome %s", "il feed utente di Lemmy esiste solo dove l'account è registrato", "l'istanza richiede autenticazione".
+
 ## [1.9.1] - 2026-09-17
 
 ### Fixed

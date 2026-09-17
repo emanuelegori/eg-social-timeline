@@ -2,8 +2,8 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
- * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
- * Version: 1.9.1
+ * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
+ * Version: 1.10.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.9.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.10.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -84,6 +84,10 @@ function eg_social_timeline_register_settings() {
                 'bluesky_limit' => 10,
                 'peertube_username' => '',
                 'peertube_instance' => '',
+                'peertube_type' => 'auto',
+                'pixelfed_username' => '',
+                'pixelfed_instance' => '',
+                'pixelfed_limit' => 10,
                 'peertube_limit' => 5,
                 'truncate_length' => 300,
                 'show_images' => false,
@@ -111,7 +115,9 @@ function eg_social_timeline_register_settings() {
         'forgejo_instance'  => __('Forgejo / Gitea — Instance URL', 'eg-social-timeline'),
         'forgejo_username'  => __('Forgejo / Gitea — Username', 'eg-social-timeline'),
         'peertube_instance' => __('PeerTube — Instance URL', 'eg-social-timeline'),
-        'peertube_username' => __('PeerTube — Account', 'eg-social-timeline'),
+        'peertube_username' => __('PeerTube — Account or channel', 'eg-social-timeline'),
+        'pixelfed_instance' => __('Pixelfed — Instance URL', 'eg-social-timeline'),
+        'pixelfed_username' => __('Pixelfed — Username', 'eg-social-timeline'),
         'bluesky_instance'  => __('Bluesky — Service', 'eg-social-timeline'),
         'bluesky_handle'    => __('Bluesky — Handle', 'eg-social-timeline'),
     );
@@ -169,6 +175,14 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_peertube_limit',
         __('Max PeerTube Videos', 'eg-social-timeline'),
         'eg_social_timeline_peertube_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_pixelfed_limit',
+        __('Max Pixelfed Posts', 'eg-social-timeline'),
+        'eg_social_timeline_pixelfed_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
     );
@@ -334,6 +348,111 @@ function eg_social_timeline_parse_fediverse_profile($input) {
 }
 
 /**
+ * Estrae istanza, nome e tipo da un indirizzo di profilo.
+ *
+ * Accetta l'indirizzo che si copia dal browser, l'handle federato
+ * nome@istanza e, per PeerTube, distingue canali da account guardando il
+ * percorso: /c/ e /video-channels/ sono canali, /a/ e /accounts/ account.
+ *
+ * Quando il nome porta con se' la propria origine (canali remoti visti da
+ * un'altra istanza, es. s3nnet@tube.tchncs.de su peertube.tv) vince quella:
+ * interrogare il server di origine non dipende dallo stato della federazione.
+ *
+ * @param string $platform Slug della piattaforma.
+ * @param string $value    Indirizzo o handle incollato dall'utente.
+ * @return array|false array con instance, username e type; false se non riconosciuto.
+ */
+function eg_social_timeline_extract_profile($platform, $value) {
+    $value = trim((string) $value);
+
+    if ('' === $value) {
+        return false;
+    }
+
+    $patterns = array(
+        'peertube' => array(
+            '~^https?://([^/]+)/(?:c|video-channels)/([^/?#]+)~i' => 'channel',
+            '~^https?://([^/]+)/(?:a|accounts)/([^/?#]+)~i'       => 'account',
+        ),
+        'mastodon' => array(
+            '~^https?://([^/]+)/(?:@|users/)([^/?#]+)~i' => '',
+        ),
+        'lemmy' => array(
+            '~^https?://([^/]+)/u/([^/?#]+)~i' => '',
+        ),
+        'pixelfed' => array(
+            '~^https?://([^/]+)/users/([^/?#]+)\.atom~i' => '',
+            '~^https?://([^/]+)/@([^/?#]+)~i'            => '',
+            '~^https?://([^/]+)/p/([^/?#]+)/~i'          => '',
+            '~^https?://([^/]+)/([^/?#]+)~i'             => '',
+        ),
+        'forgejo' => array(
+            '~^https?://([^/]+)/([^/?#]+)~i' => '',
+        ),
+        'bluesky' => array(
+            '~^https?://[^/]+/profile/([^/?#]+)~i' => '',
+        ),
+    );
+
+    $instance = '';
+    $username = '';
+    $type = '';
+
+    if (isset($patterns[$platform])) {
+        foreach ($patterns[$platform] as $pattern => $kind) {
+            if (!preg_match($pattern, $value, $matches)) {
+                continue;
+            }
+
+            if ('bluesky' === $platform) {
+                // L'handle contiene gia' il proprio dominio, non c'e' istanza.
+                return array(
+                    'instance' => EG_SOCIAL_TIMELINE_BLUESKY_SERVICE,
+                    'username' => $matches[1],
+                    'type'     => '',
+                );
+            }
+
+            $instance = eg_social_timeline_normalize_instance($matches[1]);
+            $username = $matches[2];
+            $type = $kind;
+            break;
+        }
+    }
+
+    // Handle federato, senza indirizzo completo.
+    if ('' === $username && 'bluesky' !== $platform && preg_match('~^@?([^@/\s]+)@([^@/\s]+)$~', $value, $matches)) {
+        $instance = eg_social_timeline_normalize_instance($matches[2]);
+        $username = $matches[1];
+    }
+
+    if ('' === $username) {
+        return false;
+    }
+
+    // Il nome porta la propria origine: quella vince sull'istanza dell'indirizzo.
+    if (false !== strpos($username, '@')) {
+        $parts = explode('@', $username, 2);
+        $origin = eg_social_timeline_normalize_instance($parts[1]);
+
+        if ('' !== $origin) {
+            $username = $parts[0];
+            $instance = $origin;
+        }
+    }
+
+    if ('' === $instance) {
+        return false;
+    }
+
+    return array(
+        'instance' => $instance,
+        'username' => $username,
+        'type'     => $type,
+    );
+}
+
+/**
  * Profili configurati, normalizzati e con i limiti per piattaforma.
  *
  * Migra alla lettura lo schema delle versioni precedenti: il campo unico
@@ -407,6 +526,12 @@ function eg_social_timeline_profiles() {
             'instance' => eg_social_timeline_normalize_instance($get('peertube_instance')),
             'username' => ltrim(sanitize_text_field($get('peertube_username', $get('peertube_handle'))), '@'),
             'limit'    => $limit('peertube_limit', 5),
+            'type'     => in_array($get('peertube_type', 'auto'), array('account', 'channel', 'auto'), true) ? $get('peertube_type', 'auto') : 'auto',
+        ),
+        'pixelfed' => array(
+            'instance' => eg_social_timeline_normalize_instance($get('pixelfed_instance')),
+            'username' => ltrim(sanitize_text_field($get('pixelfed_username')), '@'),
+            'limit'    => $limit('pixelfed_limit', 10),
         ),
         'bluesky' => array(
             'instance' => EG_SOCIAL_TIMELINE_BLUESKY_SERVICE,
@@ -428,7 +553,7 @@ function eg_social_timeline_has_profiles() {
         }
 
         // Le piattaforme federate servono a poco senza l'istanza.
-        if (in_array($slug, array('mastodon', 'lemmy', 'forgejo', 'peertube'), true) && '' === $profile['instance']) {
+        if (in_array($slug, array('mastodon', 'lemmy', 'forgejo', 'peertube', 'pixelfed'), true) && '' === $profile['instance']) {
             continue;
         }
 
@@ -601,7 +726,7 @@ function eg_social_timeline_mastodon_username_callback() {
         'mastodon_username',
         $value,
         'emanuelegori',
-        __('Username alone, without the leading @ and without the domain.', 'eg-social-timeline')
+        __('Username, or paste the full profile address (/@name, /users/name or name@instance).', 'eg-social-timeline')
     );
 }
 
@@ -625,7 +750,7 @@ function eg_social_timeline_lemmy_username_callback() {
         'lemmy_username',
         $value,
         'emanuelegori',
-        __('Username alone, without the leading @. The platform name shown on the cards comes from the instance domain.', 'eg-social-timeline')
+        __('Username, or paste the full profile address: from https://lemmy.ml/u/1Malayali the name is 1Malayali. The platform name shown on the cards comes from the instance domain.', 'eg-social-timeline')
     );
 }
 
@@ -661,7 +786,7 @@ function eg_social_timeline_peertube_instance_callback() {
         'peertube_instance',
         $value,
         'https://peertube.uno',
-        __('The PeerTube instance hosting your videos, HTTPS only.', 'eg-social-timeline')
+        __('The PeerTube instance hosting your videos, HTTPS only. Leave the address of a remote channel in the name field instead and this is filled in from it.', 'eg-social-timeline')
     );
 }
 
@@ -673,7 +798,31 @@ function eg_social_timeline_peertube_username_callback() {
         'peertube_username',
         $value,
         'emanuelegori',
-        __('Account name, the part before the @ of your PeerTube address.', 'eg-social-timeline')
+        __('Account or channel name, or paste the full address: /c/name is a channel, /a/name an account. On PeerTube videos usually live in a channel.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_pixelfed_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['pixelfed_instance']) ? $options['pixelfed_instance'] : eg_social_timeline_profiles()['pixelfed']['instance'];
+
+    eg_social_timeline_profile_field(
+        'pixelfed_instance',
+        $value,
+        'https://pixelfed.uno',
+        __('The Pixelfed instance hosting your photos, HTTPS only.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_pixelfed_username_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['pixelfed_username']) ? $options['pixelfed_username'] : eg_social_timeline_profiles()['pixelfed']['username'];
+
+    eg_social_timeline_profile_field(
+        'pixelfed_username',
+        $value,
+        'emanuelegori',
+        __('Username, or paste the full profile address. Pixelfed posts are read from the public Atom feed, which carries photos and captions but no interaction counts.', 'eg-social-timeline')
     );
 }
 
@@ -779,6 +928,22 @@ function eg_social_timeline_peertube_limit_callback() {
            class="small-text">
     <p class="description">
         <?php esc_html_e('Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_pixelfed_limit_callback() {
+    $limit = eg_social_timeline_profiles()['pixelfed']['limit'];
+    ?>
+    <input type="number"
+           id="eg_social_timeline_pixelfed_limit"
+           name="eg_social_timeline_options[pixelfed_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1118,43 +1283,91 @@ function eg_social_timeline_icon_style_callback() {
 function eg_social_timeline_sanitize_options($input) {
     $output = array();
     
-    // Profili: istanza + utente per ogni piattaforma federata.
-    $instances = array(
-        'mastodon_instance' => '',
-        'lemmy_instance'    => '',
-        'forgejo_instance'  => 'https://gitea.com',
-        'peertube_instance' => '',
+    // Profili: istanza + utente per ogni piattaforma federata. Un indirizzo
+    // completo incollato in uno dei due campi viene riconosciuto e distribuito
+    // su entrambi, tipo del profilo compreso.
+    $platform_defaults = array(
+        'mastodon' => '',
+        'lemmy'    => '',
+        'forgejo'  => 'https://gitea.com',
+        'peertube' => '',
+        'pixelfed' => '',
     );
 
-    foreach ($instances as $key => $fallback) {
-        $instance = isset($input[$key]) ? eg_social_timeline_normalize_instance($input[$key]) : '';
+    $extracted = array();
 
-        if ('' === $instance && isset($input[$key]) && '' !== trim((string) $input[$key])) {
+    foreach ($platform_defaults as $platform => $fallback) {
+        $raw_username = isset($input[$platform . '_username']) ? trim((string) $input[$platform . '_username']) : '';
+        $raw_instance = isset($input[$platform . '_instance']) ? trim((string) $input[$platform . '_instance']) : '';
+
+        foreach (array($raw_username, $raw_instance) as $candidate) {
+            if ('' === $candidate) {
+                continue;
+            }
+
+            $parsed = eg_social_timeline_extract_profile($platform, $candidate);
+
+            if ($parsed) {
+                $extracted[$platform] = $parsed;
+                break;
+            }
+        }
+
+        if (isset($extracted[$platform])) {
+            $output[$platform . '_instance'] = $extracted[$platform]['instance'];
+            $output[$platform . '_username'] = sanitize_text_field($extracted[$platform]['username']);
+            continue;
+        }
+
+        $instance = eg_social_timeline_normalize_instance($raw_instance);
+
+        if ('' === $instance && '' !== $raw_instance) {
             add_settings_error(
                 'eg_social_timeline_options',
-                'invalid_instance_' . $key,
+                'invalid_instance_' . $platform,
                 '<strong>' . __('Error:', 'eg-social-timeline') . '</strong> ' .
                 sprintf(
                     /* translators: %s: valore inserito per l'istanza */
                     __('"%s" is not a usable instance address. Use an HTTPS address of a public server.', 'eg-social-timeline'),
-                    esc_html(trim((string) $input[$key]))
+                    esc_html($raw_instance)
                 ),
                 'error'
             );
         }
 
-        $output[$key] = ('' !== $instance) ? $instance : $fallback;
+        $output[$platform . '_instance'] = ('' !== $instance) ? $instance : $fallback;
+        $output[$platform . '_username'] = sanitize_text_field(ltrim($raw_username, '@'));
     }
 
-    $usernames = array('mastodon_username', 'lemmy_username', 'forgejo_username', 'peertube_username', 'bluesky_handle');
+    // Bluesky non ha istanza: l'handle porta il proprio dominio.
+    $raw_bluesky = isset($input['bluesky_handle']) ? trim((string) $input['bluesky_handle']) : '';
+    $parsed_bluesky = eg_social_timeline_extract_profile('bluesky', $raw_bluesky);
+    $output['bluesky_handle'] = sanitize_text_field(ltrim($parsed_bluesky ? $parsed_bluesky['username'] : $raw_bluesky, '@'));
 
-    foreach ($usernames as $key) {
-        $output[$key] = isset($input[$key]) ? sanitize_text_field(ltrim(trim($input[$key]), '@')) : '';
+    // Tipo del profilo PeerTube: noto se l'indirizzo lo diceva, altrimenti si
+    // scopre al primo recupero. Se il profilo non cambia si conserva quello
+    // gia' trovato, per non ripetere la scoperta a ogni salvataggio.
+    $output['peertube_type'] = (isset($extracted['peertube']['type']) && in_array($extracted['peertube']['type'], array('account', 'channel'), true))
+        ? $extracted['peertube']['type']
+        : 'auto';
+
+    if ('auto' === $output['peertube_type']) {
+        $previous = get_option('eg_social_timeline_options');
+
+        if (
+            is_array($previous)
+            && !empty($previous['peertube_type'])
+            && isset($previous['peertube_username'], $previous['peertube_instance'])
+            && $previous['peertube_username'] === $output['peertube_username']
+            && $previous['peertube_instance'] === $output['peertube_instance']
+        ) {
+            $output['peertube_type'] = $previous['peertube_type'];
+        }
     }
 
     $configured = false;
 
-    foreach (array('mastodon', 'lemmy', 'forgejo', 'peertube') as $platform) {
+    foreach (array_keys($platform_defaults) as $platform) {
         if ('' !== $output[$platform . '_username'] && '' !== $output[$platform . '_instance']) {
             $configured = true;
         }
@@ -1216,6 +1429,9 @@ function eg_social_timeline_sanitize_options($input) {
 
     $peertube_limit = isset($input['peertube_limit']) ? intval($input['peertube_limit']) : 5;
     $output['peertube_limit'] = max(0, min(100, $peertube_limit));
+
+    $pixelfed_limit = isset($input['pixelfed_limit']) ? intval($input['pixelfed_limit']) : 10;
+    $output['pixelfed_limit'] = max(0, min(100, $pixelfed_limit));
 
     $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
@@ -1338,7 +1554,7 @@ function eg_social_timeline_settings_page() {
     <div class="wrap">
         <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 
-        <?php eg_social_timeline_render_status_notice(); ?>
+        <?php eg_social_timeline_render_diagnostics(); ?>
         
         <form action="options.php" method="post">
             <?php
@@ -1992,43 +2208,94 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
 }
 
 // Fetch PeerTube videos via the public REST API (no authentication)
-function eg_social_timeline_fetch_peertube($handle, $instance_url, $limit = 0) {
-    if (empty($handle) || empty($instance_url)) {
+function eg_social_timeline_fetch_peertube($username, $instance, $limit = 0, $type = 'auto') {
+    $instance = eg_social_timeline_normalize_instance($instance);
+    $username = ltrim(trim((string) $username), '@');
+
+    if ('' === $username || '' === $instance) {
         return array();
     }
 
-    // HTTPS only + anti-SSRF (public API, no token, must not hit internal hosts)
-    if (strpos($instance_url, 'https://') !== 0 || !eg_social_timeline_is_public_url($instance_url)) {
-        return array();
-    }
-
-    $handle = ltrim($handle, '@');
     $api_limit = ($limit > 0) ? min($limit, 100) : 100;
 
-    $api_url = rtrim($instance_url, '/') . '/api/v1/accounts/' . rawurlencode($handle) . '/videos?' . http_build_query(array(
-        'count' => $api_limit,
-        'sort'  => '-publishedAt',
-    ));
+    // Su PeerTube i video stanno quasi sempre in un canale, non nell'account:
+    // l'indirizzo /c/nome e' un canale, /a/nome un account. Quando il tipo non
+    // e' noto si provano entrambi e l'esito resta in cache.
+    $cache_key = 'eg_st_pt_kind_' . md5($instance . '/' . $username);
 
-    $response = wp_remote_get($api_url, array(
-        'timeout'  => 15,
-        'sslverify' => true,
-    ));
+    if (!in_array($type, array('account', 'channel'), true)) {
+        $cached_kind = get_transient($cache_key);
+        $type = $cached_kind ? $cached_kind : 'auto';
+    }
 
-    if (is_wp_error($response)) {
-        if (EG_SOCIAL_TIMELINE_DEBUG) {
-            error_log('EG Social Timeline PeerTube Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+    $endpoints = array(
+        'account' => '/api/v1/accounts/',
+        'channel' => '/api/v1/video-channels/',
+    );
+
+    $kinds = ('auto' === $type) ? array('account', 'channel') : array($type);
+    $data = null;
+    $found_kind = '';
+    $last_code = 0;
+
+    foreach ($kinds as $kind) {
+        $api_url = $instance . $endpoints[$kind] . rawurlencode($username) . '/videos?' . http_build_query(array(
+            'count' => $api_limit,
+            'sort'  => '-publishedAt',
+        ));
+
+        $response = wp_remote_get($api_url, array(
+            'timeout'  => 15,
+            'sslverify' => true,
+        ));
+
+        if (is_wp_error($response)) {
+            eg_social_timeline_record_issue('peertube', $response->get_error_message());
+
+            if (EG_SOCIAL_TIMELINE_DEBUG) {
+                error_log('EG Social Timeline PeerTube Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            }
+
+            return array();
         }
+
+        $last_code = (int) wp_remote_retrieve_response_code($response);
+
+        if (200 !== $last_code) {
+            continue;
+        }
+
+        $decoded = json_decode(wp_remote_retrieve_body($response), true);
+
+        if (isset($decoded['data']) && is_array($decoded['data'])) {
+            $data = $decoded;
+            $found_kind = $kind;
+            break;
+        }
+    }
+
+    if (null === $data) {
+        eg_social_timeline_record_issue(
+            'peertube',
+            sprintf(
+                /* translators: 1: nome cercato, 2: host dell'istanza, 3: codice di stato HTTP */
+                __('Neither an account nor a channel named "%1$s" exists on %2$s (HTTP %3$d). On PeerTube videos usually live in a channel: from an address like /c/name@host use that name and the host it belongs to.', 'eg-social-timeline'),
+                $username,
+                wp_parse_url($instance, PHP_URL_HOST),
+                $last_code
+            )
+        );
+
         return array();
     }
 
-    $data = json_decode(wp_remote_retrieve_body($response), true);
+    set_transient($cache_key, $found_kind, MONTH_IN_SECONDS);
 
-    if (empty($data['data']) || !is_array($data['data'])) {
+    if (empty($data['data'])) {
         return array();
     }
 
-    $base = rtrim($instance_url, '/');
+    $base = $instance;
     $posts = array();
 
     foreach ($data['data'] as $video) {
@@ -2063,6 +2330,7 @@ function eg_social_timeline_fetch_peertube($handle, $instance_url, $limit = 0) {
 
         $posts[] = array(
             'platform'        => 'peertube',
+            'platform_label'  => 'PeerTube',
             'date'            => $timestamp,
             'title'           => $name,
             'content'         => $content,
@@ -2074,6 +2342,158 @@ function eg_social_timeline_fetch_peertube($handle, $instance_url, $limit = 0) {
             'reblogs_count'   => 0,
             'replies_count'   => 0,
         );
+    }
+
+    return $posts;
+}
+
+/**
+ * Fetch dei post Pixelfed dal feed Atom pubblico del profilo.
+ *
+ * L'API Mastodon di Pixelfed risponde al lookup dell'account ma rimanda
+ * l'endpoint degli stati alla pagina di login, quindi la via pubblica e' il
+ * feed Atom. Porta foto e didascalie ma nessun conteggio di interazioni.
+ *
+ * Il parser e' dedicato: Atom usa feed/entry con namespace media, non il
+ * channel/item dell'RSS 2.0 usato per Lemmy.
+ *
+ * @param string $username Nome utente.
+ * @param string $instance URL dell'istanza.
+ * @param int    $limit    Numero massimo di post, 0 per nessun limite.
+ * @return array Post normalizzati.
+ */
+function eg_social_timeline_fetch_pixelfed($username, $instance, $limit = 0) {
+    $instance = eg_social_timeline_normalize_instance($instance);
+    $username = ltrim(trim((string) $username), '@');
+
+    if ('' === $username || '' === $instance) {
+        return array();
+    }
+
+    $feed_url = $instance . '/users/' . rawurlencode($username) . '.atom';
+
+    $response = wp_remote_get($feed_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        eg_social_timeline_record_issue('pixelfed', $response->get_error_message());
+
+        if (EG_SOCIAL_TIMELINE_DEBUG) {
+            error_log('EG Social Timeline Pixelfed Error: ' . $response->get_error_message()); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+        }
+
+        return array();
+    }
+
+    $code = (int) wp_remote_retrieve_response_code($response);
+
+    if (200 !== $code) {
+        eg_social_timeline_record_issue(
+            'pixelfed',
+            sprintf(
+                /* translators: 1: nome utente, 2: codice di stato HTTP */
+                __('The instance did not return the Atom feed of "%1$s" (HTTP %2$d).', 'eg-social-timeline'),
+                $username,
+                $code
+            )
+        );
+
+        return array();
+    }
+
+    $body = wp_remote_retrieve_body($response);
+
+    if (empty($body)) {
+        return array();
+    }
+
+    $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+
+    if (false === $xml || !isset($xml->entry)) {
+        eg_social_timeline_record_issue(
+            'pixelfed',
+            __('The Atom feed could not be read. The instance may have changed its format.', 'eg-social-timeline')
+        );
+
+        return array();
+    }
+
+    $posts = array();
+    $count = 0;
+
+    foreach ($xml->entry as $entry) {
+        if ($limit > 0 && $count >= $limit) {
+            break;
+        }
+
+        $timestamp = strtotime((string) $entry->updated);
+
+        if (!$timestamp) {
+            continue;
+        }
+
+        // Il link della pagina del post: rel="alternate", o il primo link.
+        $link = '';
+
+        foreach ($entry->link as $candidate) {
+            $attributes = $candidate->attributes();
+            $rel = isset($attributes['rel']) ? (string) $attributes['rel'] : 'alternate';
+
+            if ('alternate' === $rel && isset($attributes['href'])) {
+                $link = (string) $attributes['href'];
+                break;
+            }
+        }
+
+        if ('' === $link) {
+            $link = (string) $entry->id;
+        }
+
+        $title = sanitize_text_field((string) $entry->title);
+        $summary = trim(wp_strip_all_tags((string) $entry->summary));
+        $content_html = (string) $entry->content;
+        $content = ('' !== $summary) ? $summary : $title;
+
+        // L'immagine sta in media:content; in mancanza si prende quella del
+        // contenuto HTML, dove Pixelfed mette la galleria del post.
+        $image_url = '';
+        $image_alt = $title;
+        $media = $entry->children('http://search.yahoo.com/mrss/');
+
+        if (isset($media->content)) {
+            $media_attributes = $media->content->attributes();
+
+            if (isset($media_attributes['url'])) {
+                $image_url = esc_url_raw((string) $media_attributes['url']);
+            }
+        }
+
+        if ('' === $image_url && preg_match('~<img[^>]+src="([^"]+)"~i', $content_html, $matches)) {
+            $image_url = esc_url_raw($matches[1]);
+        }
+
+        if (preg_match('~<img[^>]+alt="([^"]*)"~i', $content_html, $matches) && '' !== $matches[1]) {
+            $image_alt = sanitize_text_field($matches[1]);
+        }
+
+        $posts[] = array(
+            'platform'         => 'pixelfed',
+            'platform_label'   => 'Pixelfed',
+            'date'             => $timestamp,
+            'title'            => $title,
+            'content'          => $content,
+            'link'             => esc_url_raw($link),
+            'is_boost'         => false,
+            'image_url'        => $image_url,
+            'image_alt'        => $image_alt,
+            'favourites_count' => 0,
+            'reblogs_count'    => 0,
+            'replies_count'    => 0,
+        );
+
+        $count++;
     }
 
     return $posts;
@@ -2098,6 +2518,7 @@ function eg_social_timeline_fetch_all_feeds() {
         'lemmy'    => 'eg_social_timeline_fetch_lemmy',
         'forgejo'  => 'eg_social_timeline_fetch_forgejo',
         'peertube' => 'eg_social_timeline_fetch_peertube',
+        'pixelfed' => 'eg_social_timeline_fetch_pixelfed',
     );
 
     foreach ($fetchers as $platform => $fetcher) {
@@ -2107,7 +2528,14 @@ function eg_social_timeline_fetch_all_feeds() {
             continue;
         }
 
-        $posts = call_user_func($fetcher, $profile['username'], $profile['instance'], $profile['limit']);
+        $arguments = array($profile['username'], $profile['instance'], $profile['limit']);
+
+        // Solo PeerTube distingue account e canali.
+        if ('peertube' === $platform) {
+            $arguments[] = isset($profile['type']) ? $profile['type'] : 'auto';
+        }
+
+        $posts = call_user_func_array($fetcher, $arguments);
         $all_posts = array_merge($all_posts, $posts);
         $fetched[$platform] = count($posts);
     }
@@ -2145,32 +2573,350 @@ function eg_social_timeline_fetch_all_feeds() {
 }
 
 /**
- * Avvisi in Impostazioni sulle piattaforme che non hanno portato contenuti.
+ * Verifica i profili configurati interrogando le istanze.
+ *
+ * Una richiesta leggera per piattaforma, il cui esito viene salvato: la
+ * pagina delle impostazioni mostra il risultato registrato e non interroga
+ * nulla al caricamento, altrimenti aprirla costerebbe cinque o sei richieste
+ * HTTP e sarebbe ostaggio dei timeout.
+ *
+ * @return array Esito per piattaforma.
  */
-function eg_social_timeline_render_status_notice() {
-    $report = get_option('eg_social_timeline_status');
+function eg_social_timeline_verify_profiles() {
+    $profiles = eg_social_timeline_profiles();
+    $report = array('time' => time(), 'platforms' => array());
 
-    if (empty($report['platforms']) || !is_array($report['platforms'])) {
-        return;
+    $get = function ($url) {
+        $response = wp_remote_get($url, array('timeout' => 10, 'sslverify' => true));
+
+        if (is_wp_error($response)) {
+            return array('code' => 0, 'body' => '', 'error' => $response->get_error_message());
+        }
+
+        return array(
+            'code'  => (int) wp_remote_retrieve_response_code($response),
+            'body'  => wp_remote_retrieve_body($response),
+            'error' => '',
+        );
+    };
+
+    // Famiglia Mastodon: software dell'istanza e account.
+    $profile = $profiles['mastodon'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $software = eg_social_timeline_detect_software($profile['instance']);
+        $unsupported = eg_social_timeline_unsupported_software();
+        $result = $get($profile['instance'] . '/api/v1/accounts/lookup?acct=' . rawurlencode($profile['username']));
+        $data = json_decode($result['body'], true);
+
+        if (isset($unsupported[$software])) {
+            $report['platforms']['mastodon'] = array(
+                'ok'     => false,
+                'detail' => eg_social_timeline_fediverse_label($software),
+                'note'   => $unsupported[$software],
+            );
+        } elseif (!empty($data['id'])) {
+            $report['platforms']['mastodon'] = array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $software ? eg_social_timeline_fediverse_label($software) : __('unknown software', 'eg-social-timeline'), $profile['username']),
+                'note'   => '',
+            );
+        } else {
+            $report['platforms']['mastodon'] = array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('Account "%1$s" not found (HTTP %2$d).', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+        }
     }
 
-    foreach ($report['platforms'] as $platform => $result) {
-        if (!empty($result['count'])) {
+    // Lemmy: feed RSS dell'utente.
+    $profile = $profiles['lemmy'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/feeds/u/' . rawurlencode($profile['username']) . '.xml');
+        $items = ('' !== $result['body']) ? substr_count($result['body'], '<item>') : 0;
+
+        $report['platforms']['lemmy'] = (200 === $result['code'])
+            ? array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), eg_social_timeline_lemmy_label($profile['instance']), $profile['username']),
+                'note'   => sprintf(
+                    /* translators: %d: numero di elementi nel feed */
+                    _n('%d item in the feed', '%d items in the feed', $items, 'eg-social-timeline'),
+                    $items
+                ),
+            )
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('No feed for "%1$s" on this instance (HTTP %2$d). The Lemmy user feed exists only where the account is registered.', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+    }
+
+    // Forgejo/Gitea: esistenza dell'utente.
+    $profile = $profiles['forgejo'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/api/v1/users/' . rawurlencode($profile['username']));
+
+        $report['platforms']['forgejo'] = (200 === $result['code'])
+            ? array('ok' => true, 'detail' => sprintf('%s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $profile['username']), 'note' => '')
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('User "%1$s" not found (HTTP %2$d).', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+    }
+
+    // PeerTube: account oppure canale.
+    $profile = $profiles['peertube'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $kinds = array(
+            'account' => '/api/v1/accounts/',
+            'channel' => '/api/v1/video-channels/',
+        );
+
+        $found = '';
+        $total = 0;
+        $last = array('code' => 0, 'error' => '');
+
+        foreach ($kinds as $kind => $path) {
+            $result = $get($profile['instance'] . $path . rawurlencode($profile['username']) . '/videos?count=1');
+            $last = $result;
+
+            if (200 === $result['code']) {
+                $data = json_decode($result['body'], true);
+                $found = $kind;
+                $total = isset($data['total']) ? intval($data['total']) : 0;
+                break;
+            }
+        }
+
+        if ('' !== $found) {
+            set_transient('eg_st_pt_kind_' . md5($profile['instance'] . '/' . $profile['username']), $found, MONTH_IN_SECONDS);
+
+            $report['platforms']['peertube'] = array(
+                'ok'     => true,
+                'detail' => sprintf(
+                    '%s · %s · %s',
+                    wp_parse_url($profile['instance'], PHP_URL_HOST),
+                    ('channel' === $found) ? __('channel', 'eg-social-timeline') : __('account', 'eg-social-timeline'),
+                    $profile['username']
+                ),
+                'note'   => sprintf(
+                    /* translators: %d: numero di video */
+                    _n('%d video', '%d videos', $total, 'eg-social-timeline'),
+                    $total
+                ),
+            );
+        } else {
+            $report['platforms']['peertube'] = array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $last['error']) ? $last['error'] : sprintf(
+                    /* translators: 1: nome cercato, 2: codice di stato HTTP */
+                    __('Neither an account nor a channel named "%1$s" (HTTP %2$d). On PeerTube videos usually live in a channel.', 'eg-social-timeline'),
+                    $profile['username'],
+                    $last['code']
+                ),
+            );
+        }
+    }
+
+    // Pixelfed: feed Atom.
+    $profile = $profiles['pixelfed'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/users/' . rawurlencode($profile['username']) . '.atom');
+        $entries = ('' !== $result['body']) ? substr_count($result['body'], '<entry>') : 0;
+
+        $report['platforms']['pixelfed'] = (200 === $result['code'])
+            ? array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $profile['username']),
+                'note'   => sprintf(
+                    /* translators: %d: numero di elementi nel feed */
+                    _n('%d item in the Atom feed', '%d items in the Atom feed', $entries, 'eg-social-timeline'),
+                    $entries
+                ),
+            )
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('No Atom feed for "%1$s" (HTTP %2$d).', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+    }
+
+    // Bluesky: feed pubblico dell'autore.
+    $profile = $profiles['bluesky'];
+
+    if ('' !== $profile['username']) {
+        $result = $get(EG_SOCIAL_TIMELINE_BLUESKY_SERVICE . '/xrpc/app.bsky.feed.getAuthorFeed?' . http_build_query(array(
+            'actor' => $profile['username'],
+            'limit' => 1,
+        )));
+
+        $report['platforms']['bluesky'] = (200 === $result['code'])
+            ? array('ok' => true, 'detail' => $profile['username'], 'note' => '')
+            : array(
+                'ok'     => false,
+                'detail' => $profile['username'],
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: %d: codice di stato HTTP */
+                    __('The public API did not return this handle (HTTP %d).', 'eg-social-timeline'),
+                    $result['code']
+                ),
+            );
+    }
+
+    update_option('eg_social_timeline_diagnostics', $report, false);
+
+    return $report;
+}
+
+/**
+ * Tabella in Impostazioni con l'esito delle verifiche e dell'ultimo recupero.
+ */
+function eg_social_timeline_render_diagnostics() {
+    $profiles = eg_social_timeline_profiles();
+    $diagnostics = get_option('eg_social_timeline_diagnostics');
+    $status = get_option('eg_social_timeline_status');
+    $configured = array();
+
+    foreach ($profiles as $platform => $profile) {
+        if ('' === $profile['username']) {
             continue;
         }
 
-        $label = eg_social_timeline_get_platform_name($platform);
-        $reason = !empty($result['issue'])
-            ? $result['issue']
-            : __('No content retrieved. Check the username and the instance URL.', 'eg-social-timeline');
-        ?>
-        <div class="notice notice-warning">
-            <p>
-                <strong><?php echo esc_html($label); ?>:</strong>
-                <?php echo esc_html($reason); ?>
-            </p>
-        </div>
+        if ('bluesky' !== $platform && '' === $profile['instance']) {
+            continue;
+        }
+
+        $configured[] = $platform;
+    }
+
+    if (empty($configured)) {
+        return;
+    }
+    ?>
+    <h2><?php esc_html_e('Configured profiles', 'eg-social-timeline'); ?></h2>
+    <table class="widefat striped" style="max-width: 900px;">
+        <thead>
+            <tr>
+                <th><?php esc_html_e('Platform', 'eg-social-timeline'); ?></th>
+                <th><?php esc_html_e('What the plugin sees', 'eg-social-timeline'); ?></th>
+                <th><?php esc_html_e('Last fetch', 'eg-social-timeline'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($configured as $platform): ?>
+                <?php
+                $check = isset($diagnostics['platforms'][$platform]) ? $diagnostics['platforms'][$platform] : null;
+                $fetch = isset($status['platforms'][$platform]) ? $status['platforms'][$platform] : null;
+                ?>
+                <tr>
+                    <td><strong><?php echo esc_html(eg_social_timeline_get_platform_name($platform)); ?></strong></td>
+                    <td>
+                        <?php if (null === $check): ?>
+                            <em><?php esc_html_e('Not verified yet.', 'eg-social-timeline'); ?></em>
+                        <?php else: ?>
+                            <?php echo esc_html(($check['ok'] ? '✓ ' : '✗ ') . $check['detail']); ?>
+                            <?php if (!empty($check['note'])): ?>
+                                <br><span class="description"><?php echo esc_html($check['note']); ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (null === $fetch): ?>
+                            <em><?php esc_html_e('Nothing fetched yet.', 'eg-social-timeline'); ?></em>
+                        <?php elseif (!empty($fetch['count'])): ?>
+                            <?php
+                            printf(
+                                /* translators: %d: numero di contenuti recuperati */
+                                esc_html(_n('%d item', '%d items', $fetch['count'], 'eg-social-timeline')),
+                                intval($fetch['count'])
+                            );
+                            ?>
+                        <?php else: ?>
+                            <span style="color: #b32d2e;">
+                                <?php echo esc_html(!empty($fetch['issue']) ? $fetch['issue'] : __('No content retrieved.', 'eg-social-timeline')); ?>
+                            </span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <p class="description">
         <?php
+        if (!empty($diagnostics['time'])) {
+            printf(
+                /* translators: %s: data e ora dell'ultima verifica */
+                esc_html__('Profiles verified on %s.', 'eg-social-timeline'),
+                esc_html(date_i18n(get_option('date_format') . ' H:i', $diagnostics['time']))
+            );
+        } else {
+            esc_html_e('Save the settings or use "Verify profiles" to run the checks.', 'eg-social-timeline');
+        }
+        ?>
+    </p>
+    <form method="post" style="display: inline;">
+        <?php wp_nonce_field('eg_social_timeline_verify', 'eg_social_timeline_verify_nonce'); ?>
+        <input type="hidden" name="eg_social_timeline_verify" value="1">
+        <button type="submit" class="button"><?php esc_html_e('Verify profiles', 'eg-social-timeline'); ?></button>
+    </form>
+    <?php
+}
+
+// Verifica su richiesta e dopo il salvataggio delle impostazioni
+add_action('admin_init', 'eg_social_timeline_handle_verify');
+
+function eg_social_timeline_handle_verify() {
+    if (!is_admin() || !current_user_can('manage_options')) {
+        return;
+    }
+
+    $screen_is_settings = isset($_GET['page']) && 'eg-social-timeline' === sanitize_key(wp_unslash($_GET['page'])); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- sola lettura del parametro di pagina
+
+    // Richiesta esplicita dal pulsante.
+    if (isset($_POST['eg_social_timeline_verify'])) {
+        if (
+            !isset($_POST['eg_social_timeline_verify_nonce'])
+            || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['eg_social_timeline_verify_nonce'])), 'eg_social_timeline_verify')
+        ) {
+            wp_die(esc_html__('Security check failed.', 'eg-social-timeline'));
+        }
+
+        eg_social_timeline_verify_profiles();
+
+        return;
+    }
+
+    // Dopo un salvataggio riuscito, una volta.
+    if ($screen_is_settings && isset($_GET['settings-updated'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- parametro aggiunto da options.php, nessuna azione distruttiva
+        eg_social_timeline_verify_profiles();
     }
 }
 
@@ -2362,6 +3108,8 @@ function eg_social_timeline_shortcode($atts) {
                             esc_html_e('View commit', 'eg-social-timeline');
                         } elseif ($post['platform'] === 'peertube') {
                             esc_html_e('Watch video', 'eg-social-timeline');
+                        } elseif ($post['platform'] === 'pixelfed') {
+                            esc_html_e('View photo', 'eg-social-timeline');
                         } else {
                             esc_html_e('View original post', 'eg-social-timeline');
                         }
@@ -2382,7 +3130,8 @@ function eg_social_timeline_get_platform_name($platform) {
         'lemmy' => __('Lemmy', 'eg-social-timeline'),
         'bluesky' => __('Bluesky', 'eg-social-timeline'),
         'forgejo' => __('Forgejo', 'eg-social-timeline'),
-        'peertube' => __('PeerTube', 'eg-social-timeline')
+        'peertube' => __('PeerTube', 'eg-social-timeline'),
+        'pixelfed' => __('Pixelfed', 'eg-social-timeline')
     );
     
     return isset($names[$platform]) ? $names[$platform] : $platform;
@@ -2396,6 +3145,7 @@ function eg_social_timeline_get_icon($platform, $software = '') {
         'bluesky' => 'bluesky.svg',
         'forgejo' => 'forgejo.svg',
         'peertube' => 'peertube.svg',
+        'pixelfed' => 'pixelfed.svg',
         'blog' => 'blog.svg'
     );
 
@@ -2612,7 +3362,7 @@ function eg_social_timeline_scope_declarations($settings, $context) {
     $card_polarity    = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
     $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
 
-    $icons = array('mono', 'mastodon', 'pleroma', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'blog');
+    $icons = array('mono', 'mastodon', 'pleroma', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'blog');
     $declarations = array();
 
     // Primo piano della scheda.

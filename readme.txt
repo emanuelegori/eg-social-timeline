@@ -4,11 +4,11 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.1
+Stable tag: 1.10.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
+Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
 
 == Description ==
 
@@ -18,7 +18,8 @@ EG Social Timeline aggregates in chronological order your public posts from five
 
 - Mastodon, and the Mastodon-compatible Pleroma and Akkoma (public accounts API, no authentication)
 - Bluesky (public API, no authentication required)
-- PeerTube (public REST API, videos from your account)
+- Pixelfed (public Atom feed: photos and captions, no interaction counts)
+- PeerTube (public REST API, videos from an account or from a channel)
 - Forgejo and Gitea (commits from your public repositories)
 - Lemmy, on any instance (public user RSS feed; Diggita is one of them)
 
@@ -72,9 +73,12 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 - Mastodon, Pleroma or Akkoma: instance URL + username (e.g. https://mastodon.uno + username)
 - OR Lemmy: instance URL + username (e.g. https://diggita.com + username)
-- OR PeerTube: instance URL + account (e.g. https://peertube.uno + yourname)
+- OR Pixelfed: instance URL + username (e.g. https://pixelfed.uno + yourname)
+- OR PeerTube: instance URL + account or channel (e.g. https://peertube.uno + yourname)
 - OR Forgejo/Gitea: instance URL + username
 - OR Bluesky: handle alone (e.g. emanuele.bsky.social)
+
+You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.ml/u/1Malayali`, `https://mastodon.uno/@name`, `https://peertube.tv/c/name@host/videos`, `https://bsky.app/profile/name.bsky.social`.
 
 = Advanced configuration =
 
@@ -93,7 +97,17 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 
 = Which platforms are supported? =
 
-Mastodon, Pleroma, Akkoma, Bluesky, PeerTube, Forgejo/Gitea and Lemmy (any instance).
+Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea and Lemmy (any instance).
+
+= My PeerTube videos are not showing up. =
+
+On PeerTube videos almost always live in a **channel**, not directly in the account, and the two use different API endpoints. Paste the full address of your channel and the plugin sorts it out: `/c/name` is a channel, `/a/name` an account. If you only type a name, both are tried and the answer is remembered.
+
+A second detail: a channel belongs to the instance that hosts it. An address like `https://peertube.tv/c/name@tube.example/videos` means the channel lives on `tube.example` and peertube.tv only federates it — the plugin then queries the origin, which does not depend on the state of federation.
+
+= Why does Pixelfed show no likes or comments? =
+
+Because its public Atom feed does not carry them. Pixelfed answers the Mastodon-compatible account lookup but redirects the statuses endpoint to its login page, so the feed is the only way to read a profile without credentials: it gives photos, captions, dates and links, and no counts.
 
 = Does the Mastodon field work with every fediverse server? =
 
@@ -101,7 +115,7 @@ No, and it is worth knowing why. The plugin reads the public accounts API (`/api
 
 = A platform I configured does not show up. Where do I look? =
 
-The settings page. After each cache refresh the plugin records what every configured platform returned, and shows a warning for the ones that came back empty, with the reason when it knows it: an instance requiring authentication, an account not found, a Lemmy feed requested on an instance where that account is not registered.
+The settings page, in the "Configured profiles" table. It shows what the plugin sees for each platform — instance, software, account or channel — and what the last fetch returned, with the reason when a platform came back empty: an instance requiring authentication, an account not found, a Lemmy feed requested where that account is not registered. The checks run when you save the settings and can be repeated with the "Verify profiles" button; the page itself never queries the instances while loading.
 
 = Do the platform filters require JavaScript? =
 
@@ -147,6 +161,14 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.10.0 - 2026-09-17 =
+* Added: Pixelfed support, through the public Atom feed of the profile (`/users/{name}.atom`). Photos, captions, dates and links; no interaction counts, because the feed does not carry them. The Mastodon-compatible API cannot be used: it answers the account lookup but redirects the statuses endpoint to the login page.
+* Fixed: PeerTube channels. Videos on PeerTube almost always live in a channel rather than in the account, and the two use different API endpoints — the plugin only knew the account one, so a channel returned nothing. Both are supported now, the type is taken from the address when you paste it (`/c/` channel, `/a/` account) and otherwise discovered once and remembered.
+* Added: the full profile address is accepted in every field and split into instance and username — `https://lemmy.ml/u/name`, `https://mastodon.uno/@name`, `/users/name`, `name@instance`, `https://peertube.tv/c/name@host/videos`, `https://pixelfed.uno/name`, `https://bsky.app/profile/handle`.
+* Added: when a name carries its own origin (a remote PeerTube channel seen from another instance) the plugin queries that origin instead of the instance that federates it, so the result does not depend on the state of federation.
+* Added: a "Configured profiles" table in the settings showing what the plugin sees for each platform — instance, software, account or channel, item counts — and what the last fetch returned. The checks run on save, can be repeated with the "Verify profiles" button, and are never run while the page loads.
+* Changed: clearer failure messages, for instance "neither an account nor a channel named X exists on Y" instead of a generic invitation to check the settings.
 
 = 1.9.1 - 2026-09-17 =
 * Fixed: the `[eg_social_timeline]` shortcode was no longer registered in 1.9.0, so the tag was printed as plain text on the page. The `add_shortcode()` call sat between two functions that were rewritten and was removed with them.
@@ -255,6 +277,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.10.0 =
+Adds Pixelfed, fixes PeerTube channels (videos in a channel returned nothing), accepts the full profile address in every field, and adds a table showing what the plugin sees for each configured platform.
+
 = 1.9.1 =
 Fixes 1.9.0: the shortcode was not registered and appeared as plain text on the page. Update right away if you are on 1.9.0.
 
@@ -332,7 +357,7 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 
 - **What**: the PeerTube instance the user enters in the settings (e.g. `https://peertube.uno`).
 - **When**: each time the timeline cache expires and a page containing the shortcode is rendered.
-- **Endpoint**: `GET /api/v1/accounts/{account}/videos` for the account's public videos.
+- **Endpoints**: `GET /api/v1/accounts/{account}/videos` and `GET /api/v1/video-channels/{channel}/videos` for the public videos of an account or of a channel.
 - **Data sent**: only the public account name entered in the settings, as part of the URL path.
 - **Data received and stored**: public video metadata (title, description, date, link, thumbnail URL and like count). Cached locally as a WordPress transient.
 - PeerTube is decentralized federated video hosting: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
@@ -345,6 +370,15 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Data sent**: only the public username entered in the settings, as a URL parameter.
 - **Data received and stored**: public commit metadata (message, date, repository name, commit hash and link). Cached locally as a WordPress transient.
 - Forgejo and Gitea are open-source git hosting platforms. Their terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= Pixelfed =
+
+- **What**: the Pixelfed instance the user enters in the settings (e.g. `https://pixelfed.uno`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
+- **Endpoint**: `GET /users/{username}.atom`, the public Atom feed of the profile.
+- **Data sent**: only the public username entered in the settings, as part of the URL path.
+- **Data received and stored**: public post metadata (caption, date, link, photo URL and alt text if image previews are enabled) parsed from the public Atom feed. Cached locally as a WordPress transient.
+- Pixelfed is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
 
 = Lemmy =
 

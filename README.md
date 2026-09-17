@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.9.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.10.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
+WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
 
 ---
 
@@ -17,7 +17,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
   - **Lemmy**, any instance, with full statistics
   - **Forgejo/Gitea** (repository commits)
   - **Bluesky** (public ATP API, no authentication required)
-  - **PeerTube** (public REST API, videos from your account)
+  - **Pixelfed** (public Atom feed: photos and captions, no counts)
+  - **PeerTube** (public REST API, videos from an account or a channel)
 - **Per-platform limits**: prevents a single platform from monopolizing the timeline
 - **Interactive filters**: pure-CSS filter system to show/hide platforms
 - **Modular icon system**: SVG icons loaded from files, easy to customize
@@ -65,7 +66,8 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
    - **Mastodon / Pleroma / Akkoma**: instance URL + username (e.g. `https://mastodon.uno` + `emanuelegori`)
    - **Lemmy**: instance URL + username (e.g. `https://diggita.com` + `emanuelegori`)
    - **Forgejo / Gitea**: instance URL + username (e.g. `https://git.emanuelegori.uno`)
-   - **PeerTube**: instance URL + account (e.g. `https://peertube.uno` + `emanuelegori`)
+   - **Pixelfed**: instance URL + username (e.g. `https://pixelfed.uno` + `emanuelegori`)
+   - **PeerTube**: instance URL + account or channel (e.g. `https://peertube.uno` + `emanuelegori`)
    - **Bluesky**: handle alone (e.g. `emanuele.bsky.social`, without @) — its public API is the same for everyone
 3. Configure per-platform limits (optional):
    - Max Mastodon posts (default: 20, 0 = unlimited)
@@ -73,6 +75,7 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
    - Max Forgejo commits (default: 5, 0 = unlimited)
    - Max Bluesky posts (default: 10, 0 = unlimited)
    - Max PeerTube videos (default: 5, 0 = unlimited)
+   - Max Pixelfed posts (default: 10, 0 = unlimited)
 4. Adjust cache and display settings
 5. Adjust the **Appearance** section (optional):
    - Timeline background: transparent (default) · neutral preset · follow the visitor browser · custom color
@@ -138,6 +141,7 @@ social-icons/
 ├── mastodon.svg
 ├── pleroma.svg      # used for Pleroma and Akkoma
 ├── lemmy.svg
+├── pixelfed.svg
 ├── forgejo.svg
 ├── peertube.svg
 └── bluesky.svg
@@ -216,12 +220,26 @@ eg-social-timeline/
 
 - **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, and `/.well-known/nodeinfo` to tell the software apart
 - **Lemmy**: RSS `/feeds/u/{username}.xml` (with stats parsing), on any instance
+- **Pixelfed**: Atom `/users/{username}.atom` (photos and captions, no counts)
+- **PeerTube**: `/api/v1/accounts/{name}/videos` or `/api/v1/video-channels/{name}/videos`
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 - **Bluesky**: `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed` (public, no token required)
 
 ---
 
 ## Changelog
+
+### [1.10.0] - 2026-09-17
+
+#### Added
+- **Pixelfed**, through the public Atom feed of the profile (`/users/{name}.atom`): photos, captions, dates and links, no interaction counts because the feed does not carry them. A dedicated parser (`feed/entry` with the `media:` namespace), distinct from the RSS 2.0 one used for Lemmy.
+- **The full profile address is accepted in every field** and split into instance and username: `/u/name`, `/@name`, `/users/name`, `name@instance`, `/c/name@host`, `/profile/handle`. A bare instance URL is not mistaken for a profile.
+- When a name carries its own origin (a remote PeerTube channel seen from another instance) the plugin queries that origin rather than the instance federating it.
+- A **"Configured profiles"** table in the settings: what the plugin sees per platform (instance, software, account or channel, item counts) and what the last fetch returned. Checks run on save and via the **Verify profiles** button, never while the page loads.
+
+#### Fixed
+- **PeerTube channels.** Videos on PeerTube almost always live in a channel rather than the account, and the two use different endpoints; only the account one was implemented, so a channel returned nothing. Measured: `/api/v1/accounts/s3nnet/videos` → 404, `/api/v1/video-channels/s3nnet/videos` → 200 with 147 videos.
+- Specific failure messages instead of a generic invitation to check the settings.
 
 ### [1.9.1] - 2026-09-17
 

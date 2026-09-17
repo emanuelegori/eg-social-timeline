@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.9.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.10.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon** (anche Pleroma e Akkoma), **Lemmy**, **PeerTube**, **Forgejo/Gitea** e **Bluesky**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon** (anche Pleroma e Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea** e **Bluesky**.
 
 ---
 
@@ -17,7 +17,8 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
   - **Lemmy**, qualsiasi istanza, con statistiche complete
   - **Forgejo/Gitea** (commit repository)
   - **Bluesky** (API pubblica ATP, nessuna autenticazione)
-  - **PeerTube** (API REST pubblica, video dal tuo account)
+  - **Pixelfed** (feed Atom pubblico: foto e didascalie, senza statistiche)
+  - **PeerTube** (API REST pubblica, video da un account o da un canale)
 - **Limiti Configurabili per Piattaforma**: Previene che una piattaforma monopolizzi la timeline
 - **Filtri Interattivi**: Sistema filtri CSS puro per mostrare/nascondere piattaforme
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
@@ -65,7 +66,8 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    - **Mastodon / Pleroma / Akkoma**: URL istanza + username (es: `https://mastodon.uno` + `emanuelegori`)
    - **Lemmy**: URL istanza + username (es: `https://diggita.com` + `emanuelegori`)
    - **Forgejo / Gitea**: URL istanza + username (es: `https://git.emanuelegori.uno`)
-   - **PeerTube**: URL istanza + account (es: `https://peertube.uno` + `emanuelegori`)
+   - **Pixelfed**: URL istanza + username (es: `https://pixelfed.uno` + `emanuelegori`)
+   - **PeerTube**: URL istanza + account o canale (es: `https://peertube.uno` + `emanuelegori`)
    - **Bluesky**: solo handle (es: `emanuele.bsky.social`, senza @) — la sua API pubblica è la stessa per tutti
 3. Configura limiti per piattaforma (opzionale):
    - Max post Mastodon (default: 20, 0 = illimitato)
@@ -73,6 +75,7 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    - Max commit Forgejo (default: 5, 0 = illimitato)
    - Max post Bluesky (default: 10, 0 = illimitato)
    - Max video PeerTube (default: 5, 0 = illimitato)
+   - Max post Pixelfed (default: 10, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
 5. Regola la sezione **Aspetto** (opzionale):
    - Sfondo timeline: trasparente (default) · preset neutro · segue il browser del visitatore · colore personalizzato
@@ -138,6 +141,7 @@ social-icons/
 ├── mastodon.svg
 ├── pleroma.svg      # usata per Pleroma e Akkoma
 ├── lemmy.svg
+├── pixelfed.svg
 ├── forgejo.svg
 ├── peertube.svg
 └── bluesky.svg
@@ -216,12 +220,26 @@ eg-social-timeline/
 
 - **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, più `/.well-known/nodeinfo` per distinguere il software
 - **Lemmy**: RSS `/feeds/u/{username}.xml` (con parsing statistiche), su qualsiasi istanza
+- **Pixelfed**: Atom `/users/{username}.atom` (foto e didascalie, senza statistiche)
+- **PeerTube**: `/api/v1/accounts/{nome}/videos` oppure `/api/v1/video-channels/{nome}/videos`
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
 - **Bluesky**: `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed` (pubblica, nessun token)
 
 ---
 
 ## Changelog
+
+### [1.10.0] - 2026-09-17
+
+#### Added
+- **Pixelfed**, tramite il feed Atom pubblico del profilo (`/users/{nome}.atom`): foto, didascalie, date e link, senza statistiche perché il feed non le porta. Parser dedicato (`feed/entry` con namespace `media:`), diverso da quello RSS 2.0 usato per Lemmy.
+- **L'indirizzo completo del profilo è accettato in ogni campo** e viene spezzato in istanza + nome: `/u/nome`, `/@nome`, `/users/nome`, `nome@istanza`, `/c/nome@host`, `/profile/handle`. Un URL di sola istanza non viene confuso con un profilo.
+- Quando il nome porta la propria origine (canale PeerTube remoto visto da un'altra istanza) il plugin interroga quella istanza invece di chi la federa.
+- Tabella **"Profili configurati"** nelle impostazioni: cosa vede il plugin per ogni piattaforma (istanza, software, account o canale, numero di contenuti) e l'esito dell'ultimo recupero. Le verifiche girano al salvataggio e col pulsante **Verifica profili**, mai al caricamento della pagina.
+
+#### Fixed
+- **Canali PeerTube.** I video stanno quasi sempre in un canale e non nell'account, e i due usano endpoint diversi: era implementato solo quello dell'account, quindi un canale non restituiva nulla. Misurato: `/api/v1/accounts/s3nnet/videos` → 404, `/api/v1/video-channels/s3nnet/videos` → 200 con 147 video.
+- Messaggi di errore specifici al posto dell'invito generico a ricontrollare.
 
 ### [1.9.1] - 2026-09-17
 
