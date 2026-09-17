@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Diggita. Zero JavaScript, zero tracking.
- * Version: 1.8.0
+ * Version: 1.8.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.8.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.8.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -84,14 +84,11 @@ function eg_social_timeline_register_settings() {
                 'peertube_limit' => 5,
                 'truncate_length' => 300,
                 'show_images' => false,
-                'color_scheme' => 'light',
                 'icon_style' => 'brand',
                 'canvas_bg' => 'none',
-                'canvas_bg_light' => '#f3f4f6',
-                'canvas_bg_dark' => '#111827',
-                'card_bg' => 'auto',
-                'card_bg_light' => '#ffffff',
-                'card_bg_dark' => '#1f2937'
+                'canvas_bg_color' => '#f3f4f6',
+                'card_bg' => 'neutral',
+                'card_bg_color' => '#ffffff'
             )
         )
     );
@@ -259,14 +256,6 @@ function eg_social_timeline_register_settings() {
         __('Appearance', 'eg-social-timeline'),
         'eg_social_timeline_appearance_section_callback',
         'eg-social-timeline'
-    );
-
-    add_settings_field(
-        'eg_social_timeline_color_scheme',
-        __('Color Scheme', 'eg-social-timeline'),
-        'eg_social_timeline_color_scheme_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_appearance_section'
     );
 
     add_settings_field(
@@ -608,148 +597,225 @@ function eg_social_timeline_truncate_length_callback() {
 }
 
 function eg_social_timeline_appearance_section_callback() {
-    echo '<p>' . esc_html__('Colors of the timeline. The color scheme is chosen here and no longer depends on the visitor browser, so the timeline can stay consistent with your theme.', 'eg-social-timeline') . '</p>';
+    echo '<p>' . esc_html__('Colors of the timeline. Choose a background for the timeline and one for the cards: text, borders and icons are derived from the color you pick, measuring its contrast, so they stay readable on any surface.', 'eg-social-timeline') . '</p>';
 }
 
 /**
- * Restituisce il valore di un'opzione aspetto, con fallback al default.
+ * Impostazioni aspetto normalizzate, con migrazione dal modello della 1.8.0.
  *
- * @param string $key     Chiave dell'opzione.
- * @param mixed  $default Valore di fallback.
- * @return mixed
+ * La 1.8.0 aveva uno schema colori globale piu' una coppia di colori
+ * (chiaro/scuro) per superficie. Qui quel modello viene ridotto a quello
+ * attuale — una scelta e un colore per superficie — leggendo le vecchie
+ * chiavi senza riscrivere l'opzione: il DB si allinea al primo salvataggio.
+ *
+ * @return array Impostazioni con chiavi canvas_bg, canvas_bg_color, card_bg,
+ *               card_bg_color, icon_style.
  */
-function eg_social_timeline_appearance_option($key, $default) {
+function eg_social_timeline_appearance_settings() {
     $options = get_option('eg_social_timeline_options');
 
-    if (!is_array($options) || !isset($options[$key]) || '' === $options[$key]) {
-        return $default;
+    if (!is_array($options)) {
+        $options = array();
     }
 
-    return $options[$key];
+    $legacy_scheme = isset($options['color_scheme']) ? $options['color_scheme'] : '';
+    $legacy = in_array($legacy_scheme, array('light', 'dark', 'auto'), true);
+
+    // Sfondo della timeline.
+    $canvas = isset($options['canvas_bg']) ? $options['canvas_bg'] : 'none';
+    $canvas_color = isset($options['canvas_bg_color']) ? sanitize_hex_color($options['canvas_bg_color']) : null;
+
+    if ($legacy) {
+        if (!$canvas_color) {
+            $legacy_key = ('dark' === $legacy_scheme) ? 'canvas_bg_dark' : 'canvas_bg_light';
+            $canvas_color = isset($options[$legacy_key]) ? sanitize_hex_color($options[$legacy_key]) : null;
+        }
+
+        // Il preset neutro cambiava con lo schema: con schema "auto" equivale
+        // alla nuova voce "segue il browser".
+        if ('neutral' === $canvas && 'auto' === $legacy_scheme) {
+            $canvas = 'auto';
+        }
+    }
+
+    if (!in_array($canvas, array('none', 'neutral', 'auto', 'custom'), true)) {
+        $canvas = 'none';
+    }
+
+    // Sfondo delle schede.
+    $card = isset($options['card_bg']) ? $options['card_bg'] : 'neutral';
+    $card_color = isset($options['card_bg_color']) ? sanitize_hex_color($options['card_bg_color']) : null;
+
+    if ($legacy) {
+        if (!$card_color) {
+            $legacy_key = ('dark' === $legacy_scheme) ? 'card_bg_dark' : 'card_bg_light';
+            $card_color = isset($options[$legacy_key]) ? sanitize_hex_color($options[$legacy_key]) : null;
+        }
+
+        // "Automatico" seguiva lo schema globale: diventa "segue il browser"
+        // oppure il colore fisso corrispondente allo schema scelto allora.
+        if ('auto' === $card) {
+            if ('auto' === $legacy_scheme) {
+                $card = 'auto';
+            } elseif ('dark' === $legacy_scheme) {
+                $card = 'custom';
+                $card_color = '#1f2937';
+            } else {
+                $card = 'neutral';
+            }
+        }
+    }
+
+    if (!in_array($card, array('neutral', 'none', 'auto', 'custom'), true)) {
+        $card = 'neutral';
+    }
+
+    $icon_style = isset($options['icon_style']) ? $options['icon_style'] : 'brand';
+
+    if (!in_array($icon_style, array('brand', 'mono'), true)) {
+        $icon_style = 'brand';
+    }
+
+    return array(
+        'canvas_bg'       => $canvas,
+        'canvas_bg_color' => $canvas_color ? $canvas_color : '#f3f4f6',
+        'card_bg'         => $card,
+        'card_bg_color'   => $card_color ? $card_color : '#ffffff',
+        'icon_style'      => $icon_style,
+    );
 }
 
 /**
- * Stampa la coppia di color picker chiaro/scuro di un'opzione aspetto.
+ * Stampa il color picker di un'opzione aspetto.
  *
- * @param string $key_light Chiave del colore per lo schema chiaro.
- * @param string $key_dark  Chiave del colore per lo schema scuro.
- * @param string $def_light Colore di default per lo schema chiaro.
- * @param string $def_dark  Colore di default per lo schema scuro.
+ * @param string $key   Chiave dell'opzione.
+ * @param string $value Colore corrente.
  */
-function eg_social_timeline_color_pair_field($key_light, $key_dark, $def_light, $def_dark) {
-    $light = eg_social_timeline_appearance_option($key_light, $def_light);
-    $dark  = eg_social_timeline_appearance_option($key_dark, $def_dark);
+function eg_social_timeline_color_field($key, $value) {
     ?>
-    <p class="eg-social-timeline-color-pair">
-        <label for="eg_social_timeline_<?php echo esc_attr($key_light); ?>">
-            <?php esc_html_e('Light scheme:', 'eg-social-timeline'); ?>
+    <p>
+        <label for="eg_social_timeline_<?php echo esc_attr($key); ?>">
+            <?php esc_html_e('Custom color:', 'eg-social-timeline'); ?>
         </label>
         <input type="color"
-               id="eg_social_timeline_<?php echo esc_attr($key_light); ?>"
-               name="eg_social_timeline_options[<?php echo esc_attr($key_light); ?>]"
-               value="<?php echo esc_attr($light); ?>">
-        &nbsp;
-        <label for="eg_social_timeline_<?php echo esc_attr($key_dark); ?>">
-            <?php esc_html_e('Dark scheme:', 'eg-social-timeline'); ?>
-        </label>
-        <input type="color"
-               id="eg_social_timeline_<?php echo esc_attr($key_dark); ?>"
-               name="eg_social_timeline_options[<?php echo esc_attr($key_dark); ?>]"
-               value="<?php echo esc_attr($dark); ?>">
+               id="eg_social_timeline_<?php echo esc_attr($key); ?>"
+               name="eg_social_timeline_options[<?php echo esc_attr($key); ?>]"
+               value="<?php echo esc_attr($value); ?>">
     </p>
     <?php
 }
 
-function eg_social_timeline_color_scheme_callback() {
-    $scheme = eg_social_timeline_appearance_option('color_scheme', 'light');
-    $choices = array(
-        'light' => __('Always light', 'eg-social-timeline'),
-        'dark'  => __('Always dark', 'eg-social-timeline'),
-        'auto'  => __('Follow the visitor browser', 'eg-social-timeline'),
-    );
+/**
+ * Stampa il select di un'opzione aspetto.
+ *
+ * @param string $key     Chiave dell'opzione.
+ * @param string $current Valore corrente.
+ * @param array  $choices Coppie valore => etichetta.
+ */
+function eg_social_timeline_select_field($key, $current, $choices) {
     ?>
-    <select id="eg_social_timeline_color_scheme" name="eg_social_timeline_options[color_scheme]">
+    <select id="eg_social_timeline_<?php echo esc_attr($key); ?>"
+            name="eg_social_timeline_options[<?php echo esc_attr($key); ?>]">
         <?php foreach ($choices as $value => $label): ?>
-            <option value="<?php echo esc_attr($value); ?>" <?php selected($scheme, $value); ?>>
+            <option value="<?php echo esc_attr($value); ?>" <?php selected($current, $value); ?>>
                 <?php echo esc_html($label); ?>
             </option>
         <?php endforeach; ?>
     </select>
-    <p class="description">
-        <?php esc_html_e('"Follow the visitor browser" uses the prefers-color-scheme setting: the timeline turns dark even on a light theme. Default: Always light', 'eg-social-timeline'); ?>
+    <?php
+}
+
+/**
+ * Avviso se il colore scelto non permette testo leggibile.
+ *
+ * Con un colore di mezzo (un viola o un grigio medio) nessuna delle due
+ * palette di primo piano raggiunge il minimo WCAG AA: meglio dirlo invece di
+ * lasciare all'utente una scheda dal testo illeggibile.
+ *
+ * @param string $hex Colore scelto.
+ */
+function eg_social_timeline_contrast_notice($hex) {
+    $best = max(
+        eg_social_timeline_contrast_ratio($hex, '#374151'),
+        eg_social_timeline_contrast_ratio($hex, '#d1d5db')
+    );
+
+    if ($best >= 4.5) {
+        return;
+    }
+    ?>
+    <p class="description" style="color: #b32d2e;">
+        <?php
+        printf(
+            /* translators: %s: rapporto di contrasto raggiunto, es. 2.9 */
+            esc_html__('Careful: with this color the text reaches a contrast ratio of only %s:1, below the 4.5:1 required by WCAG AA. Pick a clearly lighter or darker color.', 'eg-social-timeline'),
+            esc_html(number_format_i18n($best, 1))
+        );
+        ?>
     </p>
     <?php
 }
 
 function eg_social_timeline_canvas_bg_callback() {
-    $mode = eg_social_timeline_appearance_option('canvas_bg', 'none');
-    $choices = array(
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('canvas_bg', $settings['canvas_bg'], array(
         'none'    => __('Transparent (theme background)', 'eg-social-timeline'),
         'neutral' => __('Neutral preset', 'eg-social-timeline'),
-        'custom'  => __('Custom colors', 'eg-social-timeline'),
-    );
-    ?>
-    <select id="eg_social_timeline_canvas_bg" name="eg_social_timeline_options[canvas_bg]">
-        <?php foreach ($choices as $value => $label): ?>
-            <option value="<?php echo esc_attr($value); ?>" <?php selected($mode, $value); ?>>
-                <?php echo esc_html($label); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <p class="description">
-        <?php esc_html_e('Background behind the cards. Set it apart from the card background to make the cards stand out. Default: Transparent', 'eg-social-timeline'); ?>
-    </p>
-    <?php
-    eg_social_timeline_color_pair_field('canvas_bg_light', 'canvas_bg_dark', '#f3f4f6', '#111827');
+        'auto'    => __('Follow the visitor browser', 'eg-social-timeline'),
+        'custom'  => __('Custom color', 'eg-social-timeline'),
+    ));
     ?>
     <p class="description">
-        <?php esc_html_e('The two colors above apply only with "Custom colors".', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Background behind the cards. Set it apart from the card background to make the cards stand out. "Follow the visitor browser" uses a light grey or a very dark grey according to the prefers-color-scheme setting. Default: Transparent', 'eg-social-timeline'); ?>
     </p>
     <?php
+    eg_social_timeline_color_field('canvas_bg_color', $settings['canvas_bg_color']);
+    ?>
+    <p class="description">
+        <?php esc_html_e('The color above applies only with "Custom color".', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+    if ('custom' === $settings['canvas_bg']) {
+        eg_social_timeline_contrast_notice($settings['canvas_bg_color']);
+    }
 }
 
 function eg_social_timeline_card_bg_callback() {
-    $mode = eg_social_timeline_appearance_option('card_bg', 'auto');
-    $choices = array(
-        'auto'   => __('Automatic (follows the color scheme)', 'eg-social-timeline'),
-        'custom' => __('Custom colors', 'eg-social-timeline'),
-    );
-    ?>
-    <select id="eg_social_timeline_card_bg" name="eg_social_timeline_options[card_bg]">
-        <?php foreach ($choices as $value => $label): ?>
-            <option value="<?php echo esc_attr($value); ?>" <?php selected($mode, $value); ?>>
-                <?php echo esc_html($label); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <p class="description">
-        <?php esc_html_e('Background of each post card. Default: Automatic (white on light scheme, dark grey on dark scheme)', 'eg-social-timeline'); ?>
-    </p>
-    <?php
-    eg_social_timeline_color_pair_field('card_bg_light', 'card_bg_dark', '#ffffff', '#1f2937');
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('card_bg', $settings['card_bg'], array(
+        'neutral' => __('Neutral preset (white)', 'eg-social-timeline'),
+        'none'    => __('Transparent', 'eg-social-timeline'),
+        'auto'    => __('Follow the visitor browser', 'eg-social-timeline'),
+        'custom'  => __('Custom color', 'eg-social-timeline'),
+    ));
     ?>
     <p class="description">
-        <?php esc_html_e('The two colors above apply only with "Custom colors".', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Background of each post card. "Transparent" drops the card surface and its shadow, leaving only the border. Default: Neutral preset', 'eg-social-timeline'); ?>
     </p>
     <?php
+    eg_social_timeline_color_field('card_bg_color', $settings['card_bg_color']);
+    ?>
+    <p class="description">
+        <?php esc_html_e('The color above applies only with "Custom color". Pick a dark one and the post text, the stats and the icons switch to their light variants on their own.', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+    if ('custom' === $settings['card_bg']) {
+        eg_social_timeline_contrast_notice($settings['card_bg_color']);
+    }
 }
 
 function eg_social_timeline_icon_style_callback() {
-    $style = eg_social_timeline_appearance_option('icon_style', 'brand');
-    $choices = array(
-        'brand' => __('Brand colors', 'eg-social-timeline'),
-        'mono'  => __('Monochrome (follows the text color)', 'eg-social-timeline'),
-    );
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('icon_style', $settings['icon_style'], array(
+        'brand' => __('Platform colors', 'eg-social-timeline'),
+        'mono'  => __('Single color (same as the post text)', 'eg-social-timeline'),
+    ));
     ?>
-    <select id="eg_social_timeline_icon_style" name="eg_social_timeline_options[icon_style]">
-        <?php foreach ($choices as $value => $label): ?>
-            <option value="<?php echo esc_attr($value); ?>" <?php selected($style, $value); ?>>
-                <?php echo esc_html($label); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
     <p class="description">
-        <?php esc_html_e('Brand colors use the official platform color, lightened on the dark scheme to stay readable. Monochrome icons take the post text color, so they turn white on a dark card. Default: Brand colors', 'eg-social-timeline'); ?>
+        <?php esc_html_e('The SVG icons are monochrome outlines and carry no color of their own: the stylesheet paints them. Platform colors use the official color of each platform, lightened when the surface is dark. A single color follows the post text, so the icons turn white on a dark card. Default: Platform colors', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -828,30 +894,25 @@ function eg_social_timeline_sanitize_options($input) {
     $output['truncate_length'] = ($truncate === 0) ? 0 : max(50, min(600, $truncate));
 
     // Aspetto
-    $color_scheme = isset($input['color_scheme']) ? sanitize_key($input['color_scheme']) : 'light';
-    $output['color_scheme'] = in_array($color_scheme, array('light', 'dark', 'auto'), true) ? $color_scheme : 'light';
+    $canvas_bg = isset($input['canvas_bg']) ? sanitize_key($input['canvas_bg']) : 'none';
+    $output['canvas_bg'] = in_array($canvas_bg, array('none', 'neutral', 'auto', 'custom'), true) ? $canvas_bg : 'none';
+
+    $card_bg = isset($input['card_bg']) ? sanitize_key($input['card_bg']) : 'neutral';
+    $output['card_bg'] = in_array($card_bg, array('neutral', 'none', 'auto', 'custom'), true) ? $card_bg : 'neutral';
 
     $icon_style = isset($input['icon_style']) ? sanitize_key($input['icon_style']) : 'brand';
     $output['icon_style'] = in_array($icon_style, array('brand', 'mono'), true) ? $icon_style : 'brand';
 
-    $canvas_bg = isset($input['canvas_bg']) ? sanitize_key($input['canvas_bg']) : 'none';
-    $output['canvas_bg'] = in_array($canvas_bg, array('none', 'neutral', 'custom'), true) ? $canvas_bg : 'none';
-
-    $card_bg = isset($input['card_bg']) ? sanitize_key($input['card_bg']) : 'auto';
-    $output['card_bg'] = in_array($card_bg, array('auto', 'custom'), true) ? $card_bg : 'auto';
-
     $colors = array(
-        'canvas_bg_light' => '#f3f4f6',
-        'canvas_bg_dark'  => '#111827',
-        'card_bg_light'   => '#ffffff',
-        'card_bg_dark'    => '#1f2937',
+        'canvas_bg_color' => '#f3f4f6',
+        'card_bg_color'   => '#ffffff',
     );
 
     foreach ($colors as $key => $fallback) {
         $color = isset($input[$key]) ? sanitize_hex_color($input[$key]) : '';
         $output[$key] = $color ? $color : $fallback;
     }
-    
+
     delete_transient('eg_social_timeline_cache');
     
     add_settings_error(
@@ -1912,26 +1973,15 @@ function eg_social_timeline_truncate($text, $length = 200) {
 }
 
 /**
- * Classi del contenitore della timeline: schema colori, stile icone, sfondo.
+ * Classi del contenitore della timeline: stile icone e sfondo.
  *
  * @return string Elenco di classi CSS separate da spazio.
  */
 function eg_social_timeline_wrapper_classes() {
-    $classes = array('eg-social-timeline');
+    $settings = eg_social_timeline_appearance_settings();
+    $classes  = array('eg-social-timeline', 'egst-icons-' . $settings['icon_style']);
 
-    $scheme = eg_social_timeline_appearance_option('color_scheme', 'light');
-    if (!in_array($scheme, array('light', 'dark', 'auto'), true)) {
-        $scheme = 'light';
-    }
-    $classes[] = 'egst-scheme-' . $scheme;
-
-    $icon_style = eg_social_timeline_appearance_option('icon_style', 'brand');
-    if (!in_array($icon_style, array('brand', 'mono'), true)) {
-        $icon_style = 'brand';
-    }
-    $classes[] = 'egst-icons-' . $icon_style;
-
-    if (in_array(eg_social_timeline_appearance_option('canvas_bg', 'none'), array('neutral', 'custom'), true)) {
+    if ('none' !== $settings['canvas_bg']) {
         $classes[] = 'egst-has-canvas';
     }
 
@@ -1939,16 +1989,177 @@ function eg_social_timeline_wrapper_classes() {
 }
 
 /**
- * Colore esadecimale validato di un'opzione aspetto.
+ * Luminanza relativa di un colore esadecimale, secondo WCAG 2.1.
  *
- * @param string $key      Chiave dell'opzione.
- * @param string $fallback Colore di fallback.
- * @return string
+ * @param string $hex Colore nel formato #rgb o #rrggbb.
+ * @return float Valore fra 0 (nero) e 1 (bianco).
  */
-function eg_social_timeline_appearance_color($key, $fallback) {
-    $color = sanitize_hex_color(eg_social_timeline_appearance_option($key, $fallback));
+function eg_social_timeline_relative_luminance($hex) {
+    $hex = ltrim((string) $hex, '#');
 
-    return $color ? $color : $fallback;
+    if (3 === strlen($hex)) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+
+    if (6 !== strlen($hex)) {
+        return 1.0;
+    }
+
+    $channels = array(
+        hexdec(substr($hex, 0, 2)),
+        hexdec(substr($hex, 2, 2)),
+        hexdec(substr($hex, 4, 2)),
+    );
+
+    $weights = array(0.2126, 0.7152, 0.0722);
+    $luminance = 0.0;
+
+    foreach ($channels as $index => $value) {
+        $channel = $value / 255;
+        $channel = ($channel <= 0.03928) ? $channel / 12.92 : pow((($channel + 0.055) / 1.055), 2.4);
+        $luminance += $weights[$index] * $channel;
+    }
+
+    return $luminance;
+}
+
+/**
+ * Rapporto di contrasto fra due colori, secondo WCAG 2.1.
+ *
+ * @param string $hex_a Primo colore.
+ * @param string $hex_b Secondo colore.
+ * @return float Valore fra 1 e 21.
+ */
+function eg_social_timeline_contrast_ratio($hex_a, $hex_b) {
+    $a = eg_social_timeline_relative_luminance($hex_a);
+    $b = eg_social_timeline_relative_luminance($hex_b);
+
+    $lighter = max($a, $b);
+    $darker  = min($a, $b);
+
+    return ($lighter + 0.05) / ($darker + 0.05);
+}
+
+/**
+ * Palette di primo piano che sta meglio su una superficie.
+ *
+ * Nessuna soglia arbitraria: si confronta il contrasto del colore della
+ * superficie con il testo della palette chiara e con quello della palette
+ * scura, e vince quella che contrasta di piu'.
+ *
+ * @param string $hex Colore della superficie.
+ * @return string 'light' oppure 'dark'.
+ */
+function eg_social_timeline_surface_polarity($hex) {
+    $on_light = eg_social_timeline_contrast_ratio($hex, '#374151');
+    $on_dark  = eg_social_timeline_contrast_ratio($hex, '#d1d5db');
+
+    return ($on_dark > $on_light) ? 'dark' : 'light';
+}
+
+/**
+ * Colore di una superficie in un dato contesto.
+ *
+ * @param array  $settings Impostazioni aspetto normalizzate.
+ * @param string $surface  'canvas' oppure 'card'.
+ * @param string $context  'light' oppure 'dark' (il contesto della @media).
+ * @return string|null Colore, oppure null se la superficie e' trasparente.
+ */
+function eg_social_timeline_surface_color($settings, $surface, $context) {
+    $mode = $settings[$surface . '_bg'];
+
+    if ('none' === $mode) {
+        return null;
+    }
+
+    if ('custom' === $mode) {
+        return $settings[$surface . '_bg_color'];
+    }
+
+    $presets = array(
+        'canvas' => array('light' => '#f3f4f6', 'dark' => '#111827'),
+        'card'   => array('light' => '#ffffff', 'dark' => '#1f2937'),
+    );
+
+    // Il preset neutro e' un colore fisso chiaro; "auto" segue il contesto.
+    $key = ('auto' === $mode) ? $context : 'light';
+
+    return $presets[$surface][$key];
+}
+
+/**
+ * Custom properties da sovrascrivere in un contesto.
+ *
+ * @param array  $settings Impostazioni aspetto normalizzate.
+ * @param string $context  'light' oppure 'dark'.
+ * @return array Coppie nome => valore.
+ */
+function eg_social_timeline_scope_declarations($settings, $context) {
+    $canvas = eg_social_timeline_surface_color($settings, 'canvas', $context);
+    $card   = eg_social_timeline_surface_color($settings, 'card', $context);
+
+    // La scheda si misura sul proprio colore; se e' trasparente si guarda il
+    // fondo della timeline, e se non c'e' nemmeno quello l'unico indizio su
+    // cosa ci sia sotto e' il tema del browser, cioe' il contesto.
+    $card_reference    = $card ? $card : $canvas;
+    $filters_reference = $canvas ? $canvas : $card_reference;
+
+    $card_polarity    = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
+    $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
+
+    $icons = array('mono', 'mastodon', 'diggita', 'bluesky', 'forgejo', 'peertube', 'blog');
+    $declarations = array();
+
+    // Primo piano della scheda.
+    if ('dark' === $card_polarity) {
+        $tokens = array(
+            'text', 'heading', 'muted', 'stat', 'link', 'link-hover',
+            'badge-bg', 'badge-text', 'card-border', 'card-border-hover',
+            'card-shadow', 'card-shadow-hover', 'brand', 'empty-bg', 'empty-text',
+        );
+
+        foreach ($icons as $icon) {
+            $tokens[] = 'icon-' . $icon;
+        }
+
+        foreach ($tokens as $token) {
+            $declarations['--egst-' . $token] = 'var(--egst-dark-' . $token . ')';
+        }
+    }
+
+    // Primo piano del box filtri e dei chip.
+    if ('dark' === $filters_polarity) {
+        $tokens = array(
+            'filters-bg', 'filters-border', 'filters-title', 'filters-shadow',
+            'chip-bg', 'chip-bg-hover', 'chip-bg-off', 'chip-border', 'chip-text', 'count',
+        );
+
+        foreach ($tokens as $token) {
+            $declarations['--egst-' . $token] = 'var(--egst-dark-' . $token . ')';
+        }
+
+        $declarations['--egst-chip-brand'] = 'var(--egst-dark-brand)';
+
+        foreach ($icons as $icon) {
+            $declarations['--egst-chip-icon-' . $icon] = 'var(--egst-dark-icon-' . $icon . ')';
+        }
+    }
+
+    // Superfici: vanno dopo i gruppi, cosi' una scheda trasparente resta senza
+    // ombra anche quando il gruppo scuro ne avrebbe impostata una.
+    if (null !== $canvas) {
+        $declarations['--egst-canvas'] = $canvas;
+    }
+
+    if (null === $card) {
+        $declarations['--egst-card-bg'] = 'transparent';
+        $declarations['--egst-card-shadow'] = 'none';
+        $declarations['--egst-card-shadow-hover'] = 'none';
+    } elseif ('#ffffff' !== strtolower($card)) {
+        $declarations['--egst-card-bg'] = $card;
+    }
+
+    return $declarations;
 }
 
 /**
@@ -1968,44 +2179,30 @@ function eg_social_timeline_css_declarations($vars) {
 }
 
 /**
- * CSS inline che sovrascrive i token di colore scelti in Impostazioni.
+ * CSS inline che applica le scelte della sezione Aspetto.
  *
- * I colori personalizzati non possono stare in uno style inline sull'elemento:
- * servono due valori distinti per schema chiaro e scuro, e solo una regola CSS
- * puo' essere racchiusa in una @media prefers-color-scheme.
+ * Il foglio di stile statico e' tutto sulla palette chiara: qui si spostano i
+ * token attivi sulla palette scura dove serve, in base al contrasto del
+ * colore scelto. Il blocco @media viene emesso solo se il contesto scuro
+ * risulta diverso, cioe' quando almeno una superficie segue il browser o
+ * quando sono entrambe trasparenti e non c'e' nessun colore da misurare.
  *
  * @return string CSS, stringa vuota se non c'e' nulla da sovrascrivere.
  */
 function eg_social_timeline_appearance_css() {
-    $light = array();
-    $dark  = array();
+    $settings = eg_social_timeline_appearance_settings();
 
-    $canvas = eg_social_timeline_appearance_option('canvas_bg', 'none');
+    $light = eg_social_timeline_scope_declarations($settings, 'light');
+    $dark  = eg_social_timeline_scope_declarations($settings, 'dark');
 
-    if ('neutral' === $canvas) {
-        $light['--egst-canvas'] = '#f3f4f6';
-        $dark['--egst-canvas']  = '#111827';
-    } elseif ('custom' === $canvas) {
-        $light['--egst-canvas'] = eg_social_timeline_appearance_color('canvas_bg_light', '#f3f4f6');
-        $dark['--egst-canvas']  = eg_social_timeline_appearance_color('canvas_bg_dark', '#111827');
-    }
-
-    if ('custom' === eg_social_timeline_appearance_option('card_bg', 'auto')) {
-        $light['--egst-card-bg'] = eg_social_timeline_appearance_color('card_bg_light', '#ffffff');
-        $dark['--egst-card-bg']  = eg_social_timeline_appearance_color('card_bg_dark', '#1f2937');
-    }
-
-    $light_declarations = eg_social_timeline_css_declarations($light);
-    $dark_declarations  = eg_social_timeline_css_declarations($dark);
     $css = '';
 
-    if ('' !== $light_declarations) {
-        $css .= '.eg-social-timeline.egst-scheme-light,.eg-social-timeline.egst-scheme-auto{' . $light_declarations . '}';
+    if (!empty($light)) {
+        $css .= '.eg-social-timeline{' . eg_social_timeline_css_declarations($light) . '}';
     }
 
-    if ('' !== $dark_declarations) {
-        $css .= '.eg-social-timeline.egst-scheme-dark{' . $dark_declarations . '}';
-        $css .= '@media (prefers-color-scheme: dark){.eg-social-timeline.egst-scheme-auto{' . $dark_declarations . '}}';
+    if ($dark !== $light) {
+        $css .= '@media (prefers-color-scheme: dark){.eg-social-timeline{' . eg_social_timeline_css_declarations($dark) . '}}';
     }
 
     return $css;

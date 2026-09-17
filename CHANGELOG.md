@@ -6,6 +6,22 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.8.1] - 2026-09-17
+
+### Fixed
+- **Il contrasto si calcola dal colore, non si deduce dallo schema.** Nella 1.8.0 testo, bordi, badge, link e icone seguivano lo schema colori globale: una scheda nera con schema "sempre chiaro" restava con testo e icone scuri sul nero. Ora il plugin misura il rapporto di contrasto WCAG del colore scelto per la superficie e sposta il primo piano sulla palette che contrasta di più (nessuna soglia arbitraria: si confrontano i due contrasti e vince il maggiore).
+- Le icone sui chip dei filtri leggono token propri (`--egst-chip-icon-*`) invece di seguire la scheda: con una scheda scura si schiarivano pur stando su chip chiari.
+
+### Added
+- Sfondo delle schede **Trasparente**: la timeline diventa una lista senza superfici, con il solo bordo a delimitare i post (l'ombra viene rimossa, su una superficie trasparente sarebbe un artefatto).
+- Avviso nel pannello quando il colore personalizzato non raggiunge il minimo WCAG AA (4.5:1) con nessuna delle due palette di testo, con il rapporto misurato: un viola o un grigio medio non permettono testo leggibile e tacerlo non aiuterebbe.
+
+### Changed
+- Sezione Aspetto semplificata: via l'impostazione **Schema colori** e le coppie di colori chiaro/scuro. Ogni superficie ha un solo menu (trasparente · preset neutro · segue il browser del visitatore · colore personalizzato) e un solo colore.
+- Etichette dello stile icone riscritte in "Colori delle piattaforme" e "Un solo colore (quello del testo)": le icone SVG sono sagome monocromatiche senza colore proprio, è il foglio di stile a dipingerle. Se un file SVG porta i propri `fill`, quelli vincono e l'impostazione non ha effetto su quella piattaforma.
+- Il foglio di stile non contiene più nessuna `@media (prefers-color-scheme: dark)`: i colori sono organizzati in due palette sorgente (`--egst-light-*`, `--egst-dark-*`) e in token attivi che le leggono. La media query viene emessa nel CSS inline solo se una superficie segue il browser, oppure se entrambe sono trasparenti e non c'è alcun colore da misurare.
+- Le impostazioni salvate con la 1.8.0 vengono convertite alla lettura (`color_scheme` + coppie di colori → una scelta e un colore per superficie), senza riscrivere l'opzione: il database si allinea al primo salvataggio dal pannello.
+
 ## [1.8.0] - 2026-09-17
 
 ### Added

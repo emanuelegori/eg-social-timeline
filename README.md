@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.8.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.8.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -24,8 +24,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Smart cache**: reduces API requests with a configurable cache
 - **Interaction stats**: shows likes, boosts and comments for each post
 - **Responsive**: design optimized for desktop, tablet and mobile
-- **Color scheme**: always light (default), always dark, or follow the visitor browser
-- **Configurable backgrounds**: timeline background independent from the card background, with separate light and dark colors
+- **Configurable backgrounds**: timeline background independent from the card background, one color each
+- **Derived contrast**: text, borders and icons follow the WCAG contrast of the background you pick, no color scheme to keep in sync
 - **Privacy-friendly**: public data only, no tracking
 
 ---
@@ -75,10 +75,12 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
    - Max PeerTube videos (default: 5, 0 = unlimited)
 4. Adjust cache and display settings
 5. Adjust the **Appearance** section (optional):
-   - Color scheme: always light (default), always dark, or follow the visitor browser
-   - Timeline background: transparent (default), neutral preset or custom colors
-   - Card background: automatic (default) or custom colors
-   - Platform icon style: brand colors (default) or monochrome
+   - Timeline background: transparent (default) · neutral preset · follow the visitor browser · custom color
+   - Card background: neutral preset (default) · transparent · follow the visitor browser · custom color
+   - Platform icon style: platform colors (default) · single color (same as the post text)
+
+   Text, borders, badges, links and icons are not configured: they are derived from the contrast of the
+   background you choose. Pick a dark card and they switch to their light variants on their own.
 6. Save
 
 ![Profile configuration](assets/screenshot-2.png)
@@ -147,27 +149,30 @@ social-icons/
 
 ### Custom CSS
 
-Every color comes from a custom property declared on the `.eg-social-timeline` container, so you can retheme the whole timeline by redefining the tokens instead of overriding each rule:
+Colors live in custom properties on the `.eg-social-timeline` container, on two levels: the source palettes `--egst-light-*` and `--egst-dark-*`, and the active tokens that read from them (`--egst-text`, `--egst-card-bg`, `--egst-chip-bg`, `--egst-icon-mastodon`, …). Redefine either level instead of overriding each rule:
 
 ```css
-/* Retheme the light scheme */
-.eg-social-timeline.egst-scheme-light {
-    --egst-canvas: #f0f4ff;        /* background behind the cards */
-    --egst-card-bg: #ffffff;       /* card background            */
-    --egst-card-border: #d8deff;
-    --egst-text: #1f2937;          /* post text                  */
-    --egst-brand: #6364ff;         /* checkboxes, boost accent   */
-    --egst-icon-mastodon: #563acc; /* one token per platform     */
+/* Change the colors used on a light surface */
+.eg-social-timeline {
+    --egst-light-text: #1f2937;          /* post text               */
+    --egst-light-card-border: #d8deff;
+    --egst-light-icon-mastodon: #563acc; /* one token per platform  */
 }
 
-/* Same tokens for the dark scheme */
-.eg-social-timeline.egst-scheme-dark {
-    --egst-canvas: #0b1020;
-    --egst-card-bg: #1f2937;
+/* Change the colors used on a dark surface */
+.eg-social-timeline {
+    --egst-dark-text: #e8eaf0;
+    --egst-dark-icon-mastodon: #a5a6ff;
+}
+
+/* Or set an active token directly */
+.eg-social-timeline {
+    --egst-canvas: #f0f4ff;  /* background behind the cards */
+    --egst-card-bg: #ffffff; /* card background             */
 }
 ```
 
-The full token list is at the top of `eg-social-timeline.css`. The `egst-scheme-auto` class carries the tokens applied when the browser asks for a dark theme.
+The full token list is at the top of `eg-social-timeline.css`. Which palette each token reads is decided by the plugin from the contrast of your background, and applied as inline CSS after the stylesheet — so an override in a theme stylesheet is best written on the source palettes, which are never rewritten.
 
 Plain rules still work, of course:
 
@@ -215,6 +220,22 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.8.1] - 2026-09-17
+
+#### Fixed
+- **Contrast is measured on the chosen color instead of inferred from a color scheme.** In 1.8.0 a dark card background left the post text, the borders and the icons dark on dark. The plugin now computes the WCAG contrast ratio of the background and moves text, borders, badges, links and icons to the palette that contrasts more.
+- Icons on the filter chips read their own tokens (`--egst-chip-icon-*`) instead of following the card, where a dark card used to lighten them while they sat on light chips.
+
+#### Added
+- **Transparent** card background: a timeline with no card surfaces, only the border delimiting each post (the shadow is dropped).
+- A warning in the settings when the chosen color cannot reach the WCAG AA minimum (4.5:1) with either text palette, showing the measured ratio.
+
+#### Changed
+- Simpler Appearance section: the **Color Scheme** setting and the light/dark color pairs are gone. Each background has one menu (transparent · neutral preset · follow the visitor browser · custom color) and one color.
+- Clearer icon labels: "Platform colors" and "Single color (same as the post text)". The SVG icons are monochrome outlines with no color of their own — the stylesheet paints them.
+- The stylesheet no longer contains any `prefers-color-scheme` rule: colors are organized in two source palettes (`--egst-light-*`, `--egst-dark-*`) plus the active tokens reading from them. The media query is emitted in the inline CSS only when a background follows the browser, or when both are transparent.
+- Settings saved with 1.8.0 are converted on read, so nothing is lost; the database is rewritten on your first save.
 
 ### [1.8.0] - 2026-09-17
 

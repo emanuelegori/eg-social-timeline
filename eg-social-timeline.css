@@ -2,154 +2,141 @@
    EG SOCIAL TIMELINE - STILI
    ==============================================
 
-   Tutti i colori passano da custom properties definite sul wrapper
-   .eg-social-timeline. Lo schema viene scelto in Impostazioni e arriva
-   come classe sul wrapper:
+   I colori sono organizzati in tre livelli:
 
-     .egst-scheme-light  -> sempre chiaro (default del plugin)
-     .egst-scheme-dark   -> sempre scuro
-     .egst-scheme-auto   -> segue prefers-color-scheme del browser
+   1. PALETTE SORGENTE: --egst-light-* e --egst-dark-*, i due insiemi di
+      colori di primo piano pensati per stare su una superficie chiara o su
+      una scura. Non vengono usati direttamente dalle regole.
+   2. TOKEN ATTIVI: --egst-text, --egst-chip-bg, ... Sono quelli che le
+      regole leggono. Qui puntano tutti alla palette chiara.
+   3. OVERRIDE: il PHP emette CSS inline (wp_add_inline_style) che sposta i
+      token attivi sulla palette scura quando la superficie scelta nelle
+      impostazioni e' scura, misurando il contrasto del colore reale. Le
+      superfici impostate su "segue il browser" producono anche un blocco
+      @media (prefers-color-scheme: dark).
 
-   I colori personalizzati (sfondo timeline / sfondo schede) sovrascrivono
-   i token via CSS inline generato dal PHP, quindi qui non vanno toccati.
+   Percio' questo file non contiene nessuna @media prefers-color-scheme: il
+   tema scuro non e' piu' deciso qui, ma dalle impostazioni del plugin.
    ============================================== */
 
-/* ---------- Token: schema chiaro (default) ---------- */
 .eg-social-timeline {
+    /* ---------- Palette sorgente: primo piano su superficie CHIARA ---------- */
+    --egst-light-text: #374151;
+    --egst-light-heading: #374151;
+    --egst-light-muted: #9CA3AF;
+    --egst-light-stat: #6B7280;
+    --egst-light-link: #6364FF;
+    --egst-light-link-hover: #4F46E5;
+    --egst-light-badge-bg: #EEF2FF;
+    --egst-light-badge-text: #6364FF;
+    --egst-light-card-border: #E5E7EB;
+    --egst-light-card-border-hover: #D1D5DB;
+    --egst-light-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --egst-light-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --egst-light-brand: #6364FF;
+    --egst-light-icon-mono: #374151;
+    --egst-light-icon-mastodon: #6364FF;
+    --egst-light-icon-diggita: #FF6B35;
+    --egst-light-icon-bluesky: #0085FF;
+    --egst-light-icon-forgejo: #609926;
+    --egst-light-icon-peertube: #F1680D;
+    --egst-light-icon-blog: #6364FF;
+    --egst-light-empty-bg: #F5F5F5;
+    --egst-light-empty-text: #666666;
+    --egst-light-filters-bg: #F8F9FF;
+    --egst-light-filters-border: #E0E2FF;
+    --egst-light-filters-title: #2C3E50;
+    --egst-light-filters-shadow: 0 2px 8px rgba(99, 100, 255, 0.08);
+    --egst-light-chip-bg: #FFFFFF;
+    --egst-light-chip-bg-hover: #FAFBFF;
+    --egst-light-chip-bg-off: #F5F5F5;
+    --egst-light-chip-border: #E0E0E0;
+    --egst-light-chip-text: #2C3E50;
+    --egst-light-count: #7F8C8D;
+
+    /* ---------- Palette sorgente: primo piano su superficie SCURA ---------- */
+    --egst-dark-text: #D1D5DB;
+    --egst-dark-heading: #E5E7EB;
+    --egst-dark-muted: #9CA3AF;
+    --egst-dark-stat: #9CA3AF;
+    --egst-dark-link: #A5B4FC;
+    --egst-dark-link-hover: #C7D2FE;
+    --egst-dark-badge-bg: #312E81;
+    --egst-dark-badge-text: #A5B4FC;
+    --egst-dark-card-border: #374151;
+    --egst-dark-card-border-hover: #4B5563;
+    --egst-dark-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --egst-dark-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --egst-dark-brand: #8B8DFF;
+    --egst-dark-icon-mono: #E5E7EB;
+    --egst-dark-icon-mastodon: #8B8DFF;
+    --egst-dark-icon-diggita: #FF9470;
+    --egst-dark-icon-bluesky: #4DA6FF;
+    --egst-dark-icon-forgejo: #8FCB4F;
+    --egst-dark-icon-peertube: #FF9248;
+    --egst-dark-icon-blog: #A5B4FC;
+    --egst-dark-empty-bg: #1F2937;
+    --egst-dark-empty-text: #9CA3AF;
+    --egst-dark-filters-bg: #2A2A2A;
+    --egst-dark-filters-border: #3A3A3A;
+    --egst-dark-filters-title: #E0E0E0;
+    --egst-dark-filters-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --egst-dark-chip-bg: #1E1E1E;
+    --egst-dark-chip-bg-hover: #333333;
+    --egst-dark-chip-bg-off: #252525;
+    --egst-dark-chip-border: #3A3A3A;
+    --egst-dark-chip-text: #E0E0E0;
+    --egst-dark-count: #9CA3AF;
+
+    /* ---------- Superfici e struttura ---------- */
     --egst-canvas: transparent;
     --egst-canvas-padding: 24px;
     --egst-canvas-radius: 16px;
-
-    --egst-brand: #6364FF;
-
     --egst-card-bg: #FFFFFF;
-    --egst-card-border: #E5E7EB;
-    --egst-card-border-hover: #D1D5DB;
-    --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-    --egst-heading: #374151;
-    --egst-text: #374151;
-    --egst-muted: #9CA3AF;
-    --egst-stat: #6B7280;
+    /* ---------- Token attivi: contesto SCHEDA ---------- */
+    --egst-text: var(--egst-light-text);
+    --egst-heading: var(--egst-light-heading);
+    --egst-muted: var(--egst-light-muted);
+    --egst-stat: var(--egst-light-stat);
+    --egst-link: var(--egst-light-link);
+    --egst-link-hover: var(--egst-light-link-hover);
+    --egst-badge-bg: var(--egst-light-badge-bg);
+    --egst-badge-text: var(--egst-light-badge-text);
+    --egst-card-border: var(--egst-light-card-border);
+    --egst-card-border-hover: var(--egst-light-card-border-hover);
+    --egst-card-shadow: var(--egst-light-card-shadow);
+    --egst-card-shadow-hover: var(--egst-light-card-shadow-hover);
+    --egst-brand: var(--egst-light-brand);
+    --egst-icon-mono: var(--egst-light-icon-mono);
+    --egst-icon-mastodon: var(--egst-light-icon-mastodon);
+    --egst-icon-diggita: var(--egst-light-icon-diggita);
+    --egst-icon-bluesky: var(--egst-light-icon-bluesky);
+    --egst-icon-forgejo: var(--egst-light-icon-forgejo);
+    --egst-icon-peertube: var(--egst-light-icon-peertube);
+    --egst-icon-blog: var(--egst-light-icon-blog);
+    --egst-empty-bg: var(--egst-light-empty-bg);
+    --egst-empty-text: var(--egst-light-empty-text);
 
-    --egst-link: #6364FF;
-    --egst-link-hover: #4F46E5;
-    --egst-badge-bg: #EEF2FF;
-    --egst-badge-text: #6364FF;
-
-    --egst-empty-bg: #F5F5F5;
-    --egst-empty-text: #666666;
-
-    --egst-filters-bg: #F8F9FF;
-    --egst-filters-border: #E0E2FF;
-    --egst-filters-shadow: 0 2px 8px rgba(99, 100, 255, 0.08);
-    --egst-filters-title: #2C3E50;
-    --egst-chip-bg: #FFFFFF;
-    --egst-chip-bg-hover: #FAFBFF;
-    --egst-chip-bg-off: #F5F5F5;
-    --egst-chip-border: #E0E0E0;
-    --egst-chip-text: #2C3E50;
-    --egst-count: #7F8C8D;
-
-    --egst-icon-mono: #374151;
-    --egst-icon-mastodon: #6364FF;
-    --egst-icon-diggita: #FF6B35;
-    --egst-icon-bluesky: #0085FF;
-    --egst-icon-forgejo: #609926;
-    --egst-icon-peertube: #F1680D;
-    --egst-icon-blog: #6364FF;
-}
-
-/* ---------- Token: schema scuro ----------
-   Lo stesso blocco vale per lo schema scuro forzato e per lo schema auto
-   quando il browser chiede il tema scuro. Le due copie sono inevitabili in
-   CSS puro: una @media non si puo' raggruppare con un selettore di classe.
-   Se aggiungi un token qui, aggiungilo anche nella copia sotto. */
-.eg-social-timeline.egst-scheme-dark {
-    --egst-brand: #8B8DFF;
-
-    --egst-card-bg: #1F2937;
-    --egst-card-border: #374151;
-    --egst-card-border-hover: #4B5563;
-    --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
-
-    --egst-heading: #E5E7EB;
-    --egst-text: #D1D5DB;
-    --egst-muted: #6B7280;
-    --egst-stat: #9CA3AF;
-
-    --egst-link: #A5B4FC;
-    --egst-link-hover: #C7D2FE;
-    --egst-badge-bg: #312E81;
-    --egst-badge-text: #A5B4FC;
-
-    --egst-empty-bg: #1F2937;
-    --egst-empty-text: #9CA3AF;
-
-    --egst-filters-bg: #2A2A2A;
-    --egst-filters-border: #3A3A3A;
-    --egst-filters-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --egst-filters-title: #E0E0E0;
-    --egst-chip-bg: #1E1E1E;
-    --egst-chip-bg-hover: #333333;
-    --egst-chip-bg-off: #252525;
-    --egst-chip-border: #3A3A3A;
-    --egst-chip-text: #E0E0E0;
-    --egst-count: #9CA3AF;
-
-    --egst-icon-mono: #E5E7EB;
-    --egst-icon-mastodon: #8B8DFF;
-    --egst-icon-diggita: #FF9470;
-    --egst-icon-bluesky: #4DA6FF;
-    --egst-icon-forgejo: #8FCB4F;
-    --egst-icon-peertube: #FF9248;
-    --egst-icon-blog: #A5B4FC;
-}
-
-@media (prefers-color-scheme: dark) {
-    .eg-social-timeline.egst-scheme-auto {
-        --egst-brand: #8B8DFF;
-
-        --egst-card-bg: #1F2937;
-        --egst-card-border: #374151;
-        --egst-card-border-hover: #4B5563;
-        --egst-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        --egst-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
-
-        --egst-heading: #E5E7EB;
-        --egst-text: #D1D5DB;
-        --egst-muted: #6B7280;
-        --egst-stat: #9CA3AF;
-
-        --egst-link: #A5B4FC;
-        --egst-link-hover: #C7D2FE;
-        --egst-badge-bg: #312E81;
-        --egst-badge-text: #A5B4FC;
-
-        --egst-empty-bg: #1F2937;
-        --egst-empty-text: #9CA3AF;
-
-        --egst-filters-bg: #2A2A2A;
-        --egst-filters-border: #3A3A3A;
-        --egst-filters-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --egst-filters-title: #E0E0E0;
-        --egst-chip-bg: #1E1E1E;
-        --egst-chip-bg-hover: #333333;
-        --egst-chip-bg-off: #252525;
-        --egst-chip-border: #3A3A3A;
-        --egst-chip-text: #E0E0E0;
-        --egst-count: #9CA3AF;
-
-        --egst-icon-mono: #E5E7EB;
-        --egst-icon-mastodon: #8B8DFF;
-        --egst-icon-diggita: #FF9470;
-        --egst-icon-bluesky: #4DA6FF;
-        --egst-icon-forgejo: #8FCB4F;
-        --egst-icon-peertube: #FF9248;
-        --egst-icon-blog: #A5B4FC;
-    }
+    /* ---------- Token attivi: contesto FILTRI ---------- */
+    --egst-filters-bg: var(--egst-light-filters-bg);
+    --egst-filters-border: var(--egst-light-filters-border);
+    --egst-filters-title: var(--egst-light-filters-title);
+    --egst-filters-shadow: var(--egst-light-filters-shadow);
+    --egst-chip-bg: var(--egst-light-chip-bg);
+    --egst-chip-bg-hover: var(--egst-light-chip-bg-hover);
+    --egst-chip-bg-off: var(--egst-light-chip-bg-off);
+    --egst-chip-border: var(--egst-light-chip-border);
+    --egst-chip-text: var(--egst-light-chip-text);
+    --egst-count: var(--egst-light-count);
+    --egst-chip-brand: var(--egst-light-brand);
+    --egst-chip-icon-mono: var(--egst-light-icon-mono);
+    --egst-chip-icon-mastodon: var(--egst-light-icon-mastodon);
+    --egst-chip-icon-diggita: var(--egst-light-icon-diggita);
+    --egst-chip-icon-bluesky: var(--egst-light-icon-bluesky);
+    --egst-chip-icon-forgejo: var(--egst-light-icon-forgejo);
+    --egst-chip-icon-peertube: var(--egst-light-icon-peertube);
+    --egst-chip-icon-blog: var(--egst-light-icon-blog);
 }
 
 /* ==============================================
@@ -251,9 +238,9 @@
     justify-content: center;
     width: 16px;
     height: 16px;
-    border: 2px solid var(--egst-brand);
+    border: 2px solid var(--egst-chip-brand);
     border-radius: 4px;
-    background: var(--egst-brand);
+    background: var(--egst-chip-brand);
     color: #FFFFFF;
     font-weight: bold;
     font-size: 11px;
@@ -285,7 +272,7 @@
 }
 
 .filter-checkbox-label:hover {
-    border-color: var(--egst-brand);
+    border-color: var(--egst-chip-brand);
     background: var(--egst-chip-bg-hover);
 }
 
@@ -458,35 +445,42 @@
 /* ==============================================
    ICONE PIATTAFORMA
    ==============================================
-   Le icone Simple Icons non portano un attributo fill, quindi senza questa
-   regola il path resta nero (valore iniziale di fill) e il color qui sotto
-   sarebbe inerte: nero su scheda scura = icona invisibile. */
+   Le icone in social-icons/ sono sagome monocromatiche a un solo path, in
+   stile Simple Icons: non portano l'attributo fill, quindi senza la regola
+   qui sotto il path resterebbe nero (valore iniziale di fill) e i color
+   sarebbero inerti. Il colore lo decide il CSS, non il file SVG.
+
+   Le icone sulla scheda e quelle sui chip dei filtri leggono token distinti
+   (--egst-icon-* e --egst-chip-icon-*) perche' stanno su due superfici
+   diverse: la scheda puo' essere scura mentre i chip restano chiari. */
 
 .platform-icon svg,
 .platform-icon-small svg {
     fill: currentColor;
 }
 
-/* Stile "brand": colore ufficiale della piattaforma, sia sulla scheda sia
-   sul chip del filtro. Selettori per slug, come i filtri. */
-.egst-icons-brand .platform-mastodon .platform-icon svg,
-.egst-icons-brand label[for="filter-mastodon"] .platform-icon-small svg { color: var(--egst-icon-mastodon); }
-.egst-icons-brand .platform-diggita .platform-icon svg,
-.egst-icons-brand label[for="filter-diggita"] .platform-icon-small svg { color: var(--egst-icon-diggita); }
-.egst-icons-brand .platform-bluesky .platform-icon svg,
-.egst-icons-brand label[for="filter-bluesky"] .platform-icon-small svg { color: var(--egst-icon-bluesky); }
-.egst-icons-brand .platform-forgejo .platform-icon svg,
-.egst-icons-brand label[for="filter-forgejo"] .platform-icon-small svg { color: var(--egst-icon-forgejo); }
-.egst-icons-brand .platform-peertube .platform-icon svg,
-.egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-icon-peertube); }
-.egst-icons-brand .platform-blog .platform-icon svg,
-.egst-icons-brand label[for="filter-blog"] .platform-icon-small svg { color: var(--egst-icon-blog); }
+/* Stile "colori delle piattaforme": selettori per slug, come i filtri. */
+.egst-icons-brand .platform-mastodon .platform-icon svg { color: var(--egst-icon-mastodon); }
+.egst-icons-brand label[for="filter-mastodon"] .platform-icon-small svg { color: var(--egst-chip-icon-mastodon); }
+.egst-icons-brand .platform-diggita .platform-icon svg { color: var(--egst-icon-diggita); }
+.egst-icons-brand label[for="filter-diggita"] .platform-icon-small svg { color: var(--egst-chip-icon-diggita); }
+.egst-icons-brand .platform-bluesky .platform-icon svg { color: var(--egst-icon-bluesky); }
+.egst-icons-brand label[for="filter-bluesky"] .platform-icon-small svg { color: var(--egst-chip-icon-bluesky); }
+.egst-icons-brand .platform-forgejo .platform-icon svg { color: var(--egst-icon-forgejo); }
+.egst-icons-brand label[for="filter-forgejo"] .platform-icon-small svg { color: var(--egst-chip-icon-forgejo); }
+.egst-icons-brand .platform-peertube .platform-icon svg { color: var(--egst-icon-peertube); }
+.egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-chip-icon-peertube); }
+.egst-icons-brand .platform-blog .platform-icon svg { color: var(--egst-icon-blog); }
+.egst-icons-brand label[for="filter-blog"] .platform-icon-small svg { color: var(--egst-chip-icon-blog); }
 
-/* Stile "monocromatico": le icone seguono il colore del testo, quindi vanno
-   in contrasto con lo sfondo della scheda da sole (bianche sul tema scuro). */
-.egst-icons-mono .platform-icon svg,
-.egst-icons-mono .platform-icon-small svg {
+/* Stile "un solo colore": le icone prendono il colore del testo della
+   superficie su cui stanno, quindi vanno in contrasto da sole. */
+.egst-icons-mono .platform-icon svg {
     color: var(--egst-icon-mono);
+}
+
+.egst-icons-mono .platform-icon-small svg {
+    color: var(--egst-chip-icon-mono);
 }
 
 /* ==============================================

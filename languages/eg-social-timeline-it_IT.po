@@ -3,10 +3,10 @@
 # This file is distributed under the same license as the EG Social Timeline plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.8.0\n"
+"Project-Id-Version: EG Social Timeline 1.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-09-17T17:50:26+00:00\n"
+"POT-Creation-Date: 2026-09-17T19:14:51+00:00\n"
 "PO-Revision-Date: 2026-09-17\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -45,107 +45,103 @@ msgstr "Emanuele Gori"
 msgid "https://emanuelegori.uno"
 msgstr "https://emanuelegori.uno"
 
-#: eg-social-timeline.php:101
+#: eg-social-timeline.php:98
 msgid "Social Profiles Configuration"
 msgstr "Configurazione profili social"
 
-#: eg-social-timeline.php:108
+#: eg-social-timeline.php:105
 msgid "Mastodon Profile URL"
 msgstr "URL profilo Mastodon"
 
-#: eg-social-timeline.php:116
+#: eg-social-timeline.php:113
 msgid "Diggita Username"
 msgstr "Username Diggita"
 
-#: eg-social-timeline.php:124
+#: eg-social-timeline.php:121
 msgid "Forgejo/Gitea Username"
 msgstr "Username Forgejo/Gitea"
 
-#: eg-social-timeline.php:132
+#: eg-social-timeline.php:129
 msgid "Forgejo/Gitea Instance URL"
 msgstr "URL istanza Forgejo/Gitea"
 
-#: eg-social-timeline.php:140
+#: eg-social-timeline.php:137
 msgid "Bluesky Handle"
 msgstr "Handle Bluesky"
 
-#: eg-social-timeline.php:148
+#: eg-social-timeline.php:145
 msgid "PeerTube Account"
 msgstr "Account PeerTube"
 
-#: eg-social-timeline.php:156
+#: eg-social-timeline.php:153
 msgid "PeerTube Instance URL"
 msgstr "URL istanza PeerTube"
 
-#: eg-social-timeline.php:164
+#: eg-social-timeline.php:161
 msgid "Per-Platform Post Limits"
 msgstr "Limiti post per piattaforma"
 
-#: eg-social-timeline.php:171
+#: eg-social-timeline.php:168
 msgid "Max Mastodon Posts"
 msgstr "Max post Mastodon"
 
-#: eg-social-timeline.php:179
+#: eg-social-timeline.php:176
 msgid "Max Diggita Posts"
 msgstr "Max post Diggita"
 
-#: eg-social-timeline.php:187
+#: eg-social-timeline.php:184
 msgid "Max Forgejo Commits"
 msgstr "Max commit Forgejo"
 
-#: eg-social-timeline.php:195
+#: eg-social-timeline.php:192
 msgid "Max Bluesky Posts"
 msgstr "Max post Bluesky"
 
-#: eg-social-timeline.php:203
+#: eg-social-timeline.php:200
 msgid "Max PeerTube Videos"
 msgstr "Max video PeerTube"
 
-#: eg-social-timeline.php:211
+#: eg-social-timeline.php:208
 msgid "Number of Posts to Show"
 msgstr "Numero post da mostrare"
 
-#: eg-social-timeline.php:219
+#: eg-social-timeline.php:216
 msgid "Cache Duration"
 msgstr "Durata cache"
 
-#: eg-social-timeline.php:227
+#: eg-social-timeline.php:224
 msgid "Include Boosts/Reposts"
 msgstr "Includi boost/repost"
 
-#: eg-social-timeline.php:235
+#: eg-social-timeline.php:232
 msgid "Show Statistics"
 msgstr "Mostra statistiche"
 
-#: eg-social-timeline.php:243
+#: eg-social-timeline.php:240
 msgid "Post Text Length"
 msgstr "Lunghezza testo post"
 
-#: eg-social-timeline.php:251
+#: eg-social-timeline.php:248
 msgid "Show Image Previews"
 msgstr "Mostra anteprime immagini"
 
-#: eg-social-timeline.php:259
+#: eg-social-timeline.php:256
 msgid "Appearance"
 msgstr "Aspetto"
 
-#: eg-social-timeline.php:266
-msgid "Color Scheme"
-msgstr "Schema colori"
-
-#: eg-social-timeline.php:274
+#: eg-social-timeline.php:263
 msgid "Timeline Background"
 msgstr "Sfondo della timeline"
 
-#: eg-social-timeline.php:282
+#: eg-social-timeline.php:271
 msgid "Card Background"
 msgstr "Sfondo delle schede"
 
-#: eg-social-timeline.php:290
+#: eg-social-timeline.php:279
 msgid "Platform Icon Style"
 msgstr "Stile delle icone di piattaforma"
 
-#: eg-social-timeline.php:299
+#: eg-social-timeline.php:288
 msgid ""
 "Configure your social profiles to display a unified timeline. At least one "
 "profile is required."
@@ -153,7 +149,7 @@ msgstr ""
 "Configura i tuoi profili social per mostrare una timeline unificata. Almeno "
 "un profilo è obbligatorio."
 
-#: eg-social-timeline.php:303
+#: eg-social-timeline.php:292
 msgid ""
 "Limit the maximum number of posts per platform. This prevents a very active "
 "platform (e.g. Forgejo) from filling all available slots. Set 0 for no limit."
@@ -162,50 +158,50 @@ msgstr ""
 "piattaforma molto attiva (es. Forgejo) monopolizzi tutti gli slot "
 "disponibili. Imposta 0 per nessun limite."
 
-#: eg-social-timeline.php:314
+#: eg-social-timeline.php:303
 msgid "e.g. https://mastodon.social/@yourusername"
 msgstr "es: https://mastodon.uno/@tuonomeutente"
 
-#: eg-social-timeline.php:317
+#: eg-social-timeline.php:306
 msgid ""
 "Full URL of your public Mastodon profile (or other Fediverse instances)."
 msgstr ""
 "URL completo del tuo profilo pubblico Mastodon (o altre istanze del "
 "Fediverso)."
 
-#: eg-social-timeline.php:330 eg-social-timeline.php:346
-#: eg-social-timeline.php:394
+#: eg-social-timeline.php:319 eg-social-timeline.php:335
+#: eg-social-timeline.php:383
 msgid "e.g. yourusername"
 msgstr "es: tuonomeutente"
 
-#: eg-social-timeline.php:333
+#: eg-social-timeline.php:322
 msgid "Diggita username (without @)."
 msgstr "Username Diggita (senza @)."
 
-#: eg-social-timeline.php:349
+#: eg-social-timeline.php:338
 msgid "Your Forgejo/Gitea account username (without @)."
 msgstr "Username del tuo account Forgejo/Gitea (senza @)."
 
-#: eg-social-timeline.php:365
+#: eg-social-timeline.php:354
 msgid "Full URL of your Forgejo/Gitea instance. Default: https://gitea.com"
 msgstr ""
 "URL completo della tua istanza Forgejo/Gitea. Default: https://gitea.com"
 
-#: eg-social-timeline.php:378
+#: eg-social-timeline.php:367
 msgid "e.g. emanuele.bsky.social"
 msgstr "es: tuonomeutente.bsky.social"
 
-#: eg-social-timeline.php:381
+#: eg-social-timeline.php:370
 msgid "Your Bluesky handle (without @). Example: emanuele.bsky.social"
 msgstr ""
 "Handle del tuo profilo Bluesky (senza @). Esempio: emanuele.bsky.social"
 
-#: eg-social-timeline.php:397
+#: eg-social-timeline.php:386
 msgid "Your PeerTube account name (without @ and without the instance domain)."
 msgstr ""
 "Il nome del tuo account PeerTube (senza @ e senza il dominio dell'istanza)."
 
-#: eg-social-timeline.php:413
+#: eg-social-timeline.php:402
 msgid ""
 "Full URL of your PeerTube instance (HTTPS only). Example: https://peertube."
 "uno"
@@ -213,50 +209,50 @@ msgstr ""
 "URL completo della tua istanza PeerTube (solo HTTPS). Esempio: https://"
 "peertube.uno"
 
-#: eg-social-timeline.php:430
+#: eg-social-timeline.php:419
 msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10"
 msgstr ""
 "Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10"
 
-#: eg-social-timeline.php:447
+#: eg-social-timeline.php:436
 msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20"
 msgstr ""
 "Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20"
 
-#: eg-social-timeline.php:464
+#: eg-social-timeline.php:453
 msgid "Maximum number of Diggita posts to fetch (0 = unlimited). Default: 10"
 msgstr ""
 "Numero massimo di post Diggita da recuperare (0 = illimitato). Default: 10"
 
-#: eg-social-timeline.php:481
+#: eg-social-timeline.php:470
 msgid ""
 "Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5"
 msgstr ""
 "Numero massimo di commit Forgejo da recuperare (0 = illimitato). Default: 5"
 
-#: eg-social-timeline.php:498
+#: eg-social-timeline.php:487
 msgid "Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5"
 msgstr ""
 "Numero massimo di video PeerTube da recuperare (0 = illimitato). Default: 5"
 
-#: eg-social-timeline.php:515
+#: eg-social-timeline.php:504
 msgid "Maximum number of posts to show in the timeline (1–100). Default: 10"
 msgstr "Numero massimo di post da mostrare nella timeline (1-100). Default: 10"
 
-#: eg-social-timeline.php:526
+#: eg-social-timeline.php:515
 msgid "minutes"
 msgstr "minuti"
 
-#: eg-social-timeline.php:527
+#: eg-social-timeline.php:516
 msgid "hour"
 msgstr "ora"
 
-#: eg-social-timeline.php:528 eg-social-timeline.php:529
-#: eg-social-timeline.php:530 eg-social-timeline.php:531
+#: eg-social-timeline.php:517 eg-social-timeline.php:518
+#: eg-social-timeline.php:519 eg-social-timeline.php:520
 msgid "hours"
 msgstr "ore"
 
-#: eg-social-timeline.php:534
+#: eg-social-timeline.php:523
 msgid ""
 "Feed cache duration. Longer cache = fewer requests to servers. Default: 1 "
 "hour"
@@ -264,27 +260,27 @@ msgstr ""
 "Durata della cache dei feed. Cache più lunga = meno richieste ai server. "
 "Default: 1 ora"
 
-#: eg-social-timeline.php:549
+#: eg-social-timeline.php:538
 msgid "Include boosts and reposts in the timeline"
 msgstr "Includi boost e repost nella timeline"
 
-#: eg-social-timeline.php:552
+#: eg-social-timeline.php:541
 msgid "If disabled, shows only original posts (no boosts/reblogs)."
 msgstr "Se disabilitato, mostra solo post originali (nessun boost/reblog)."
 
-#: eg-social-timeline.php:567
+#: eg-social-timeline.php:556
 msgid "Show like/boost/reply counts"
 msgstr "Mostra conteggi like/boost/risposte"
 
-#: eg-social-timeline.php:570
+#: eg-social-timeline.php:559
 msgid "Display interaction statistics below each post."
 msgstr "Visualizza le statistiche di interazione sotto ogni post."
 
-#: eg-social-timeline.php:585
+#: eg-social-timeline.php:574
 msgid "Show the first image attached to posts (when available)"
 msgstr "Mostra la prima immagine allegata ai post (quando disponibile)"
 
-#: eg-social-timeline.php:588
+#: eg-social-timeline.php:577
 msgid ""
 "Supported by Mastodon and Pixelfed. Disabled by default: most useful if you "
 "use Pixelfed."
@@ -292,7 +288,7 @@ msgstr ""
 "Supportato da Mastodon e Pixelfed. Disabilitato per default: utile "
 "soprattutto con Pixelfed."
 
-#: eg-social-timeline.php:605
+#: eg-social-timeline.php:594
 msgid ""
 "Maximum number of characters shown per post (50–600). Set 0 to show full "
 "text with no limit (not recommended: may break mobile layout). Default: 300"
@@ -300,104 +296,114 @@ msgstr ""
 "Numero massimo di caratteri per post (50-600). Imposta 0 per testo completo "
 "(sconsigliato: può compromettere il layout su mobile). Default: 300"
 
-#: eg-social-timeline.php:611
+#: eg-social-timeline.php:600
 msgid ""
-"Colors of the timeline. The color scheme is chosen here and no longer "
-"depends on the visitor browser, so the timeline can stay consistent with "
-"your theme."
+"Colors of the timeline. Choose a background for the timeline and one for the "
+"cards: text, borders and icons are derived from the color you pick, "
+"measuring its contrast, so they stay readable on any surface."
 msgstr ""
-"Colori della timeline. Lo schema colori si imposta qui e non dipende più dal "
-"browser del visitatore, così la timeline può restare coerente con il tuo "
-"tema."
+"Colori della timeline. Scegli uno sfondo per la timeline e uno per le "
+"schede: testo, bordi e icone vengono derivati dal colore che scegli, "
+"misurandone il contrasto, così restano leggibili su qualsiasi superficie."
 
-#: eg-social-timeline.php:645
-msgid "Light scheme:"
-msgstr "Schema chiaro:"
+#: eg-social-timeline.php:698
+msgid "Custom color:"
+msgstr "Colore personalizzato:"
 
-#: eg-social-timeline.php:653
-msgid "Dark scheme:"
-msgstr "Schema scuro:"
-
-#: eg-social-timeline.php:666
-msgid "Always light"
-msgstr "Sempre chiaro"
-
-#: eg-social-timeline.php:667
-msgid "Always dark"
-msgstr "Sempre scuro"
-
-#: eg-social-timeline.php:668
-msgid "Follow the visitor browser"
-msgstr "Segue il browser del visitatore"
-
-#: eg-social-timeline.php:679
+#. translators: %s: rapporto di contrasto raggiunto, es. 2.9
+#: eg-social-timeline.php:751
 msgid ""
-"\"Follow the visitor browser\" uses the prefers-color-scheme setting: the "
-"timeline turns dark even on a light theme. Default: Always light"
+"Careful: with this color the text reaches a contrast ratio of only %s:1, "
+"below the 4.5:1 required by WCAG AA. Pick a clearly lighter or darker color."
 msgstr ""
-"\"Segue il browser del visitatore\" usa l'impostazione prefers-color-scheme: "
-"la timeline diventa scura anche su un tema chiaro. Default: Sempre chiaro"
+"Attenzione: con questo colore il testo raggiunge un rapporto di contrasto di "
+"solo %s:1, sotto il 4,5:1 richiesto da WCAG AA. Scegli un colore decisamente "
+"più chiaro o più scuro."
 
-#: eg-social-timeline.php:687
+#: eg-social-timeline.php:763
 msgid "Transparent (theme background)"
 msgstr "Trasparente (sfondo del tema)"
 
-#: eg-social-timeline.php:688
+#: eg-social-timeline.php:764
 msgid "Neutral preset"
 msgstr "Preset neutro"
 
-#: eg-social-timeline.php:689 eg-social-timeline.php:715
-msgid "Custom colors"
-msgstr "Colori personalizzati"
+#: eg-social-timeline.php:765 eg-social-timeline.php:790
+msgid "Follow the visitor browser"
+msgstr "Segue il browser del visitatore"
 
-#: eg-social-timeline.php:700
+#: eg-social-timeline.php:766 eg-social-timeline.php:791
+msgid "Custom color"
+msgstr "Colore personalizzato"
+
+#: eg-social-timeline.php:770
 msgid ""
 "Background behind the cards. Set it apart from the card background to make "
-"the cards stand out. Default: Transparent"
+"the cards stand out. \"Follow the visitor browser\" uses a light grey or a "
+"very dark grey according to the prefers-color-scheme setting. Default: "
+"Transparent"
 msgstr ""
 "Sfondo dietro le schede. Impostalo diverso dallo sfondo delle schede per "
-"farle risaltare. Default: Trasparente"
+"farle risaltare. \"Segue il browser del visitatore\" usa un grigio chiaro o "
+"un grigio molto scuro secondo l'impostazione prefers-color-scheme. Default: "
+"Trasparente"
 
-#: eg-social-timeline.php:706 eg-social-timeline.php:732
-msgid "The two colors above apply only with \"Custom colors\"."
-msgstr "I due colori qui sopra valgono solo con \"Colori personalizzati\"."
+#: eg-social-timeline.php:776
+msgid "The color above applies only with \"Custom color\"."
+msgstr "Il colore qui sopra vale solo con \"Colore personalizzato\"."
 
-#: eg-social-timeline.php:714
-msgid "Automatic (follows the color scheme)"
-msgstr "Automatico (segue lo schema colori)"
+#: eg-social-timeline.php:788
+msgid "Neutral preset (white)"
+msgstr "Preset neutro (bianco)"
 
-#: eg-social-timeline.php:726
+#: eg-social-timeline.php:789
+msgid "Transparent"
+msgstr "Trasparente"
+
+#: eg-social-timeline.php:795
 msgid ""
-"Background of each post card. Default: Automatic (white on light scheme, "
-"dark grey on dark scheme)"
+"Background of each post card. \"Transparent\" drops the card surface and its "
+"shadow, leaving only the border. Default: Neutral preset"
 msgstr ""
-"Sfondo di ogni scheda. Default: Automatico (bianco sullo schema chiaro, "
-"grigio scuro su quello scuro)"
+"Sfondo di ogni scheda. \"Trasparente\" toglie la superficie della scheda e "
+"la sua ombra, lasciando solo il bordo. Default: Preset neutro"
 
-#: eg-social-timeline.php:740
-msgid "Brand colors"
-msgstr "Colori brand"
-
-#: eg-social-timeline.php:741
-msgid "Monochrome (follows the text color)"
-msgstr "Monocromatico (segue il colore del testo)"
-
-#: eg-social-timeline.php:752
+#: eg-social-timeline.php:801
 msgid ""
-"Brand colors use the official platform color, lightened on the dark scheme "
-"to stay readable. Monochrome icons take the post text color, so they turn "
-"white on a dark card. Default: Brand colors"
+"The color above applies only with \"Custom color\". Pick a dark one and the "
+"post text, the stats and the icons switch to their light variants on their "
+"own."
 msgstr ""
-"I colori brand usano il colore ufficiale della piattaforma, schiarito sullo "
-"schema scuro per restare leggibile. Le icone monocromatiche prendono il "
-"colore del testo del post, quindi diventano bianche su una scheda scura. "
-"Default: Colori brand"
+"Il colore qui sopra vale solo con \"Colore personalizzato\". Scegline uno "
+"scuro e il testo del post, le statistiche e le icone passano da soli alle "
+"varianti chiare."
 
-#: eg-social-timeline.php:771
+#: eg-social-timeline.php:813
+msgid "Platform colors"
+msgstr "Colori delle piattaforme"
+
+#: eg-social-timeline.php:814
+msgid "Single color (same as the post text)"
+msgstr "Un solo colore (quello del testo)"
+
+#: eg-social-timeline.php:818
+msgid ""
+"The SVG icons are monochrome outlines and carry no color of their own: the "
+"stylesheet paints them. Platform colors use the official color of each "
+"platform, lightened when the surface is dark. A single color follows the "
+"post text, so the icons turn white on a dark card. Default: Platform colors"
+msgstr ""
+"Le icone SVG sono sagome monocromatiche e non hanno un colore proprio: è il "
+"foglio di stile a dipingerle. I colori delle piattaforme usano il colore "
+"ufficiale di ciascuna, schiarito quando la superficie è scura. Un solo "
+"colore segue il testo del post, quindi le icone diventano bianche su una "
+"scheda scura. Default: Colori delle piattaforme"
+
+#: eg-social-timeline.php:837
 msgid "Error:"
 msgstr "Errore:"
 
-#: eg-social-timeline.php:772
+#: eg-social-timeline.php:838
 msgid ""
 "You must configure at least one social profile (Mastodon, Diggita, Forgejo, "
 "Bluesky or PeerTube)."
@@ -405,181 +411,178 @@ msgstr ""
 "Devi configurare almeno un profilo social (Mastodon, Diggita, Forgejo, "
 "Bluesky o PeerTube)."
 
-#: eg-social-timeline.php:860
+#: eg-social-timeline.php:921
 msgid "Settings saved successfully! Cache cleared."
 msgstr "Impostazioni salvate! Cache pulita."
 
-#: eg-social-timeline.php:882
+#: eg-social-timeline.php:943
 msgid "EG Social Timeline requires configuration!"
 msgstr "EG Social Timeline richiede configurazione!"
 
-#: eg-social-timeline.php:883
+#: eg-social-timeline.php:944
 msgid "The plugin is active but no social profile has been configured."
 msgstr "Il plugin è attivo ma nessun profilo social è configurato."
 
-#: eg-social-timeline.php:885 eg-social-timeline.php:1660
+#: eg-social-timeline.php:946 eg-social-timeline.php:1721
 msgid "Configure now"
 msgstr "Configura ora"
 
-#: eg-social-timeline.php:906
+#: eg-social-timeline.php:967
 msgid "Save Settings"
 msgstr "Salva impostazioni"
 
-#: eg-social-timeline.php:912
+#: eg-social-timeline.php:973
 msgid "Usage"
 msgstr "Utilizzo"
 
-#: eg-social-timeline.php:913
+#: eg-social-timeline.php:974
 msgid "Once configured, you can insert the timeline in your posts using:"
 msgstr ""
 "Una volta configurato, puoi inserire la timeline nei tuoi articoli usando:"
 
-#: eg-social-timeline.php:915
+#: eg-social-timeline.php:976
 msgid "Shortcode"
 msgstr "Shortcode"
 
-#: eg-social-timeline.php:916
+#: eg-social-timeline.php:977
 msgid "Insert in the article content:"
 msgstr "Inserisci nel contenuto dell'articolo:"
 
-#: eg-social-timeline.php:919
+#: eg-social-timeline.php:980
 msgid "Optional: limit the number of posts:"
 msgstr "Opzionale: limita il numero di post:"
 
-#: eg-social-timeline.php:922
+#: eg-social-timeline.php:983
 msgid "Flush Cache Manually"
 msgstr "Svuota cache manualmente"
 
-#: eg-social-timeline.php:923
+#: eg-social-timeline.php:984
 msgid "To force an immediate feed refresh:"
 msgstr "Per forzare l'aggiornamento immediato dei feed:"
 
-#: eg-social-timeline.php:927
+#: eg-social-timeline.php:988
 msgid "Flush Cache Now"
 msgstr "Svuota cache ora"
 
 #. translators: %s: numero versione plugin
-#: eg-social-timeline.php:935
+#: eg-social-timeline.php:996
 msgid "EG Social Timeline v%s"
 msgstr "EG Social Timeline v%s"
 
 #. translators: %s: link HTML al sito dello sviluppatore
-#: eg-social-timeline.php:940
+#: eg-social-timeline.php:1001
 msgid "Developed by %s"
 msgstr "Sviluppato da %s"
 
-#: eg-social-timeline.php:944
+#: eg-social-timeline.php:1005
 msgid "Repository"
 msgstr "Repository"
 
-#: eg-social-timeline.php:945
+#: eg-social-timeline.php:1006
 msgid "License GPL-2.0-or-later"
 msgstr "Licenza GPL-2.0-or-later"
 
-#: eg-social-timeline.php:972
+#: eg-social-timeline.php:1033
 msgid "Cache flushed successfully!"
 msgstr "Cache svuotata!"
 
-#: eg-social-timeline.php:1658
+#: eg-social-timeline.php:1719
 msgid "EG Social Timeline — Configuration Required"
 msgstr "EG Social Timeline — Configurazione richiesta"
 
-#: eg-social-timeline.php:1659
+#: eg-social-timeline.php:1720
 msgid "No social profile configured."
 msgstr "Nessun profilo social configurato."
 
-#: eg-social-timeline.php:1677
+#: eg-social-timeline.php:1738
 msgid "No posts available at the moment."
 msgstr "Nessun post disponibile al momento."
 
-#: eg-social-timeline.php:1725
+#: eg-social-timeline.php:1786
 msgid "Filter by platform:"
 msgstr "Filtra per piattaforma:"
 
-#: eg-social-timeline.php:1771
+#: eg-social-timeline.php:1832
 msgid "Attached image"
 msgstr "Immagine allegata"
 
-#: eg-social-timeline.php:1781
+#: eg-social-timeline.php:1842
 msgid "Points"
 msgstr "Punti"
 
-#: eg-social-timeline.php:1781
+#: eg-social-timeline.php:1842
 msgid "Favourites"
 msgstr "Preferiti"
 
-#: eg-social-timeline.php:1788
+#: eg-social-timeline.php:1849
 msgid "Boost"
 msgstr "Boost"
 
-#: eg-social-timeline.php:1795
+#: eg-social-timeline.php:1856
 msgid "Comments"
 msgstr "Commenti"
 
-#: eg-social-timeline.php:1795
+#: eg-social-timeline.php:1856
 msgid "Replies"
 msgstr "Risposte"
 
-#: eg-social-timeline.php:1809
+#: eg-social-timeline.php:1870
 msgid "View commit"
 msgstr "Vedi commit"
 
-#: eg-social-timeline.php:1811
+#: eg-social-timeline.php:1872
 msgid "Watch video"
 msgstr "Guarda il video"
 
-#: eg-social-timeline.php:1813
+#: eg-social-timeline.php:1874
 msgid "View original post"
 msgstr "Vedi post originale"
 
-#: eg-social-timeline.php:1828
+#: eg-social-timeline.php:1889
 msgid "Mastodon"
 msgstr "Mastodon"
 
-#: eg-social-timeline.php:1829
+#: eg-social-timeline.php:1890
 msgid "Diggita"
 msgstr "Diggita"
 
-#: eg-social-timeline.php:1830
+#: eg-social-timeline.php:1891
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: eg-social-timeline.php:1831
+#: eg-social-timeline.php:1892
 msgid "Forgejo"
 msgstr "Forgejo"
 
-#: eg-social-timeline.php:1832
+#: eg-social-timeline.php:1893
 msgid "PeerTube"
 msgstr "PeerTube"
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:1883
+#: eg-social-timeline.php:1944
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] "%s minuto fa"
 msgstr[1] "%s minuti fa"
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:1887
+#: eg-social-timeline.php:1948
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] "%s ora fa"
 msgstr[1] "%s ore fa"
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:1891
+#: eg-social-timeline.php:1952
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] "%s giorno fa"
 msgstr[1] "%s giorni fa"
 
-#: eg-social-timeline.php:2038
+#: eg-social-timeline.php:2235
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: eg-social-timeline.php:2039
+#: eg-social-timeline.php:2236
 msgid "Documentation"
 msgstr "Documentazione"
-
-#~ msgid "EG Social Timeline - Configuration Required"
-#~ msgstr "EG Social Timeline — Configurazione richiesta"

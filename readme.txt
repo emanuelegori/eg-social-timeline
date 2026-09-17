@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, forgejo, social, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,8 +29,8 @@ EG Social Timeline aggregates in chronological order your public posts from five
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
-- Selectable color scheme: always light, always dark or follow the visitor browser
-- Configurable timeline background, independent from the card background
+- Timeline and card backgrounds configurable independently, each with its own color
+- Text, borders and icons derived from the contrast of the color you pick, so they stay readable
 - Responsive design
 - Shortcode with optional limit parameter
 - Modular and customizable SVG icons
@@ -82,10 +82,10 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 - Include or exclude boosts and reposts
 - Show or hide interaction stats
 - Cache duration from 30 minutes to 24 hours
-- Color scheme: always light (default), always dark, or follow the visitor browser
-- Timeline background: transparent, neutral preset or custom colors (one for the light scheme, one for the dark scheme)
-- Card background: automatic or custom colors, so the cards can stand out against the timeline background
-- Platform icon style: brand colors or monochrome (monochrome icons follow the text color, so they turn white on dark cards)
+- Timeline background: transparent (default), neutral preset, follow the visitor browser, or a custom color
+- Card background: neutral preset (default), transparent, follow the visitor browser, or a custom color
+- Platform icon style: platform colors, or a single color taken from the post text
+- Text, borders, badges, links and icons are not configured: they are derived from the contrast of the background you choose, and switch to their light variants on a dark surface
 
 == Frequently Asked Questions ==
 
@@ -115,11 +115,15 @@ Posts are temporarily stored to reduce calls to the external APIs. You can confi
 
 = Why does the timeline look dark on my light theme? =
 
-Up to version 1.7.2 the timeline always followed the `prefers-color-scheme` setting of the visitor browser, so it turned dark even on a light theme. Since 1.8.0 the color scheme is chosen in Settings and defaults to "Always light". Pick "Follow the visitor browser" to get the previous behaviour back.
+Up to version 1.7.2 the timeline always followed the `prefers-color-scheme` setting of the visitor browser, so it turned dark even on a light theme. Since 1.8.1 the stylesheet carries no `prefers-color-scheme` rule at all: the timeline goes dark only if you set a background to "Follow the visitor browser", or if both backgrounds are transparent and there is no color to measure.
+
+= I picked a dark card background but the text stayed dark. =
+
+That was a bug in 1.8.0, fixed in 1.8.1: contrast was inferred from a global color scheme instead of being measured on the color of the surface. Text, borders, badges, links and icons now follow the background you actually chose.
 
 = Can I customize the style? =
 
-Yes. Settings → EG Social Timeline → Appearance covers the color scheme, the timeline and card backgrounds and the icon style. Every color in the stylesheet comes from a custom property (`--egst-*`) declared on the `.eg-social-timeline` container, so a few lines of theme CSS are enough to retheme the whole timeline. The icons are SVG files you can replace in the `social-icons/` folder.
+Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds and the icon style. Every color in the stylesheet comes from a custom property declared on the `.eg-social-timeline` container: two source palettes (`--egst-light-*` and `--egst-dark-*`) and the active tokens that read from them (`--egst-text`, `--egst-card-bg`, `--egst-chip-bg`, …), so a few lines of theme CSS are enough to retheme the whole timeline. The icons are SVG files you can replace in the `social-icons/` folder.
 
 == Screenshots ==
 
@@ -133,6 +137,16 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.8.1 - 2026-09-17 =
+* Fixed: contrast is now measured on the color you choose instead of being inferred from a color scheme. In 1.8.0 a dark card background left the post text, the borders and the icons dark on dark. The plugin now computes the WCAG contrast ratio of the chosen background and moves text, borders, badges, links and icons to the palette that contrasts more.
+* Fixed: the icons on the filter chips read their own tokens, so they no longer follow the card. A dark card used to lighten them while they sat on light chips.
+* Changed: simpler Appearance section. The "Color Scheme" setting and the light/dark color pairs are gone; each background has one menu (transparent, neutral preset, follow the visitor browser, custom color) and one color.
+* Changed: clearer icon labels, "Platform colors" and "Single color (same as the post text)". The SVG icons are monochrome outlines with no color of their own: the stylesheet paints them.
+* Added: "Transparent" card background, for a timeline with no card surfaces — only the border delimits each post, and the shadow is dropped.
+* Added: a warning in the settings when the chosen color cannot reach the WCAG AA minimum (4.5:1) with either text palette, showing the measured ratio.
+* Changed: settings saved with 1.8.0 are converted on read, so nothing is lost; the database is rewritten on your first save.
+* Changed: the stylesheet no longer contains any `prefers-color-scheme` rule. The media query is emitted only when a background follows the browser, or when both are transparent.
 
 = 1.8.0 - 2026-09-17 =
 * New "Appearance" settings section: color scheme (always light, always dark or follow the visitor browser), timeline background, card background and platform icon style.
@@ -217,6 +231,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.8.1 =
+Fixes 1.8.0: contrast is measured on the color you pick, so a dark card background no longer leaves dark text and dark icons on it. The Appearance section is simpler — no more Color Scheme, one colour per background — and card backgrounds can now be transparent.
 
 = 1.8.0 =
 New Appearance section: color scheme, timeline and card backgrounds, icon style. Heads up: the timeline no longer turns dark just because the browser is dark — the default is now "Always light". Also fixes icons that were always black.

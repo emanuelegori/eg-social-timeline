@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.8.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.8.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -24,8 +24,8 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
 - **Statistiche Interazioni**: Mostra like, boost e commenti per ogni post
 - **Responsive**: Design ottimizzato per desktop, tablet e mobile
-- **Schema Colori**: Sempre chiaro (default), sempre scuro oppure segue il browser del visitatore
-- **Sfondi Configurabili**: Sfondo della timeline indipendente da quello delle schede, con colori distinti per chiaro e scuro
+- **Sfondi Configurabili**: Sfondo della timeline indipendente da quello delle schede, un colore per ciascuno
+- **Contrasto Derivato**: Testo, bordi e icone seguono il contrasto WCAG dello sfondo scelto, senza schemi da tenere allineati
 - **Privacy-Friendly**: Solo dati pubblici, nessun tracking
 
 ---
@@ -75,10 +75,12 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    - Max video PeerTube (default: 5, 0 = illimitato)
 4. Regola impostazioni cache e visualizzazione
 5. Regola la sezione **Aspetto** (opzionale):
-   - Schema colori: sempre chiaro (default), sempre scuro oppure segue il browser del visitatore
-   - Sfondo timeline: trasparente (default), preset neutro o colori personalizzati
-   - Sfondo schede: automatico (default) o colori personalizzati
-   - Stile icone piattaforma: colori brand (default) o monocromatico
+   - Sfondo timeline: trasparente (default) · preset neutro · segue il browser del visitatore · colore personalizzato
+   - Sfondo schede: preset neutro (default) · trasparente · segue il browser del visitatore · colore personalizzato
+   - Stile icone piattaforma: colori delle piattaforme (default) · un solo colore (quello del testo)
+
+   Testo, bordi, badge, link e icone non si impostano: vengono derivati dal contrasto dello sfondo
+   che scegli. Scegli una scheda scura e passano da soli alle varianti chiare.
 6. Salva
 
 ![Configurazione profili](assets/screenshot-2.png)
@@ -147,27 +149,30 @@ social-icons/
 
 ### CSS Personalizzato
 
-Tutti i colori arrivano da custom properties dichiarate sul contenitore `.eg-social-timeline`: puoi ridefinire il tema intervenendo sui token, senza inseguire ogni singola regola.
+I colori stanno in custom properties sul contenitore `.eg-social-timeline`, su due livelli: le palette sorgente `--egst-light-*` e `--egst-dark-*`, e i token attivi che le leggono (`--egst-text`, `--egst-card-bg`, `--egst-chip-bg`, `--egst-icon-mastodon`, …). Puoi ridefinire uno dei due livelli invece di inseguire ogni regola.
 
 ```css
-/* Ridefinisci lo schema chiaro */
-.eg-social-timeline.egst-scheme-light {
-    --egst-canvas: #f0f4ff;        /* sfondo dietro le schede */
-    --egst-card-bg: #ffffff;       /* sfondo scheda           */
-    --egst-card-border: #d8deff;
-    --egst-text: #1f2937;          /* testo dei post          */
-    --egst-brand: #6364ff;         /* checkbox, accento boost */
-    --egst-icon-mastodon: #563acc; /* un token per piattaforma */
+/* Cambia i colori usati su una superficie chiara */
+.eg-social-timeline {
+    --egst-light-text: #1f2937;          /* testo dei post           */
+    --egst-light-card-border: #d8deff;
+    --egst-light-icon-mastodon: #563acc; /* un token per piattaforma */
 }
 
-/* Gli stessi token per lo schema scuro */
-.eg-social-timeline.egst-scheme-dark {
-    --egst-canvas: #0b1020;
-    --egst-card-bg: #1f2937;
+/* Cambia i colori usati su una superficie scura */
+.eg-social-timeline {
+    --egst-dark-text: #e8eaf0;
+    --egst-dark-icon-mastodon: #a5a6ff;
+}
+
+/* Oppure imposta direttamente un token attivo */
+.eg-social-timeline {
+    --egst-canvas: #f0f4ff;  /* sfondo dietro le schede */
+    --egst-card-bg: #ffffff; /* sfondo scheda           */
 }
 ```
 
-L'elenco completo dei token è in testa a `eg-social-timeline.css`. La classe `egst-scheme-auto` porta i token applicati quando è il browser a chiedere il tema scuro.
+L'elenco completo dei token è in testa a `eg-social-timeline.css`. Quale palette legga ciascun token lo decide il plugin dal contrasto del tuo sfondo, applicandolo come CSS inline dopo il foglio di stile: per questo un override nel tema conviene scriverlo sulle palette sorgente, che non vengono mai riscritte.
 
 Le regole normali continuano a funzionare:
 
@@ -215,6 +220,22 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.8.1] - 2026-09-17
+
+#### Fixed
+- **Il contrasto si calcola dal colore scelto invece di essere dedotto dallo schema.** Nella 1.8.0 una scheda scura lasciava testo, bordi e icone scuri sullo scuro. Ora il plugin misura il rapporto di contrasto WCAG dello sfondo e sposta testo, bordi, badge, link e icone sulla palette che contrasta di più.
+- Le icone sui chip dei filtri leggono token propri (`--egst-chip-icon-*`) invece di seguire la scheda: con una scheda scura si schiarivano pur stando su chip chiari.
+
+#### Added
+- Sfondo schede **Trasparente**: timeline senza superfici, con il solo bordo a delimitare i post (l'ombra viene rimossa).
+- Avviso nelle impostazioni quando il colore scelto non raggiunge il minimo WCAG AA (4.5:1) con nessuna delle due palette di testo, con il rapporto misurato.
+
+#### Changed
+- Sezione Aspetto semplificata: via **Schema colori** e le coppie di colori chiaro/scuro. Ogni sfondo ha un solo menu (trasparente · preset neutro · segue il browser · colore personalizzato) e un solo colore.
+- Etichette icone più chiare: "Colori delle piattaforme" e "Un solo colore (quello del testo)". Le icone SVG sono sagome monocromatiche senza colore proprio: è il foglio di stile a dipingerle.
+- Il foglio di stile non contiene più nessuna regola `prefers-color-scheme`: i colori stanno in due palette sorgente (`--egst-light-*`, `--egst-dark-*`) più i token attivi che le leggono. La media query viene emessa nel CSS inline solo se uno sfondo segue il browser, o se sono entrambi trasparenti.
+- Le impostazioni salvate con la 1.8.0 vengono convertite alla lettura: niente va perso, il database si allinea al primo salvataggio.
 
 ### [1.8.0] - 2026-09-17
 
