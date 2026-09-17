@@ -6,6 +6,11 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.9.1] - 2026-09-17
+
+### Fixed
+- **Lo shortcode `[eg_social_timeline]` non era più registrato**: nella 1.9.0 la riga `add_shortcode('eg_social_timeline', 'eg_social_timeline_shortcode')` stava tra `fetch_all_feeds()` e la funzione dello shortcode, ed è stata rimossa insieme al blocco riscritto. Senza registrazione WordPress non riconosce il tag e lo stampa come testo nella pagina. Lezione: un controllo automatico aveva segnalato `eg_social_timeline_shortcode` come "definita e mai richiamata" e la segnalazione era corretta.
+
 ## [1.9.0] - 2026-09-17
 
 ### Changed

@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
- * Version: 1.9.0
+ * Version: 1.9.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.9.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.9.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -2173,6 +2173,9 @@ function eg_social_timeline_render_status_notice() {
         <?php
     }
 }
+
+// Shortcode
+add_shortcode('eg_social_timeline', 'eg_social_timeline_shortcode');
 
 function eg_social_timeline_shortcode($atts) {
     $options = get_option('eg_social_timeline_options');

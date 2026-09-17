@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.9.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.9.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -222,6 +222,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.9.1] - 2026-09-17
+
+#### Fixed
+- The `[eg_social_timeline]` shortcode was no longer registered in 1.9.0 and the tag was printed as plain text: the `add_shortcode()` call sat between two rewritten functions and went away with them.
 
 ### [1.9.0] - 2026-09-17
 

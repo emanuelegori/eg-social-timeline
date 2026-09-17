@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the EG Social Timeline plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.9.0\n"
+"Project-Id-Version: EG Social Timeline 1.9.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
 "POT-Creation-Date: 2026-09-17T20:11:52+00:00\n"

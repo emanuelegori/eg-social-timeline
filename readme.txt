@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,6 +148,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.9.1 - 2026-09-17 =
+* Fixed: the `[eg_social_timeline]` shortcode was no longer registered in 1.9.0, so the tag was printed as plain text on the page. The `add_shortcode()` call sat between two functions that were rewritten and was removed with them.
+
 = 1.9.0 - 2026-09-17 =
 * Changed: every platform is now configured the same way, instance URL plus username. Mastodon used to ask for a full profile URL while Forgejo and PeerTube asked for two separate fields, with no technical reason: the code split that URL into the very same two values a couple of lines later.
 * Changed: Diggita becomes generic Lemmy support. The fetcher already spoke Lemmy — `/feeds/u/{username}.xml` is the Lemmy user feed — with the domain hardcoded; now the instance is a setting, so any Lemmy instance works. The platform name on the cards comes from the instance domain, so diggita.com still reads "Diggita" while lemmy.ml reads "Lemmy".
@@ -251,6 +254,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.9.1 =
+Fixes 1.9.0: the shortcode was not registered and appeared as plain text on the page. Update right away if you are on 1.9.0.
 
 = 1.9.0 =
 Every platform is configured the same way now: instance URL + username. Diggita becomes generic Lemmy support (your settings are migrated), Pleroma and Akkoma get their own name and icon, and a platform that returns nothing is reported in the settings instead of vanishing silently.
