@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.12.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.12.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.1] - 2026-09-20
+
+#### Changed
+- La barra compatta sta su una riga sola: "Filtra:" affiancato alle icone, senza linea di separazione.
+
+#### Fixed
+- Il tooltip mostrava il nome senza conteggio: ogni icona porta un proprio `<title>` SVG e il browser preferiva quello. Le icone sono ora inerti al puntatore, così vince il tooltip del chip; il clic continua a selezionare il filtro.
+- Icone marcate come decorative (`aria-hidden`): il nome della piattaforma è già accanto, gli screen reader lo leggevano due volte.
 
 ### [1.12.0] - 2026-09-20
 

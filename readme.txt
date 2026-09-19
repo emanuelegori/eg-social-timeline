@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.12.0
+Stable tag: 1.12.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,11 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.12.1 - 2026-09-20 =
+* Changed: the compact filter bar now fits on a single line, with "Filter:" beside the icons instead of above them, and without the separator underneath.
+* Fixed: the tooltip showed the platform name without the item count. Each icon carries its own SVG title, which the browser preferred over the chip's; the icons are now inert to the pointer, so the full tooltip appears and the click still selects the filter.
+* Fixed: platform icons are marked decorative (`aria-hidden`), since the platform name already sits next to them — screen readers were announcing it twice.
+
 = 1.12.0 - 2026-09-20 =
 * Added: a compact filter bar, chosen from the new "Filter Bar Style" setting. It keeps "Filter:" and the icons alone, each in a 36px square: a platform included is in colour, one filtered out turns grey. Name and count move into the tooltip and stay in the markup for screen readers, so nothing is lost for assistive technology.
 * Changed: an excluded platform now has its icon in greyscale in both styles, not just faded, so the state reads at a glance.
@@ -311,6 +316,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.12.1 =
+The compact bar fits on one line and the tooltip finally shows the item count. Icons are also marked decorative, so screen readers no longer read each platform name twice.
 
 = 1.12.0 =
 New compact filter bar: only the platform icons, in colour when included and grey when filtered out, with name and count in the tooltip. Choose it under Appearance; the full bar stays the default.

@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.12.0
+ * Version: 1.12.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.12.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.12.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -3804,7 +3804,12 @@ function eg_social_timeline_get_icon($platform, $software = '') {
         $icon_path = $icons_dir . $icon_files[$platform];
 
         if (file_exists($icon_path)) {
-            return wp_kses(file_get_contents($icon_path), $svg_kses);
+            $svg = wp_kses(file_get_contents($icon_path), $svg_kses);
+
+            // L'icona accompagna sempre il nome della piattaforma, scritto
+            // accanto o nascosto alla sola vista: come elemento a se' verrebbe
+            // letta due volte dagli screen reader per via del <title> interno.
+            return str_replace('<svg ', '<svg aria-hidden="true" focusable="false" ', $svg);
         }
     }
 

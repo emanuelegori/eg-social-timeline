@@ -312,8 +312,32 @@
    documento, nascosto agli occhi ma non agli screen reader, e viene ripetuto
    nel title insieme al conteggio. */
 
+/* Tutto su una riga: intestazione e icone affiancate, senza la linea di
+   separazione che serviva quando stavano su due righe. Le icone vanno a capo
+   da sole se lo schermo non basta. */
+.egst-filters-compact .eg-timeline-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 14px;
+}
+
+.egst-filters-compact .filters-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
 .egst-filters-compact .filters-checkboxes {
     gap: 8px;
+}
+
+/* L'icona porta un <title> suo (è il nome della piattaforma), e col mouse
+   sopra il browser mostrerebbe quello invece del title del chip, che ha anche
+   il conteggio. Resa inerte al puntatore: il clic resta al label. */
+.filter-checkbox-label svg {
+    pointer-events: none;
 }
 
 .egst-filters-compact .filter-checkbox-label {

@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.12.1] - 2026-09-20
+
+### Changed
+- La barra compatta sta **su una riga sola**: "Filtra:" affiancato alle icone invece che sopra, senza la linea di separazione che serviva quando stavano su due righe. Le icone vanno a capo da sole se lo schermo non basta.
+
+### Fixed
+- **Il tooltip mostrava il nome senza il conteggio.** Il `title` del chip c'era, ma ogni icona porta un proprio `<title>` (il nome della piattaforma, parte delle icone Simple Icons) e il browser mostra quello dell'elemento sotto il puntatore: siccome l'icona occupa quasi tutto il quadrato, vinceva sempre lei. Le icone dei filtri sono ora inerti al puntatore (`pointer-events: none`), così compare il `title` del chip con nome **e** numero; il clic resta al label e continua a selezionare il filtro.
+- Le icone sono marcate **decorative** (`aria-hidden="true" focusable="false"`, aggiunti dopo la sanitizzazione kses): il nome della piattaforma è già scritto accanto o nascosto alla sola vista, quindi il `<title>` interno faceva leggere due volte la stessa parola agli screen reader.
+
 ## [1.12.0] - 2026-09-20
 
 ### Added
