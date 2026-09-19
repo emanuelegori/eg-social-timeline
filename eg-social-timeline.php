@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.11.0
+ * Version: 1.11.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.11.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.11.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1672,8 +1672,10 @@ function eg_social_timeline_maybe_upgrade() {
         return;
     }
 
+    // La cache va rifatta (gli slug possono essere cambiati), ma l'esito
+    // dell'ultimo recupero si conserva: porta la sua data, e cancellarlo
+    // lascerebbe la tabella muta proprio quando si controlla l'aggiornamento.
     delete_transient('eg_social_timeline_cache');
-    delete_option('eg_social_timeline_status');
     update_option('eg_social_timeline_version', EG_SOCIAL_TIMELINE_VERSION, false);
 }
 
@@ -1780,11 +1782,19 @@ function eg_social_timeline_handle_cache_clear() {
     }
     
     delete_transient('eg_social_timeline_cache');
-    
+
+    // Un recupero subito, cosi' la cache e la tabella degli esiti tornano
+    // piene senza dover aspettare che qualcuno apra la pagina della timeline.
+    $posts = eg_social_timeline_fetch_all_feeds();
+
     add_settings_error(
         'eg_social_timeline_options',
         'cache_cleared',
-        __('Cache flushed successfully!', 'eg-social-timeline'),
+        sprintf(
+            /* translators: %d: numero di contenuti recuperati */
+            _n('Cache flushed and rebuilt: %d item retrieved.', 'Cache flushed and rebuilt: %d items retrieved.', count($posts), 'eg-social-timeline'),
+            count($posts)
+        ),
         'success'
     );
     
@@ -2037,7 +2047,12 @@ function eg_social_timeline_fetch_lemmy($username, $instance, $limit = 0) {
 
     $label = eg_social_timeline_lemmy_label($instance);
     
+    // Un feed malformato non deve riempire il log del sito di warning: gli
+    // errori di libxml restano interni e il fallimento si gestisce qui.
+    $previous_errors = libxml_use_internal_errors(true);
     $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
 
     if ($xml === false) {
         return array();
@@ -2567,7 +2582,12 @@ function eg_social_timeline_fetch_pixelfed($username, $instance, $limit = 0) {
         return array();
     }
 
+    // Un feed malformato non deve riempire il log del sito di warning: gli
+    // errori di libxml restano interni e il fallimento si gestisce qui.
+    $previous_errors = libxml_use_internal_errors(true);
     $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
 
     if (false === $xml || !isset($xml->entry)) {
         eg_social_timeline_record_issue(
@@ -2718,7 +2738,12 @@ function eg_social_timeline_fetch_rss($feed_url, $label = '', $limit = 0) {
         return array();
     }
 
+    // Un feed malformato non deve riempire il log del sito di warning: gli
+    // errori di libxml restano interni e il fallimento si gestisce qui.
+    $previous_errors = libxml_use_internal_errors(true);
     $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
 
     if (false === $xml) {
         eg_social_timeline_record_issue(
@@ -2890,9 +2915,9 @@ function eg_social_timeline_fetch_listenbrainz($username, $instance, $limit = 0)
         return array();
     }
 
-    // Il profilo sta sul sito, non sul sottodominio dell'API.
-    $host = (string) wp_parse_url($instance, PHP_URL_HOST);
-    $profile_url = 'https://' . preg_replace('~^api\.~', '', $host) . '/user/' . rawurlencode($username) . '/';
+    // Il sito sta sotto l'host dell'API senza il prefisso api.
+    $site = 'https://' . preg_replace('~^api\.~', '', (string) wp_parse_url($instance, PHP_URL_HOST));
+    $profile_url = $site . '/user/' . rawurlencode($username) . '/';
 
     $posts = array();
 
@@ -2932,7 +2957,9 @@ function eg_social_timeline_fetch_listenbrainz($username, $instance, $limit = 0)
             'date'             => $timestamp,
             'title'            => $title,
             'content'          => $content,
-            'link'             => $mbid ? 'https://musicbrainz.org/recording/' . rawurlencode($mbid) : $profile_url,
+            // Pagina del brano su ListenBrainz; senza identificatore si torna
+            // al profilo, che e' sempre valido.
+            'link'             => $mbid ? $site . '/track/' . rawurlencode($mbid) : $profile_url,
             'is_boost'         => false,
             'image_url'        => '',
             'image_alt'        => '',
@@ -3387,7 +3414,7 @@ function eg_social_timeline_render_diagnostics() {
                         <?php if ('' !== $incomplete): ?>
                             —
                         <?php elseif (null === $fetch): ?>
-                            <em><?php esc_html_e('Nothing fetched yet.', 'eg-social-timeline'); ?></em>
+                            <em><?php esc_html_e('No fetch since the cache was emptied: open the page with the timeline, or use "Flush Cache Now" below.', 'eg-social-timeline'); ?></em>
                         <?php elseif (!empty($fetch['count'])): ?>
                             <?php
                             printf(

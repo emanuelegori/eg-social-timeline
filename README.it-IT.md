@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.11.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.11.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,16 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.11.1] - 2026-09-20
+
+#### Changed
+- Il link di un ascolto porta alla pagina del brano su ListenBrainz invece che alla registrazione MusicBrainz; senza identificatore si va al profilo, come prima.
+- "Svuota cache adesso" ricostruisce subito la cache e dice quanti contenuti ha recuperato: la tabella si popola appena lo premi.
+
+#### Fixed
+- La colonna "ultimo recupero" diceva "nessun recupero" dopo ogni aggiornamento, perché l'esito registrato veniva cancellato al cambio di versione: ora viene conservato.
+- Un feed malformato non riempie più il log del sito di warning libxml: i tre parser XML tengono gli errori internamente.
 
 ### [1.11.0] - 2026-09-19
 

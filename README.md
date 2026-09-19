@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.11.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.11.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,16 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.11.1] - 2026-09-20
+
+#### Changed
+- A listen links to its track page on ListenBrainz instead of the MusicBrainz recording; without an identifier it still goes to the profile.
+- "Flush Cache Now" rebuilds the cache immediately and reports how many items it retrieved, so the settings table fills as soon as you press it.
+
+#### Fixed
+- The last-fetch column said "nothing fetched yet" after every update: the recorded outcome was cleared on version change, and it is kept now.
+- A malformed feed no longer fills the site log with libxml warnings; the three XML parsers keep those errors internal.
 
 ### [1.11.0] - 2026-09-19
 

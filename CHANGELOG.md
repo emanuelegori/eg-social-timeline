@@ -6,6 +6,16 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.11.1] - 2026-09-20
+
+### Changed
+- Il link di un ascolto porta alla pagina del brano su **ListenBrainz** (`/track/{mbid}`) invece che alla registrazione su MusicBrainz: si resta sulla fonte configurata. Senza identificatore si va al profilo, come prima. Nota: ListenBrainz è una single-page app e risponde 200 a qualunque indirizzo, quindi la rotta va provata nel browser, non con una richiesta HTTP.
+- **"Svuota cache adesso" ricostruisce subito la cache** e dice quanti contenuti ha recuperato, invece di lasciare il lavoro alla prima visita della timeline. La tabella delle impostazioni si popola appena lo premi.
+
+### Fixed
+- **La colonna "ultimo recupero" diceva "nessun recupero" dopo ogni aggiornamento.** `maybe_upgrade()` cancellava l'opzione di stato a ogni cambio di versione: un dato che porta la propria data e che serve proprio quando si controlla se l'aggiornamento è andato bene. Ora viene conservato e si rigenera solo la cache dei post, che con gli slug nuovi va comunque rifatta.
+- **Un feed malformato non riempie più il log del sito**: i tre parser XML (Lemmy, Pixelfed, RSS/Atom) tengono gli errori di libxml internamente (`libxml_use_internal_errors`) invece di lasciar stampare una decina di warning per ogni tentativo. Emerso dai test, dove un feed volutamente rotto ha prodotto dieci righe di warning.
+
 ## [1.11.0] - 2026-09-19
 
 ### Added

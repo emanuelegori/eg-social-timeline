@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -174,6 +174,12 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.11.1 - 2026-09-20 =
+* Changed: a listen now links to its track page on ListenBrainz instead of the MusicBrainz recording, so the source stays the one you configured.
+* Fixed: the last-fetch column said "nothing fetched yet" after every update, because the recorded outcome was being cleared on version change. That outcome carries its own timestamp and is kept now; only the post cache is rebuilt.
+* Changed: "Flush Cache Now" rebuilds the cache right away instead of waiting for someone to open the timeline, and reports how many items it retrieved. The settings table is therefore populated as soon as you press it.
+* Fixed: a malformed feed no longer fills the site log with libxml warnings. The three XML parsers keep those errors internal and handle the failure themselves.
+
 = 1.11.0 - 2026-09-19 =
 * Added: any RSS 2.0 or Atom feed can be added as a source — a blog, a newsletter, a podcast. One parser reads both formats, and the name on the cards comes from the label you set, from the feed's own title, or from the domain.
 * Added: ListenBrainz. Recent listens through the public API, which needs no token: artist and track with the date, linking to the MusicBrainz recording when the identifier is there and to your profile otherwise.
@@ -300,6 +306,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.11.1 =
+Listens link to ListenBrainz instead of MusicBrainz, the settings table keeps the last fetch across updates, "Flush Cache Now" refills it immediately, and a malformed feed no longer floods the site log.
+
 = 1.11.0 =
 Two new sources: any RSS or Atom feed (blog, newsletter, podcast) and ListenBrainz, your recent listens through its public API.
 
@@ -415,7 +424,7 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
 - **Endpoint**: `GET /1/user/{username}/listens`, the public listens of the account. No token is sent.
 - **Data sent**: only the public username entered in the settings, as part of the URL path.
-- **Data received and stored**: artist, track, album, listen timestamp and the MusicBrainz recording identifier when present. Cached locally as a WordPress transient.
+- **Data received and stored**: artist, track, album, listen timestamp and the recording identifier when present, used to link the track page on ListenBrainz. Cached locally as a WordPress transient.
 - Privacy policy: https://metabrainz.org/privacy — terms: https://metabrainz.org/social-contract
 
 = RSS or Atom feed =
