@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.12.1
+ * Version: 1.12.2
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.12.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.12.2');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -672,7 +672,7 @@ function eg_social_timeline_detect_software($instance) {
     }
 
     $software = '';
-    $response = wp_remote_get($instance . '/.well-known/nodeinfo', array('timeout' => 10, 'sslverify' => true));
+    $response = wp_remote_get($instance . '/.well-known/nodeinfo', array('timeout' => 10, 'sslverify' => true, 'reject_unsafe_urls' => true));
 
     if (!is_wp_error($response)) {
         $data = json_decode(wp_remote_retrieve_body($response), true);
@@ -683,7 +683,7 @@ function eg_social_timeline_detect_software($instance) {
             $same_host = $href && wp_parse_url($href, PHP_URL_HOST) === wp_parse_url($instance, PHP_URL_HOST);
 
             if ($same_host && eg_social_timeline_is_public_url($href)) {
-                $document_response = wp_remote_get($href, array('timeout' => 10, 'sslverify' => true));
+                $document_response = wp_remote_get($href, array('timeout' => 10, 'sslverify' => true, 'reject_unsafe_urls' => true));
 
                 if (!is_wp_error($document_response)) {
                     $document_data = json_decode(wp_remote_retrieve_body($document_response), true);
@@ -1884,7 +1884,10 @@ function eg_social_timeline_get_mastodon_account_id($instance, $username) {
 
     $response = wp_remote_get($api_url, array(
         'timeout' => 10,
-        'sslverify' => true
+        'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -1965,7 +1968,10 @@ function eg_social_timeline_fetch_mastodon($username, $instance, $limit = 0) {
     
     $response = wp_remote_get($api_url, array(
         'timeout' => 15,
-        'sslverify' => true
+        'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
     
     if (is_wp_error($response)) {
@@ -2044,7 +2050,10 @@ function eg_social_timeline_fetch_lemmy($username, $instance, $limit = 0) {
 
     $response = wp_remote_get($rss_url, array(
         'timeout' => 15,
-        'sslverify' => true
+        'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -2176,7 +2185,10 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
 
     $repos_response = wp_remote_get($repos_url, array(
         'timeout' => 15,
-        'sslverify' => true
+        'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($repos_response)) {
@@ -2242,7 +2254,10 @@ function eg_social_timeline_fetch_forgejo($username, $instance_url, $limit = 0) 
         
         $commits_response = wp_remote_get($commits_url, array(
             'timeout' => 10,
-            'sslverify' => true
+            'sslverify' => true,
+            // I redirect non vengono rivalidati senza questo flag: la
+            // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+            'reject_unsafe_urls' => true,
         ));
         
         if (is_wp_error($commits_response)) {
@@ -2321,6 +2336,9 @@ function eg_social_timeline_fetch_bluesky($handle, $limit = 0) {
     $response = wp_remote_get($api_url, array(
         'timeout'  => 15,
         'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -2453,6 +2471,9 @@ function eg_social_timeline_fetch_peertube($username, $instance, $limit = 0, $ty
         $response = wp_remote_get($api_url, array(
             'timeout'  => 15,
             'sslverify' => true,
+            // I redirect non vengono rivalidati senza questo flag: la
+            // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+            'reject_unsafe_urls' => true,
         ));
 
         if (is_wp_error($response)) {
@@ -2581,6 +2602,9 @@ function eg_social_timeline_fetch_pixelfed($username, $instance, $limit = 0) {
     $response = wp_remote_get($feed_url, array(
         'timeout'  => 15,
         'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -2742,6 +2766,9 @@ function eg_social_timeline_fetch_rss($feed_url, $label = '', $limit = 0) {
     $response = wp_remote_get($feed_url, array(
         'timeout'  => 15,
         'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -2923,6 +2950,9 @@ function eg_social_timeline_fetch_listenbrainz($username, $instance, $limit = 0)
     $response = wp_remote_get($api_url, array(
         'timeout'  => 15,
         'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
     ));
 
     if (is_wp_error($response)) {
@@ -3101,7 +3131,7 @@ function eg_social_timeline_verify_profiles() {
     $report = array('time' => time(), 'platforms' => array());
 
     $get = function ($url) {
-        $response = wp_remote_get($url, array('timeout' => 10, 'sslverify' => true));
+        $response = wp_remote_get($url, array('timeout' => 10, 'sslverify' => true, 'reject_unsafe_urls' => true));
 
         if (is_wp_error($response)) {
             return array('code' => 0, 'body' => '', 'error' => $response->get_error_message());

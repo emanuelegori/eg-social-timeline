@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.12.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.12.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.2] - 2026-09-20
+
+#### Security
+- Tutte le 13 richieste in uscita passano `reject_unsafe_urls`: WordPress valida così anche le destinazioni dei redirect. Il controllo sugli indirizzi privati copriva solo il primo salto, lasciando aperta una via di server-side request forgery attraverso un feed o un'istanza che rispondono con un redirect. Emerso da un audit prima della submission; nessuno sfruttamento osservato.
 
 ### [1.12.1] - 2026-09-20
 

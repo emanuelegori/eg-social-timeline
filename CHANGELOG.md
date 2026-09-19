@@ -6,6 +6,12 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.12.2] - 2026-09-20
+
+### Security
+- **Tutte e 13 le richieste in uscita passano ora `'reject_unsafe_urls' => true`.** `is_public_url()` rifiutava già indirizzi privati e riservati al salvataggio del profilo, ma quel controllo copre **solo il primo salto**: senza quel flag WordPress segue fino a 5 redirect senza rivalidarli, quindi un server configurato (compromesso, oppure ostile fin dall'inizio — il plugin invita a puntare a istanze di terzi) poteva rispondere `302` verso `169.254.169.254` o `127.0.0.1` e far recuperare al sito contenuti interni, che sarebbero finiti nella timeline pubblica e nella tabella diagnostica. Con il flag, `wp_http_validate_url()` viene applicata anche a ogni redirect.
+- Emerso da un audit di sicurezza condotto prima della pubblicazione su WordPress.org. Nessuno sfruttamento osservato: la correzione è preventiva.
+
 ## [1.12.1] - 2026-09-20
 
 ### Changed
