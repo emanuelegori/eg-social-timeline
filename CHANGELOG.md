@@ -6,6 +6,19 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.12.0] - 2026-09-20
+
+### Added
+- **Barra dei filtri compatta**, scelta dalla nuova impostazione *Stile della barra filtri* (Aspetto): resta "Filtra:" seguito dalle sole icone, ciascuna in un quadrato da 36px con cornice leggera — 36px perché sotto quella misura il bersaglio diventa difficile da centrare da telefono, mentre l'icona resta a 22px. Piattaforma inclusa a colori, esclusa in grigio.
+- Nome e conteggio, che nella barra compatta sparirebbero, finiscono nel `title` del chip e **restano nel markup** nascosti solo alla vista (`clip-path`), quindi continuano a essere letti dagli screen reader e trovati dalla ricerca nel testo della pagina.
+- Il `title` con nome e conteggio viene aggiunto in **entrambi** gli stili: nella barra completa è un'informazione in più a costo zero.
+
+### Changed
+- Una piattaforma esclusa ha ora l'icona in **grayscale** e non soltanto più pallida, in entrambi gli stili: lo stato acceso/spento si legge senza doverlo dedurre dall'opacità. Regola per slug, come tutto il resto dei filtri.
+
+### Note
+- La scelta di **non** prevedere un'opzione per nascondere del tutto la barra è deliberata (richiesta dell'utente): i filtri sono CSS-only e partono da `display:none` su tutti i post, quindi rimuovere i checkbox senza una regola dedicata lascerebbe la timeline vuota.
+
 ## [1.11.1] - 2026-09-20
 
 ### Changed

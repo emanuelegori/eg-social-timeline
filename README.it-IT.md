@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.11.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.12.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.0] - 2026-09-20
+
+#### Added
+- Barra dei filtri compatta (nuova impostazione *Stile della barra filtri*): "Filtra:" più le sole icone, bersagli da 36px con cornice leggera, a colori se incluse e grigie se filtrate. Nome e conteggio passano nel tooltip e restano nel markup per gli screen reader.
+- Un `title` con nome della piattaforma e conteggio su ogni chip, in entrambi gli stili.
+
+#### Changed
+- Una piattaforma esclusa mostra l'icona in grayscale e non solo più pallida, in entrambi gli stili.
 
 ### [1.11.1] - 2026-09-20
 

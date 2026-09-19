@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.11.1
+ * Version: 1.12.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.11.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.12.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -99,6 +99,7 @@ function eg_social_timeline_register_settings() {
                 'truncate_length' => 300,
                 'show_images' => false,
                 'icon_style' => 'brand',
+                'filters_style' => 'full',
                 'canvas_bg' => 'none',
                 'canvas_bg_color' => '#f3f4f6',
                 'card_bg' => 'neutral',
@@ -281,6 +282,14 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_card_bg',
         __('Card Background', 'eg-social-timeline'),
         'eg_social_timeline_card_bg_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_appearance_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_filters_style',
+        __('Filter Bar Style', 'eg-social-timeline'),
+        'eg_social_timeline_filters_style_callback',
         'eg-social-timeline',
         'eg_social_timeline_appearance_section'
     );
@@ -1263,12 +1272,19 @@ function eg_social_timeline_appearance_settings() {
         $icon_style = 'brand';
     }
 
+    $filters_style = isset($options['filters_style']) ? $options['filters_style'] : 'full';
+
+    if (!in_array($filters_style, array('full', 'compact'), true)) {
+        $filters_style = 'full';
+    }
+
     return array(
         'canvas_bg'       => $canvas,
         'canvas_bg_color' => $canvas_color ? $canvas_color : '#f3f4f6',
         'card_bg'         => $card,
         'card_bg_color'   => $card_color ? $card_color : '#ffffff',
         'icon_style'      => $icon_style,
+        'filters_style'   => $filters_style,
     );
 }
 
@@ -1391,6 +1407,20 @@ function eg_social_timeline_card_bg_callback() {
     if ('custom' === $settings['card_bg']) {
         eg_social_timeline_contrast_notice($settings['card_bg_color']);
     }
+}
+
+function eg_social_timeline_filters_style_callback() {
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('filters_style', $settings['filters_style'], array(
+        'full'    => __('Full: icon, name and count', 'eg-social-timeline'),
+        'compact' => __('Compact: icons only', 'eg-social-timeline'),
+    ));
+    ?>
+    <p class="description">
+        <?php esc_html_e('The compact bar keeps only the icons: a platform included is in colour, one filtered out turns grey. Name and count move to the tooltip, and stay readable by screen readers. Default: Full', 'eg-social-timeline'); ?>
+    </p>
+    <?php
 }
 
 function eg_social_timeline_icon_style_callback() {
@@ -1610,6 +1640,9 @@ function eg_social_timeline_sanitize_options($input) {
 
     $icon_style = isset($input['icon_style']) ? sanitize_key($input['icon_style']) : 'brand';
     $output['icon_style'] = in_array($icon_style, array('brand', 'mono'), true) ? $icon_style : 'brand';
+
+    $filters_style = isset($input['filters_style']) ? sanitize_key($input['filters_style']) : 'full';
+    $output['filters_style'] = in_array($filters_style, array('full', 'compact'), true) ? $filters_style : 'full';
 
     $colors = array(
         'canvas_bg_color' => '#f3f4f6',
@@ -3569,21 +3602,39 @@ function eg_social_timeline_shortcode($atts) {
         <div class="eg-timeline-filters">
             <div class="filters-header">
                 <span class="filters-icon">🔍</span>
-                <h3><?php esc_html_e( 'Filter by platform:', 'eg-social-timeline' ); ?></h3>
+                <h3>
+                    <?php
+                    if ('compact' === eg_social_timeline_appearance_settings()['filters_style']) {
+                        esc_html_e('Filter:', 'eg-social-timeline');
+                    } else {
+                        esc_html_e('Filter by platform:', 'eg-social-timeline');
+                    }
+                    ?>
+                </h3>
             </div>
             
             <div class="filters-checkboxes">
                 <?php foreach ($platform_counts as $platform => $count): ?>
-                    <?php $software = isset($platform_software[$platform]) ? $platform_software[$platform] : ''; ?>
+                    <?php
+                    $software = isset($platform_software[$platform]) ? $platform_software[$platform] : '';
+                    $name = isset($platform_names[$platform]) ? $platform_names[$platform] : ucfirst($platform);
+
+                    // Nello stile compatto il nome sparisce alla vista: resta nel
+                    // title per il mouse e nel documento per gli screen reader.
+                    $tooltip = sprintf(
+                        /* translators: 1: nome della piattaforma, 2: numero di contenuti */
+                        _x('%1$s (%2$d)', 'nome piattaforma e conteggio nel tooltip del filtro', 'eg-social-timeline'),
+                        $name,
+                        intval($count)
+                    );
+                    ?>
                     <label for="filter-<?php echo esc_attr($platform); ?>"
-                           class="<?php echo esc_attr('filter-checkbox-label' . ($software ? ' egst-sw-' . $software : '')); ?>">
+                           class="<?php echo esc_attr('filter-checkbox-label' . ($software ? ' egst-sw-' . $software : '')); ?>"
+                           title="<?php echo esc_attr($tooltip); ?>">
                         <span class="platform-icon-small">
                             <?php echo eg_social_timeline_get_icon($platform, $software); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitizzato internamente dalla funzione ?>
                         </span>
-                        <?php 
-                        $name = isset($platform_names[$platform]) ? $platform_names[$platform] : ucfirst($platform);
-                        echo esc_html($name); 
-                        ?>
+                        <span class="platform-label"><?php echo esc_html($name); ?></span>
                         <span class="post-count">(<?php echo intval($count); ?>)</span>
                     </label>
                 <?php endforeach; ?>
@@ -3806,6 +3857,10 @@ function eg_social_timeline_truncate($text, $length = 200) {
 function eg_social_timeline_wrapper_classes() {
     $settings = eg_social_timeline_appearance_settings();
     $classes  = array('eg-social-timeline', 'egst-icons-' . $settings['icon_style']);
+
+    if ('compact' === $settings['filters_style']) {
+        $classes[] = 'egst-filters-compact';
+    }
 
     if ('none' !== $settings['canvas_bg']) {
         $classes[] = 'egst-has-canvas';

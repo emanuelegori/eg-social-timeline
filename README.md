@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.11.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.12.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.0] - 2026-09-20
+
+#### Added
+- Compact filter bar (new "Filter Bar Style" setting): "Filter:" plus the icons alone, 36px targets with a light frame, in colour when included and grey when filtered out. Name and count move to the tooltip and stay in the markup for screen readers.
+- A title with platform name and item count on every chip, in both styles.
+
+#### Changed
+- An excluded platform now shows its icon in greyscale, not merely faded, in both styles.
 
 ### [1.11.1] - 2026-09-20
 

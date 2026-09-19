@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.11.1
+Stable tag: 1.12.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,7 @@ You can also paste the full profile address into either field and the plugin spl
 - Timeline background: transparent (default), neutral preset, follow the visitor browser, or a custom color
 - Card background: neutral preset (default), transparent, follow the visitor browser, or a custom color
 - Platform icon style: platform colors, or a single color taken from the post text
+- Filter bar style: full (icon, name and count) or compact (icons only, name and count in the tooltip)
 - Text, borders, badges, links and icons are not configured: they are derived from the contrast of the background you choose, and switch to their light variants on a dark surface
 
 == Frequently Asked Questions ==
@@ -173,6 +174,11 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.12.0 - 2026-09-20 =
+* Added: a compact filter bar, chosen from the new "Filter Bar Style" setting. It keeps "Filter:" and the icons alone, each in a 36px square: a platform included is in colour, one filtered out turns grey. Name and count move into the tooltip and stay in the markup for screen readers, so nothing is lost for assistive technology.
+* Changed: an excluded platform now has its icon in greyscale in both styles, not just faded, so the state reads at a glance.
+* Added: every filter chip carries a title with platform name and item count, in both styles.
 
 = 1.11.1 - 2026-09-20 =
 * Changed: a listen now links to its track page on ListenBrainz instead of the MusicBrainz recording, so the source stays the one you configured.
@@ -305,6 +311,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.12.0 =
+New compact filter bar: only the platform icons, in colour when included and grey when filtered out, with name and count in the tooltip. Choose it under Appearance; the full bar stays the default.
 
 = 1.11.1 =
 Listens link to ListenBrainz instead of MusicBrainz, the settings table keeps the last fetch across updates, "Flush Cache Now" refills it immediately, and a malformed feed no longer floods the site log.
