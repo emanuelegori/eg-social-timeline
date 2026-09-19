@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.10.1] - 2026-09-19
+
+### Fixed
+- **Un profilo compilato a metà veniva scartato in silenzio.** Con il solo nome utente e senza URL dell'istanza (o viceversa) la piattaforma non compariva né in timeline né nella tabella delle impostazioni, perché l'elenco mostrava solo i profili completi: esattamente il silenzio che la tabella doveva eliminare. Ora quel profilo ha la sua riga, con scritto cosa manca. L'istanza predefinita di Forgejo (`https://gitea.com`) non conta da sola come configurazione.
+- **Packaging.** La riga `*.md export-ignore` in `.gitattributes` escludeva **tutti** i markdown dall'archivio di release, quindi nel plugin installato mancavano `LICENSE.md` e `README.md` — la GPL chiede che il programma sia accompagnato dal testo della licenza. Ora l'elenco è esplicito: fuori restano solo `CHANGELOG.md`, `README.it-IT.md`, `LICENSE.IT.md` e i file di sviluppo.
+
+### Added
+- **`social-icons/ICONS-LICENSE.md`**: da dove vengono le icone (Simple Icons, CC0-1.0), la nota che i marchi restano dei rispettivi progetti e sono usati solo per identificare le piattaforme, i link alle linee guida di ciascun marchio (trademark Mastodon, branding Bluesky, logo license exemption Forgejo, CC BY-SA 4.0 per i loghi ufficiali Lemmy e PeerTube) e le regole per sostituire un'icona con la propria. Il file sta dentro `social-icons/` e non nella root, dove Plugin Check segnalerebbe un markdown inatteso.
+
 ## [1.10.0] - 2026-09-17
 
 ### Added

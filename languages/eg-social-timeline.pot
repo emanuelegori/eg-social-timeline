@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.10.0\n"
+"Project-Id-Version: EG Social Timeline 1.10.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-timeline\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-17T21:39:40+00:00\n"
+"POT-Creation-Date: 2026-09-19T21:49:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: eg-social-timeline\n"
@@ -431,7 +431,7 @@ msgid "The plugin is active but no social profile has been configured."
 msgstr ""
 
 #: eg-social-timeline.php:1540
-#: eg-social-timeline.php:2934
+#: eg-social-timeline.php:2950
 msgid "Configure now"
 msgstr ""
 
@@ -584,163 +584,171 @@ msgstr ""
 msgid "The public API did not return this handle (HTTP %d)."
 msgstr ""
 
-#: eg-social-timeline.php:2824
-msgid "Configured profiles"
-msgstr ""
-
 #: eg-social-timeline.php:2828
-msgid "Platform"
+msgid "Incomplete: the instance URL is missing, so this platform is skipped."
 msgstr ""
 
 #: eg-social-timeline.php:2829
+msgid "Incomplete: the username is missing, so this platform is skipped."
+msgstr ""
+
+#: eg-social-timeline.php:2836
+msgid "Configured profiles"
+msgstr ""
+
+#: eg-social-timeline.php:2840
+msgid "Platform"
+msgstr ""
+
+#: eg-social-timeline.php:2841
 msgid "What the plugin sees"
 msgstr ""
 
-#: eg-social-timeline.php:2830
+#: eg-social-timeline.php:2842
 msgid "Last fetch"
 msgstr ""
 
-#: eg-social-timeline.php:2843
+#: eg-social-timeline.php:2857
 msgid "Not verified yet."
 msgstr ""
 
-#: eg-social-timeline.php:2853
+#: eg-social-timeline.php:2869
 msgid "Nothing fetched yet."
 msgstr ""
 
 #. translators: %d: numero di contenuti recuperati
-#: eg-social-timeline.php:2858
+#: eg-social-timeline.php:2874
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:2864
+#: eg-social-timeline.php:2880
 msgid "No content retrieved."
 msgstr ""
 
 #. translators: %s: data e ora dell'ultima verifica
-#: eg-social-timeline.php:2877
+#: eg-social-timeline.php:2893
 msgid "Profiles verified on %s."
 msgstr ""
 
-#: eg-social-timeline.php:2881
+#: eg-social-timeline.php:2897
 msgid "Save the settings or use \"Verify profiles\" to run the checks."
 msgstr ""
 
-#: eg-social-timeline.php:2888
+#: eg-social-timeline.php:2904
 msgid "Verify profiles"
 msgstr ""
 
-#: eg-social-timeline.php:2909
+#: eg-social-timeline.php:2925
 msgid "Security check failed."
 msgstr ""
 
-#: eg-social-timeline.php:2932
+#: eg-social-timeline.php:2948
 msgid "EG Social Timeline — Configuration Required"
 msgstr ""
 
-#: eg-social-timeline.php:2933
+#: eg-social-timeline.php:2949
 msgid "No social profile configured."
 msgstr ""
 
-#: eg-social-timeline.php:2951
+#: eg-social-timeline.php:2967
 msgid "No posts available at the moment."
 msgstr ""
 
-#: eg-social-timeline.php:3008
+#: eg-social-timeline.php:3024
 msgid "Filter by platform:"
 msgstr ""
 
-#: eg-social-timeline.php:3070
+#: eg-social-timeline.php:3086
 msgid "Attached image"
 msgstr ""
 
-#: eg-social-timeline.php:3080
+#: eg-social-timeline.php:3096
 msgid "Points"
 msgstr ""
 
-#: eg-social-timeline.php:3080
+#: eg-social-timeline.php:3096
 msgid "Favourites"
 msgstr ""
 
-#: eg-social-timeline.php:3087
+#: eg-social-timeline.php:3103
 msgid "Boost"
 msgstr ""
 
-#: eg-social-timeline.php:3094
+#: eg-social-timeline.php:3110
 msgid "Comments"
 msgstr ""
 
-#: eg-social-timeline.php:3094
+#: eg-social-timeline.php:3110
 msgid "Replies"
 msgstr ""
 
-#: eg-social-timeline.php:3108
+#: eg-social-timeline.php:3124
 msgid "View commit"
 msgstr ""
 
-#: eg-social-timeline.php:3110
+#: eg-social-timeline.php:3126
 msgid "Watch video"
 msgstr ""
 
-#: eg-social-timeline.php:3112
+#: eg-social-timeline.php:3128
 msgid "View photo"
 msgstr ""
 
-#: eg-social-timeline.php:3114
+#: eg-social-timeline.php:3130
 msgid "View original post"
 msgstr ""
 
-#: eg-social-timeline.php:3129
+#: eg-social-timeline.php:3145
 msgid "Mastodon"
 msgstr ""
 
-#: eg-social-timeline.php:3130
+#: eg-social-timeline.php:3146
 msgid "Lemmy"
 msgstr ""
 
-#: eg-social-timeline.php:3131
+#: eg-social-timeline.php:3147
 msgid "Bluesky"
 msgstr ""
 
-#: eg-social-timeline.php:3132
+#: eg-social-timeline.php:3148
 msgid "Forgejo"
 msgstr ""
 
-#: eg-social-timeline.php:3133
+#: eg-social-timeline.php:3149
 msgid "PeerTube"
 msgstr ""
 
-#: eg-social-timeline.php:3134
+#: eg-social-timeline.php:3150
 msgid "Pixelfed"
 msgstr ""
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:3199
+#: eg-social-timeline.php:3215
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:3203
+#: eg-social-timeline.php:3219
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:3207
+#: eg-social-timeline.php:3223
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:3490
+#: eg-social-timeline.php:3506
 msgid "Settings"
 msgstr ""
 
-#: eg-social-timeline.php:3491
+#: eg-social-timeline.php:3507
 msgid "Documentation"
 msgstr ""

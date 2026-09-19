@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.10.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.10.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -228,6 +228,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.10.1] - 2026-09-19
+
+#### Fixed
+- A half-filled profile (a username without its instance URL, or the other way round) was skipped silently; it now gets a row in the settings table saying what is missing.
+- Packaging: `*.md export-ignore` kept `LICENSE.md` and `README.md` out of the release archive. Only development files are excluded now.
+
+#### Added
+- `social-icons/ICONS-LICENSE.md` with the provenance and licence of the platform icons, the trademark notice, and how to replace one.
 
 ### [1.10.0] - 2026-09-17
 

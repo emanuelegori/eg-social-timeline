@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
- * Version: 1.10.0
+ * Version: 1.10.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.10.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.10.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -2803,21 +2803,33 @@ function eg_social_timeline_render_diagnostics() {
     $profiles = eg_social_timeline_profiles();
     $diagnostics = get_option('eg_social_timeline_diagnostics');
     $status = get_option('eg_social_timeline_status');
-    $configured = array();
+    $rows = array();
 
     foreach ($profiles as $platform => $profile) {
-        if ('' === $profile['username']) {
+        $has_username = '' !== $profile['username'];
+
+        // L'istanza di Forgejo ha un valore predefinito: da sola non significa
+        // che la piattaforma sia stata configurata.
+        $has_instance = ('bluesky' === $platform)
+            ? $has_username
+            : ('' !== $profile['instance'] && !('forgejo' === $platform && 'https://gitea.com' === $profile['instance']));
+
+        if (!$has_username && !$has_instance) {
             continue;
         }
 
-        if ('bluesky' !== $platform && '' === $profile['instance']) {
+        if ($has_username && $has_instance) {
+            $rows[$platform] = '';
             continue;
         }
 
-        $configured[] = $platform;
+        // Meta' compilato: finora veniva scartato senza dire niente.
+        $rows[$platform] = $has_username
+            ? __('Incomplete: the instance URL is missing, so this platform is skipped.', 'eg-social-timeline')
+            : __('Incomplete: the username is missing, so this platform is skipped.', 'eg-social-timeline');
     }
 
-    if (empty($configured)) {
+    if (empty($rows)) {
         return;
     }
     ?>
@@ -2831,7 +2843,7 @@ function eg_social_timeline_render_diagnostics() {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($configured as $platform): ?>
+            <?php foreach ($rows as $platform => $incomplete): ?>
                 <?php
                 $check = isset($diagnostics['platforms'][$platform]) ? $diagnostics['platforms'][$platform] : null;
                 $fetch = isset($status['platforms'][$platform]) ? $status['platforms'][$platform] : null;
@@ -2839,7 +2851,9 @@ function eg_social_timeline_render_diagnostics() {
                 <tr>
                     <td><strong><?php echo esc_html(eg_social_timeline_get_platform_name($platform)); ?></strong></td>
                     <td>
-                        <?php if (null === $check): ?>
+                        <?php if ('' !== $incomplete): ?>
+                            <span style="color: #b32d2e;"><?php echo esc_html($incomplete); ?></span>
+                        <?php elseif (null === $check): ?>
                             <em><?php esc_html_e('Not verified yet.', 'eg-social-timeline'); ?></em>
                         <?php else: ?>
                             <?php echo esc_html(($check['ok'] ? '✓ ' : '✗ ') . $check['detail']); ?>
@@ -2849,7 +2863,9 @@ function eg_social_timeline_render_diagnostics() {
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?php if (null === $fetch): ?>
+                        <?php if ('' !== $incomplete): ?>
+                            —
+                        <?php elseif (null === $fetch): ?>
                             <em><?php esc_html_e('Nothing fetched yet.', 'eg-social-timeline'); ?></em>
                         <?php elseif (!empty($fetch['count'])): ?>
                             <?php

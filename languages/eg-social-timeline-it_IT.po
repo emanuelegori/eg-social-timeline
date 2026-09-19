@@ -3,10 +3,10 @@
 # This file is distributed under the same license as the EG Social Timeline plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.10.0\n"
+"Project-Id-Version: EG Social Timeline 1.10.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-09-17T21:39:40+00:00\n"
+"POT-Creation-Date: 2026-09-19T21:49:59+00:00\n"
 "PO-Revision-Date: 2026-09-17\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -563,7 +563,7 @@ msgstr "EG Social Timeline richiede configurazione!"
 msgid "The plugin is active but no social profile has been configured."
 msgstr "Il plugin è attivo ma nessun profilo social è configurato."
 
-#: eg-social-timeline.php:1540 eg-social-timeline.php:2934
+#: eg-social-timeline.php:1540 eg-social-timeline.php:2950
 msgid "Configure now"
 msgstr "Configura ora"
 
@@ -738,165 +738,176 @@ msgstr "Nessun feed Atom per \"%1$s\" (HTTP %2$d)."
 msgid "The public API did not return this handle (HTTP %d)."
 msgstr "L'API pubblica non ha restituito questo handle (HTTP %d)."
 
-#: eg-social-timeline.php:2824
+#: eg-social-timeline.php:2828
+msgid "Incomplete: the instance URL is missing, so this platform is skipped."
+msgstr ""
+"Incompleto: manca l'URL dell'istanza, quindi questa piattaforma viene "
+"saltata."
+
+#: eg-social-timeline.php:2829
+msgid "Incomplete: the username is missing, so this platform is skipped."
+msgstr ""
+"Incompleto: manca il nome utente, quindi questa piattaforma viene saltata."
+
+#: eg-social-timeline.php:2836
 msgid "Configured profiles"
 msgstr "Profili configurati"
 
-#: eg-social-timeline.php:2828
+#: eg-social-timeline.php:2840
 msgid "Platform"
 msgstr "Piattaforma"
 
-#: eg-social-timeline.php:2829
+#: eg-social-timeline.php:2841
 msgid "What the plugin sees"
 msgstr "Cosa vede il plugin"
 
-#: eg-social-timeline.php:2830
+#: eg-social-timeline.php:2842
 msgid "Last fetch"
 msgstr "Ultimo recupero"
 
-#: eg-social-timeline.php:2843
+#: eg-social-timeline.php:2857
 msgid "Not verified yet."
 msgstr "Non ancora verificato."
 
-#: eg-social-timeline.php:2853
+#: eg-social-timeline.php:2869
 msgid "Nothing fetched yet."
 msgstr "Ancora nessun recupero."
 
 #. translators: %d: numero di contenuti recuperati
-#: eg-social-timeline.php:2858
+#: eg-social-timeline.php:2874
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] "%d contenuto"
 msgstr[1] "%d contenuti"
 
-#: eg-social-timeline.php:2864
+#: eg-social-timeline.php:2880
 msgid "No content retrieved."
 msgstr "Nessun contenuto recuperato."
 
 #. translators: %s: data e ora dell'ultima verifica
-#: eg-social-timeline.php:2877
+#: eg-social-timeline.php:2893
 msgid "Profiles verified on %s."
 msgstr "Profili verificati il %s."
 
-#: eg-social-timeline.php:2881
+#: eg-social-timeline.php:2897
 msgid "Save the settings or use \"Verify profiles\" to run the checks."
 msgstr ""
 "Salva le impostazioni oppure usa \"Verifica profili\" per eseguire i "
 "controlli."
 
-#: eg-social-timeline.php:2888
+#: eg-social-timeline.php:2904
 msgid "Verify profiles"
 msgstr "Verifica profili"
 
-#: eg-social-timeline.php:2909
+#: eg-social-timeline.php:2925
 msgid "Security check failed."
 msgstr "Controllo di sicurezza non superato."
 
-#: eg-social-timeline.php:2932
+#: eg-social-timeline.php:2948
 msgid "EG Social Timeline — Configuration Required"
 msgstr "EG Social Timeline — Configurazione richiesta"
 
-#: eg-social-timeline.php:2933
+#: eg-social-timeline.php:2949
 msgid "No social profile configured."
 msgstr "Nessun profilo social configurato."
 
-#: eg-social-timeline.php:2951
+#: eg-social-timeline.php:2967
 msgid "No posts available at the moment."
 msgstr "Nessun post disponibile al momento."
 
-#: eg-social-timeline.php:3008
+#: eg-social-timeline.php:3024
 msgid "Filter by platform:"
 msgstr "Filtra per piattaforma:"
 
-#: eg-social-timeline.php:3070
+#: eg-social-timeline.php:3086
 msgid "Attached image"
 msgstr "Immagine allegata"
 
-#: eg-social-timeline.php:3080
+#: eg-social-timeline.php:3096
 msgid "Points"
 msgstr "Punti"
 
-#: eg-social-timeline.php:3080
+#: eg-social-timeline.php:3096
 msgid "Favourites"
 msgstr "Preferiti"
 
-#: eg-social-timeline.php:3087
+#: eg-social-timeline.php:3103
 msgid "Boost"
 msgstr "Boost"
 
-#: eg-social-timeline.php:3094
+#: eg-social-timeline.php:3110
 msgid "Comments"
 msgstr "Commenti"
 
-#: eg-social-timeline.php:3094
+#: eg-social-timeline.php:3110
 msgid "Replies"
 msgstr "Risposte"
 
-#: eg-social-timeline.php:3108
+#: eg-social-timeline.php:3124
 msgid "View commit"
 msgstr "Vedi commit"
 
-#: eg-social-timeline.php:3110
+#: eg-social-timeline.php:3126
 msgid "Watch video"
 msgstr "Guarda il video"
 
-#: eg-social-timeline.php:3112
+#: eg-social-timeline.php:3128
 msgid "View photo"
 msgstr "Vedi la foto"
 
-#: eg-social-timeline.php:3114
+#: eg-social-timeline.php:3130
 msgid "View original post"
 msgstr "Vedi post originale"
 
-#: eg-social-timeline.php:3129
+#: eg-social-timeline.php:3145
 msgid "Mastodon"
 msgstr "Mastodon"
 
-#: eg-social-timeline.php:3130
+#: eg-social-timeline.php:3146
 msgid "Lemmy"
 msgstr "Lemmy"
 
-#: eg-social-timeline.php:3131
+#: eg-social-timeline.php:3147
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: eg-social-timeline.php:3132
+#: eg-social-timeline.php:3148
 msgid "Forgejo"
 msgstr "Forgejo"
 
-#: eg-social-timeline.php:3133
+#: eg-social-timeline.php:3149
 msgid "PeerTube"
 msgstr "PeerTube"
 
-#: eg-social-timeline.php:3134
+#: eg-social-timeline.php:3150
 msgid "Pixelfed"
 msgstr "Pixelfed"
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:3199
+#: eg-social-timeline.php:3215
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] "%s minuto fa"
 msgstr[1] "%s minuti fa"
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:3203
+#: eg-social-timeline.php:3219
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] "%s ora fa"
 msgstr[1] "%s ore fa"
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:3207
+#: eg-social-timeline.php:3223
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] "%s giorno fa"
 msgstr[1] "%s giorni fa"
 
-#: eg-social-timeline.php:3490
+#: eg-social-timeline.php:3506
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: eg-social-timeline.php:3491
+#: eg-social-timeline.php:3507
 msgid "Documentation"
 msgstr "Documentazione"

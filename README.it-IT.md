@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.10.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.10.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -228,6 +228,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.10.1] - 2026-09-19
+
+#### Fixed
+- Un profilo compilato a metà (nome senza istanza o viceversa) veniva scartato in silenzio: ora ha una riga nella tabella delle impostazioni che dice cosa manca.
+- Packaging: la riga `*.md export-ignore` teneva `LICENSE.md` e `README.md` fuori dall'archivio di release. Ora restano esclusi solo i file di sviluppo.
+
+#### Added
+- `social-icons/ICONS-LICENSE.md` con provenienza e licenza delle icone, la nota sui marchi e le regole per sostituirne una.
 
 ### [1.10.0] - 2026-09-17
 

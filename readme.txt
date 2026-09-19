@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,11 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.10.1 - 2026-09-19 =
+* Fixed: a half-filled profile — a username without its instance URL, or the other way round — was skipped without a word, appearing neither in the timeline nor in the settings table. It now gets a row saying what is missing.
+* Fixed: packaging. The `.gitattributes` rule excluded every markdown file from the release archive, so `LICENSE.md` and `README.md` were missing from the installed plugin; only the development files are excluded now.
+* Added: `social-icons/ICONS-LICENSE.md`, documenting where the platform icons come from (Simple Icons, CC0-1.0), that the trademarks belong to their respective projects, and how to replace an icon with your own.
+
 = 1.10.0 - 2026-09-17 =
 * Added: Pixelfed support, through the public Atom feed of the profile (`/users/{name}.atom`). Photos, captions, dates and links; no interaction counts, because the feed does not carry them. The Mastodon-compatible API cannot be used: it answers the account lookup but redirects the statuses endpoint to the login page.
 * Fixed: PeerTube channels. Videos on PeerTube almost always live in a channel rather than in the account, and the two use different API endpoints — the plugin only knew the account one, so a channel returned nothing. Both are supported now, the type is taken from the address when you paste it (`/c/` channel, `/a/` account) and otherwise discovered once and remembered.
@@ -276,6 +281,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.10.1 =
+A profile filled in only halfway is now reported in the settings table instead of being skipped silently. LICENSE.md and README.md are back in the package, and the icons ship with their licence documentation.
 
 = 1.10.0 =
 Adds Pixelfed, fixes PeerTube channels (videos in a channel returned nothing), accepts the full profile address in every field, and adds a table showing what the plugin sees for each configured platform.
