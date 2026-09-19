@@ -72,7 +72,23 @@ the timeline always names the software actually detected.
 - Forgejo branding and the logo licence exemption:
   https://codeberg.org/forgejo/meta/src/branch/readme/branding
 
+### RSS and Atom feeds — `rss.svg`
+
+- Drawing: Simple Icons (CC0 1.0).
+- The RSS feed icon is a widely used generic mark, not the logo of any single
+  project.
+
 ## Icons drawn for this plugin
+
+### `listenbrainz.svg`
+
+A plain music note, drawn for EG Social Timeline and distributed under the
+plugin's licence, GPL-2.0-or-later. ListenBrainz has no icon in the collection
+used here, and this avoids putting the MusicBrainz logo — a different project
+of the same family — on ListenBrainz content.
+
+- ListenBrainz: https://listenbrainz.org/
+- MetaBrainz brand assets: https://metabrainz.org/
 
 ### `generic.svg`
 

@@ -4,11 +4,11 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.1
+Stable tag: 1.11.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
+Chronological timeline of your public activity across the fediverse, Bluesky, ListenBrainz and any RSS feed. Zero JavaScript, zero tracking.
 
 == Description ==
 
@@ -22,6 +22,8 @@ EG Social Timeline aggregates in chronological order your public posts from five
 - PeerTube (public REST API, videos from an account or from a channel)
 - Forgejo and Gitea (commits from your public repositories)
 - Lemmy, on any instance (public user RSS feed; Diggita is one of them)
+- ListenBrainz (public API, no token: what you have been listening to)
+- Any RSS 2.0 or Atom feed: a blog, a newsletter, a podcast
 
 Every platform is configured the same way: the instance URL plus your username. Bluesky is the exception, because its public API lives at a single address for everyone.
 
@@ -77,6 +79,8 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 - OR PeerTube: instance URL + account or channel (e.g. https://peertube.uno + yourname)
 - OR Forgejo/Gitea: instance URL + username
 - OR Bluesky: handle alone (e.g. emanuele.bsky.social)
+- OR ListenBrainz: username (the API URL is already filled in)
+- OR an RSS/Atom feed: the feed address, with an optional label
 
 You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.ml/u/1Malayali`, `https://mastodon.uno/@name`, `https://peertube.tv/c/name@host/videos`, `https://bsky.app/profile/name.bsky.social`.
 
@@ -104,6 +108,14 @@ Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea and Lemmy 
 On PeerTube videos almost always live in a **channel**, not directly in the account, and the two use different API endpoints. Paste the full address of your channel and the plugin sorts it out: `/c/name` is a channel, `/a/name` an account. If you only type a name, both are tried and the answer is remembered.
 
 A second detail: a channel belongs to the instance that hosts it. An address like `https://peertube.tv/c/name@tube.example/videos` means the channel lives on `tube.example` and peertube.tv only federates it — the plugin then queries the origin, which does not depend on the state of federation.
+
+= Can I add a source that is not a social platform? =
+
+Yes. The "RSS or Atom feed" fields take the address of any feed — your blog, a newsletter, a podcast — and its items join the timeline like any other source, with their own filter. The label you give it is the name shown on the cards; left empty, the feed's own title is used.
+
+= What does the ListenBrainz source show? =
+
+Your recent listens: artist and track, with the date. The public API needs no token. Each card links to the recording on MusicBrainz when the identifier is available, otherwise to your ListenBrainz profile. No interaction counts, because listens do not have any.
 
 = Why does Pixelfed show no likes or comments? =
 
@@ -161,6 +173,12 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.11.0 - 2026-09-19 =
+* Added: any RSS 2.0 or Atom feed can be added as a source — a blog, a newsletter, a podcast. One parser reads both formats, and the name on the cards comes from the label you set, from the feed's own title, or from the domain.
+* Added: ListenBrainz. Recent listens through the public API, which needs no token: artist and track with the date, linking to the MusicBrainz recording when the identifier is there and to your profile otherwise.
+* Changed: removed the leftover "blog" platform slug, which no fetcher ever produced and whose icon file did not exist. The feed source takes its place.
+* Added: a plain music note icon drawn for the plugin, used for ListenBrainz — the collection the other icons come from has none, and using the MusicBrainz logo would mean labelling one project's content with another's mark.
 
 = 1.10.1 - 2026-09-19 =
 * Fixed: a half-filled profile — a username without its instance URL, or the other way round — was skipped without a word, appearing neither in the timeline nor in the settings table. It now gets a row saying what is missing.
@@ -282,6 +300,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Upgrade Notice ==
 
+= 1.11.0 =
+Two new sources: any RSS or Atom feed (blog, newsletter, podcast) and ListenBrainz, your recent listens through its public API.
+
 = 1.10.1 =
 A profile filled in only halfway is now reported in the settings table instead of being skipped silently. LICENSE.md and README.md are back in the package, and the icons ship with their licence documentation.
 
@@ -387,6 +408,24 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Data sent**: only the public username entered in the settings, as part of the URL path.
 - **Data received and stored**: public post metadata (caption, date, link, photo URL and alt text if image previews are enabled) parsed from the public Atom feed. Cached locally as a WordPress transient.
 - Pixelfed is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= ListenBrainz =
+
+- **What**: the ListenBrainz API the user enters in the settings (by default `https://api.listenbrainz.org`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
+- **Endpoint**: `GET /1/user/{username}/listens`, the public listens of the account. No token is sent.
+- **Data sent**: only the public username entered in the settings, as part of the URL path.
+- **Data received and stored**: artist, track, album, listen timestamp and the MusicBrainz recording identifier when present. Cached locally as a WordPress transient.
+- Privacy policy: https://metabrainz.org/privacy — terms: https://metabrainz.org/social-contract
+
+= RSS or Atom feed =
+
+- **What**: the feed address the user enters in the settings; it can be any site.
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
+- **Endpoint**: a `GET` request to the address itself.
+- **Data sent**: nothing beyond the request for the feed.
+- **Data received and stored**: title, link, summary, date and, when present, the item's image. Cached locally as a WordPress transient.
+- Terms and privacy policy depend on the site the user chooses.
 
 = Lemmy =
 

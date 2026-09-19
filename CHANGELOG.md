@@ -6,6 +6,20 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.11.0] - 2026-09-19
+
+### Added
+- **Fonte RSS/Atom esterna**: l'indirizzo di un feed qualsiasi — un blog, una newsletter, un podcast — con un'etichetta facoltativa. Un solo parser legge entrambi i formati (`channel/item` dell'RSS 2.0 e `feed/entry` dell'Atom), con immagine presa da `enclosure`, `media:content` o dal primo `<img>` del testo. Il nome mostrato viene dall'etichetta, altrimenti dal titolo del feed, altrimenti dal dominio. Slug `rss`, icona `rss.svg` (Simple Icons, CC0).
+- **ListenBrainz**: gli ascolti recenti via API pubblica `GET /1/user/{utente}/listens`, **senza token** (a differenza di Last.fm, che richiede una chiave). Ogni scheda mostra "Artista — Brano" con l'album quando c'è, e punta alla registrazione su MusicBrainz se l'`mbid` è disponibile (`mbid_mapping.recording_mbid`, con ripiego su `additional_info.recording_mbid`), altrimenti al profilo. Nessuna statistica: un ascolto non ne ha. L'URL dell'API è configurabile per chi ospita una propria istanza.
+- Icona a **nota musicale** disegnata per il plugin: Simple Icons non ha ListenBrainz, e usare il logo di MusicBrainz significherebbe marchiare i contenuti di un progetto con il simbolo di un altro della stessa famiglia.
+
+### Changed
+- Rimosso lo slug **`blog`**, residuo mai prodotto da nessun fetcher e con un file icona (`blog.svg`) che non esisteva: al suo posto c'è la fonte RSS.
+- `social-icons/ICONS-LICENSE.md` aggiornato con le due icone nuove.
+
+### Fixed
+- Il fetcher del feed usciva **in silenzio** quando l'indirizzo non era utilizzabile (non HTTPS, host privato o non risolvibile): unico campo della fonte, e nessun messaggio. Ora il motivo finisce nella tabella delle impostazioni. Trovato dai test prima del rilascio.
+
 ## [1.10.1] - 2026-09-19
 
 ### Fixed

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
- * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking.
- * Version: 1.10.1
+ * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
+ * Version: 1.11.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,11 +38,12 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.10.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.11.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
 define('EG_SOCIAL_TIMELINE_BLUESKY_SERVICE', 'https://public.api.bsky.app');
+define('EG_SOCIAL_TIMELINE_LISTENBRAINZ_API', 'https://api.listenbrainz.org');
 
 // Admin menu
 add_action('admin_menu', 'eg_social_timeline_admin_menu');
@@ -88,6 +89,12 @@ function eg_social_timeline_register_settings() {
                 'pixelfed_username' => '',
                 'pixelfed_instance' => '',
                 'pixelfed_limit' => 10,
+                'listenbrainz_username' => '',
+                'listenbrainz_instance' => EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
+                'listenbrainz_limit' => 10,
+                'rss_url' => '',
+                'rss_label' => '',
+                'rss_limit' => 10,
                 'peertube_limit' => 5,
                 'truncate_length' => 300,
                 'show_images' => false,
@@ -120,6 +127,10 @@ function eg_social_timeline_register_settings() {
         'pixelfed_username' => __('Pixelfed — Username', 'eg-social-timeline'),
         'bluesky_instance'  => __('Bluesky — Service', 'eg-social-timeline'),
         'bluesky_handle'    => __('Bluesky — Handle', 'eg-social-timeline'),
+        'listenbrainz_instance' => __('ListenBrainz — API URL', 'eg-social-timeline'),
+        'listenbrainz_username' => __('ListenBrainz — Username', 'eg-social-timeline'),
+        'rss_url'           => __('RSS or Atom feed — URL', 'eg-social-timeline'),
+        'rss_label'         => __('RSS or Atom feed — Label', 'eg-social-timeline'),
     );
 
     foreach ($profile_fields as $field => $label) {
@@ -183,6 +194,22 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_pixelfed_limit',
         __('Max Pixelfed Posts', 'eg-social-timeline'),
         'eg_social_timeline_pixelfed_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_listenbrainz_limit',
+        __('Max ListenBrainz Listens', 'eg-social-timeline'),
+        'eg_social_timeline_listenbrainz_limit_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_limits_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_rss_limit',
+        __('Max Feed Items', 'eg-social-timeline'),
+        'eg_social_timeline_rss_limit_callback',
         'eg-social-timeline',
         'eg_social_timeline_limits_section'
     );
@@ -538,6 +565,19 @@ function eg_social_timeline_profiles() {
             'username' => ltrim(sanitize_text_field($get('bluesky_handle')), '@'),
             'limit'    => $limit('bluesky_limit', 10),
         ),
+        'listenbrainz' => array(
+            'instance' => eg_social_timeline_normalize_instance($get('listenbrainz_instance', EG_SOCIAL_TIMELINE_LISTENBRAINZ_API)),
+            'username' => ltrim(sanitize_text_field($get('listenbrainz_username')), '@'),
+            'limit'    => $limit('listenbrainz_limit', 10),
+        ),
+        'rss' => array(
+            // Il feed ha un indirizzo completo, non una coppia istanza+utente.
+            'instance' => '',
+            'username' => '',
+            'url'      => esc_url_raw($get('rss_url')),
+            'label'    => sanitize_text_field($get('rss_label')),
+            'limit'    => $limit('rss_limit', 10),
+        ),
     );
 }
 
@@ -548,12 +588,20 @@ function eg_social_timeline_profiles() {
  */
 function eg_social_timeline_has_profiles() {
     foreach (eg_social_timeline_profiles() as $slug => $profile) {
+        if ('rss' === $slug) {
+            if ('' !== $profile['url']) {
+                return true;
+            }
+
+            continue;
+        }
+
         if ('' === $profile['username']) {
             continue;
         }
 
         // Le piattaforme federate servono a poco senza l'istanza.
-        if (in_array($slug, array('mastodon', 'lemmy', 'forgejo', 'peertube', 'pixelfed'), true) && '' === $profile['instance']) {
+        if (in_array($slug, array('mastodon', 'lemmy', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz'), true) && '' === $profile['instance']) {
             continue;
         }
 
@@ -826,6 +874,54 @@ function eg_social_timeline_pixelfed_username_callback() {
     );
 }
 
+function eg_social_timeline_listenbrainz_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['listenbrainz_instance']) ? $options['listenbrainz_instance'] : EG_SOCIAL_TIMELINE_LISTENBRAINZ_API;
+
+    eg_social_timeline_profile_field(
+        'listenbrainz_instance',
+        $value,
+        EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
+        __('The ListenBrainz API, HTTPS only. Change it only if you run your own instance. Default: https://api.listenbrainz.org', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_listenbrainz_username_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['listenbrainz_username']) ? $options['listenbrainz_username'] : '';
+
+    eg_social_timeline_profile_field(
+        'listenbrainz_username',
+        $value,
+        'emanuelegori',
+        __('Your ListenBrainz username. Listens are read from the public API, which needs no token; each card shows artist and track, with no interaction counts.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_rss_url_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['rss_url']) ? $options['rss_url'] : '';
+
+    eg_social_timeline_profile_field(
+        'rss_url',
+        $value,
+        'https://example.com/feed/',
+        __('Address of an RSS 2.0 or Atom feed, HTTPS only. Anything with a feed fits here: a blog, a newsletter, a podcast.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_rss_label_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['rss_label']) ? $options['rss_label'] : '';
+
+    eg_social_timeline_profile_field(
+        'rss_label',
+        $value,
+        __('My blog', 'eg-social-timeline'),
+        __('Name shown on the cards and in the filter. Left empty, the feed title is used, and failing that the domain.', 'eg-social-timeline')
+    );
+}
+
 function eg_social_timeline_bluesky_instance_callback() {
     eg_social_timeline_profile_field(
         'bluesky_instance',
@@ -944,6 +1040,38 @@ function eg_social_timeline_pixelfed_limit_callback() {
            class="small-text">
     <p class="description">
         <?php esc_html_e('Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_listenbrainz_limit_callback() {
+    $limit = eg_social_timeline_profiles()['listenbrainz']['limit'];
+    ?>
+    <input type="number"
+           id="eg_social_timeline_listenbrainz_limit"
+           name="eg_social_timeline_options[listenbrainz_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of listens included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_rss_limit_callback() {
+    $limit = eg_social_timeline_profiles()['rss']['limit'];
+    ?>
+    <input type="number"
+           id="eg_social_timeline_rss_limit"
+           name="eg_social_timeline_options[rss_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of feed items included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1292,6 +1420,7 @@ function eg_social_timeline_sanitize_options($input) {
         'forgejo'  => 'https://gitea.com',
         'peertube' => '',
         'pixelfed' => '',
+        'listenbrainz' => EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
     );
 
     $extracted = array();
@@ -1339,6 +1468,29 @@ function eg_social_timeline_sanitize_options($input) {
         $output[$platform . '_username'] = sanitize_text_field(ltrim($raw_username, '@'));
     }
 
+    // Feed esterno: un indirizzo completo, con la sua etichetta.
+    $raw_feed = isset($input['rss_url']) ? trim((string) $input['rss_url']) : '';
+    $feed_url = ('' !== $raw_feed) ? esc_url_raw($raw_feed) : '';
+
+    if ('' !== $feed_url && !eg_social_timeline_is_public_url($feed_url)) {
+        add_settings_error(
+            'eg_social_timeline_options',
+            'invalid_feed_url',
+            '<strong>' . __('Error:', 'eg-social-timeline') . '</strong> ' .
+            sprintf(
+                /* translators: %s: indirizzo inserito per il feed */
+                __('"%s" is not a usable feed address. Use an HTTPS address of a public server.', 'eg-social-timeline'),
+                esc_html($raw_feed)
+            ),
+            'error'
+        );
+
+        $feed_url = '';
+    }
+
+    $output['rss_url'] = $feed_url;
+    $output['rss_label'] = isset($input['rss_label']) ? sanitize_text_field($input['rss_label']) : '';
+
     // Bluesky non ha istanza: l'handle porta il proprio dominio.
     $raw_bluesky = isset($input['bluesky_handle']) ? trim((string) $input['bluesky_handle']) : '';
     $parsed_bluesky = eg_social_timeline_extract_profile('bluesky', $raw_bluesky);
@@ -1373,7 +1525,7 @@ function eg_social_timeline_sanitize_options($input) {
         }
     }
 
-    if ('' !== $output['bluesky_handle']) {
+    if ('' !== $output['bluesky_handle'] || '' !== $output['rss_url']) {
         $configured = true;
     }
 
@@ -1432,6 +1584,12 @@ function eg_social_timeline_sanitize_options($input) {
 
     $pixelfed_limit = isset($input['pixelfed_limit']) ? intval($input['pixelfed_limit']) : 10;
     $output['pixelfed_limit'] = max(0, min(100, $pixelfed_limit));
+
+    $listenbrainz_limit = isset($input['listenbrainz_limit']) ? intval($input['listenbrainz_limit']) : 10;
+    $output['listenbrainz_limit'] = max(0, min(100, $listenbrainz_limit));
+
+    $rss_limit = isset($input['rss_limit']) ? intval($input['rss_limit']) : 10;
+    $output['rss_limit'] = max(0, min(100, $rss_limit));
 
     $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
@@ -2499,6 +2657,294 @@ function eg_social_timeline_fetch_pixelfed($username, $instance, $limit = 0) {
     return $posts;
 }
 
+/**
+ * Fetch di un feed RSS 2.0 o Atom qualsiasi.
+ *
+ * Un solo parser per i due formati: cambiano i nomi degli elementi, non la
+ * sostanza (titolo, link, testo, data, eventuale immagine).
+ *
+ * @param string $feed_url Indirizzo del feed.
+ * @param string $label    Nome da mostrare; vuoto usa il titolo del feed.
+ * @param int    $limit    Numero massimo di elementi, 0 per nessun limite.
+ * @return array Post normalizzati.
+ */
+function eg_social_timeline_fetch_rss($feed_url, $label = '', $limit = 0) {
+    $feed_url = trim((string) $feed_url);
+
+    if ('' === $feed_url) {
+        return array();
+    }
+
+    // Un indirizzo che non si puo' interrogare va detto: e' l'unico campo del
+    // feed, e senza messaggio la fonte sparirebbe in silenzio.
+    if (!eg_social_timeline_is_public_url($feed_url)) {
+        eg_social_timeline_record_issue(
+            'rss',
+            __('The feed address cannot be used: it must be an HTTPS address of a public, resolvable host.', 'eg-social-timeline')
+        );
+
+        return array();
+    }
+
+    $response = wp_remote_get($feed_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        eg_social_timeline_record_issue('rss', $response->get_error_message());
+
+        return array();
+    }
+
+    $code = (int) wp_remote_retrieve_response_code($response);
+
+    if (200 !== $code) {
+        eg_social_timeline_record_issue(
+            'rss',
+            sprintf(
+                /* translators: %d: codice di stato HTTP */
+                __('The feed did not answer (HTTP %d).', 'eg-social-timeline'),
+                $code
+            )
+        );
+
+        return array();
+    }
+
+    $body = wp_remote_retrieve_body($response);
+
+    if (empty($body)) {
+        return array();
+    }
+
+    $xml = simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NONET);
+
+    if (false === $xml) {
+        eg_social_timeline_record_issue(
+            'rss',
+            __('The feed could not be read: it is not valid RSS or Atom.', 'eg-social-timeline')
+        );
+
+        return array();
+    }
+
+    $is_atom = isset($xml->entry);
+    $items = $is_atom ? $xml->entry : (isset($xml->channel->item) ? $xml->channel->item : null);
+
+    if (null === $items) {
+        eg_social_timeline_record_issue(
+            'rss',
+            __('The feed has no items: neither channel/item nor feed/entry found.', 'eg-social-timeline')
+        );
+
+        return array();
+    }
+
+    // Senza etichetta si usa il titolo del feed, e in mancanza il dominio.
+    if ('' === $label) {
+        $feed_title = $is_atom ? (string) $xml->title : (string) $xml->channel->title;
+        $label = ('' !== trim($feed_title))
+            ? sanitize_text_field($feed_title)
+            : (string) wp_parse_url($feed_url, PHP_URL_HOST);
+    }
+
+    $posts = array();
+    $count = 0;
+
+    foreach ($items as $item) {
+        if ($limit > 0 && $count >= $limit) {
+            break;
+        }
+
+        if ($is_atom) {
+            $date_raw = (string) ($item->published ? $item->published : $item->updated);
+            $link = '';
+
+            foreach ($item->link as $candidate) {
+                $attributes = $candidate->attributes();
+                $rel = isset($attributes['rel']) ? (string) $attributes['rel'] : 'alternate';
+
+                if ('alternate' === $rel && isset($attributes['href'])) {
+                    $link = (string) $attributes['href'];
+                    break;
+                }
+            }
+
+            $summary = (string) ($item->summary ? $item->summary : $item->content);
+        } else {
+            $date_raw = (string) $item->pubDate;
+            $link = (string) $item->link;
+            $summary = (string) $item->description;
+        }
+
+        $timestamp = $date_raw ? strtotime($date_raw) : 0;
+
+        if (!$timestamp) {
+            continue;
+        }
+
+        $title = sanitize_text_field((string) $item->title);
+        $text = trim(wp_strip_all_tags($summary));
+        $content = ('' !== $text) ? $text : $title;
+
+        // Immagine: enclosure dell'RSS, media:content, o la prima del testo.
+        $image_url = '';
+
+        if (isset($item->enclosure)) {
+            $enclosure = $item->enclosure->attributes();
+            $type = isset($enclosure['type']) ? (string) $enclosure['type'] : '';
+
+            if (isset($enclosure['url']) && (0 === strpos($type, 'image/') || '' === $type)) {
+                $image_url = esc_url_raw((string) $enclosure['url']);
+            }
+        }
+
+        if ('' === $image_url) {
+            $media = $item->children('http://search.yahoo.com/mrss/');
+
+            if (isset($media->content)) {
+                $media_attributes = $media->content->attributes();
+
+                if (isset($media_attributes['url'])) {
+                    $image_url = esc_url_raw((string) $media_attributes['url']);
+                }
+            }
+        }
+
+        if ('' === $image_url && preg_match('~<img[^>]+src="([^"]+)"~i', $summary, $matches)) {
+            $image_url = esc_url_raw($matches[1]);
+        }
+
+        $posts[] = array(
+            'platform'         => 'rss',
+            'platform_label'   => $label,
+            'date'             => $timestamp,
+            'title'            => $title,
+            'content'          => ('' !== $title && 0 !== strpos($content, $title)) ? $title . "\n\n" . $content : $content,
+            'link'             => esc_url_raw($link),
+            'is_boost'         => false,
+            'image_url'        => $image_url,
+            'image_alt'        => $title,
+            'favourites_count' => 0,
+            'reblogs_count'    => 0,
+            'replies_count'    => 0,
+        );
+
+        $count++;
+    }
+
+    return $posts;
+}
+
+/**
+ * Fetch degli ascolti da ListenBrainz.
+ *
+ * API pubblica, nessun token: /1/user/{utente}/listens. Il link punta alla
+ * registrazione su MusicBrainz quando l'mbid c'e', altrimenti al profilo.
+ *
+ * @param string $username Nome utente.
+ * @param string $instance URL dell'API.
+ * @param int    $limit    Numero massimo di ascolti, 0 per il valore di default.
+ * @return array Post normalizzati.
+ */
+function eg_social_timeline_fetch_listenbrainz($username, $instance, $limit = 0) {
+    $instance = eg_social_timeline_normalize_instance('' !== $instance ? $instance : EG_SOCIAL_TIMELINE_LISTENBRAINZ_API);
+    $username = ltrim(trim((string) $username), '@');
+
+    if ('' === $username || '' === $instance) {
+        return array();
+    }
+
+    $count = ($limit > 0) ? min($limit, 100) : 25;
+
+    $api_url = $instance . '/1/user/' . rawurlencode($username) . '/listens?' . http_build_query(array(
+        'count' => $count,
+    ));
+
+    $response = wp_remote_get($api_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        eg_social_timeline_record_issue('listenbrainz', $response->get_error_message());
+
+        return array();
+    }
+
+    $code = (int) wp_remote_retrieve_response_code($response);
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (200 !== $code || !isset($data['payload']['listens'])) {
+        eg_social_timeline_record_issue(
+            'listenbrainz',
+            sprintf(
+                /* translators: 1: nome utente, 2: codice di stato HTTP */
+                __('No listens returned for "%1$s" (HTTP %2$d).', 'eg-social-timeline'),
+                $username,
+                $code
+            )
+        );
+
+        return array();
+    }
+
+    // Il profilo sta sul sito, non sul sottodominio dell'API.
+    $host = (string) wp_parse_url($instance, PHP_URL_HOST);
+    $profile_url = 'https://' . preg_replace('~^api\.~', '', $host) . '/user/' . rawurlencode($username) . '/';
+
+    $posts = array();
+
+    foreach ($data['payload']['listens'] as $listen) {
+        $timestamp = isset($listen['listened_at']) ? intval($listen['listened_at']) : 0;
+        $meta = isset($listen['track_metadata']) ? $listen['track_metadata'] : array();
+
+        if (!$timestamp || empty($meta['track_name'])) {
+            continue;
+        }
+
+        $artist = isset($meta['artist_name']) ? sanitize_text_field($meta['artist_name']) : '';
+        $track = sanitize_text_field($meta['track_name']);
+        $album = isset($meta['release_name']) ? sanitize_text_field($meta['release_name']) : '';
+
+        $mbid = '';
+
+        if (!empty($meta['mbid_mapping']['recording_mbid'])) {
+            $mbid = $meta['mbid_mapping']['recording_mbid'];
+        } elseif (!empty($meta['additional_info']['recording_mbid'])) {
+            $mbid = $meta['additional_info']['recording_mbid'];
+        }
+
+        $title = ('' !== $artist) ? $artist . ' — ' . $track : $track;
+        $content = ('' !== $album)
+            ? sprintf(
+                /* translators: 1: artista e titolo del brano, 2: nome dell'album */
+                __('%1$s (from %2$s)', 'eg-social-timeline'),
+                $title,
+                $album
+            )
+            : $title;
+
+        $posts[] = array(
+            'platform'         => 'listenbrainz',
+            'platform_label'   => 'ListenBrainz',
+            'date'             => $timestamp,
+            'title'            => $title,
+            'content'          => $content,
+            'link'             => $mbid ? 'https://musicbrainz.org/recording/' . rawurlencode($mbid) : $profile_url,
+            'is_boost'         => false,
+            'image_url'        => '',
+            'image_alt'        => '',
+            'favourites_count' => 0,
+            'reblogs_count'    => 0,
+            'replies_count'    => 0,
+        );
+    }
+
+    return $posts;
+}
+
 // Fetch and merge all feeds
 function eg_social_timeline_fetch_all_feeds() {
     $cached = get_transient('eg_social_timeline_cache');
@@ -2519,6 +2965,7 @@ function eg_social_timeline_fetch_all_feeds() {
         'forgejo'  => 'eg_social_timeline_fetch_forgejo',
         'peertube' => 'eg_social_timeline_fetch_peertube',
         'pixelfed' => 'eg_social_timeline_fetch_pixelfed',
+        'listenbrainz' => 'eg_social_timeline_fetch_listenbrainz',
     );
 
     foreach ($fetchers as $platform => $fetcher) {
@@ -2545,6 +2992,13 @@ function eg_social_timeline_fetch_all_feeds() {
         $posts = eg_social_timeline_fetch_bluesky($profiles['bluesky']['username'], $profiles['bluesky']['limit']);
         $all_posts = array_merge($all_posts, $posts);
         $fetched['bluesky'] = count($posts);
+    }
+
+    // Il feed esterno ha un indirizzo suo, non una coppia istanza + utente.
+    if ('' !== $profiles['rss']['url']) {
+        $posts = eg_social_timeline_fetch_rss($profiles['rss']['url'], $profiles['rss']['label'], $profiles['rss']['limit']);
+        $all_posts = array_merge($all_posts, $posts);
+        $fetched['rss'] = count($posts);
     }
 
     usort($all_posts, function($a, $b) {
@@ -2769,6 +3223,59 @@ function eg_social_timeline_verify_profiles() {
             );
     }
 
+    // ListenBrainz: ascolti pubblici.
+    $profile = $profiles['listenbrainz'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/1/user/' . rawurlencode($profile['username']) . '/listens?count=1');
+        $data = json_decode($result['body'], true);
+
+        $report['platforms']['listenbrainz'] = (200 === $result['code'] && isset($data['payload']['listens']))
+            ? array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $profile['username']),
+                'note'   => '',
+            )
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('No listens returned for "%1$s" (HTTP %2$d).', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+    }
+
+    // Feed esterno.
+    $profile = $profiles['rss'];
+
+    if ('' !== $profile['url']) {
+        $result = $get($profile['url']);
+        $items = ('' !== $result['body']) ? (substr_count($result['body'], '<item>') + substr_count($result['body'], '<entry>')) : 0;
+
+        $report['platforms']['rss'] = (200 === $result['code'] && $items > 0)
+            ? array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s', wp_parse_url($profile['url'], PHP_URL_HOST), ('' !== $profile['label']) ? $profile['label'] : __('label from the feed', 'eg-social-timeline')),
+                'note'   => sprintf(
+                    /* translators: %d: numero di elementi nel feed */
+                    _n('%d item in the feed', '%d items in the feed', $items, 'eg-social-timeline'),
+                    $items
+                ),
+            )
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['url'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: %d: codice di stato HTTP */
+                    __('No RSS or Atom items found at this address (HTTP %d).', 'eg-social-timeline'),
+                    $result['code']
+                ),
+            );
+    }
+
     // Bluesky: feed pubblico dell'autore.
     $profile = $profiles['bluesky'];
 
@@ -2806,13 +3313,27 @@ function eg_social_timeline_render_diagnostics() {
     $rows = array();
 
     foreach ($profiles as $platform => $profile) {
+        // Il feed esterno si configura con il solo indirizzo.
+        if ('rss' === $platform) {
+            if ('' !== $profile['url']) {
+                $rows['rss'] = '';
+            }
+
+            continue;
+        }
+
         $has_username = '' !== $profile['username'];
 
         // L'istanza di Forgejo ha un valore predefinito: da sola non significa
         // che la piattaforma sia stata configurata.
+        $defaults = array(
+            'forgejo'      => 'https://gitea.com',
+            'listenbrainz' => EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
+        );
+
         $has_instance = ('bluesky' === $platform)
             ? $has_username
-            : ('' !== $profile['instance'] && !('forgejo' === $platform && 'https://gitea.com' === $profile['instance']));
+            : ('' !== $profile['instance'] && !(isset($defaults[$platform]) && $defaults[$platform] === $profile['instance'] && !$has_username));
 
         if (!$has_username && !$has_instance) {
             continue;
@@ -3126,6 +3647,10 @@ function eg_social_timeline_shortcode($atts) {
                             esc_html_e('Watch video', 'eg-social-timeline');
                         } elseif ($post['platform'] === 'pixelfed') {
                             esc_html_e('View photo', 'eg-social-timeline');
+                        } elseif ($post['platform'] === 'listenbrainz') {
+                            esc_html_e('View the recording', 'eg-social-timeline');
+                        } elseif ($post['platform'] === 'rss') {
+                            esc_html_e('Read the post', 'eg-social-timeline');
                         } else {
                             esc_html_e('View original post', 'eg-social-timeline');
                         }
@@ -3147,7 +3672,9 @@ function eg_social_timeline_get_platform_name($platform) {
         'bluesky' => __('Bluesky', 'eg-social-timeline'),
         'forgejo' => __('Forgejo', 'eg-social-timeline'),
         'peertube' => __('PeerTube', 'eg-social-timeline'),
-        'pixelfed' => __('Pixelfed', 'eg-social-timeline')
+        'pixelfed' => __('Pixelfed', 'eg-social-timeline'),
+        'listenbrainz' => __('ListenBrainz', 'eg-social-timeline'),
+        'rss' => __('Feed', 'eg-social-timeline')
     );
     
     return isset($names[$platform]) ? $names[$platform] : $platform;
@@ -3162,7 +3689,8 @@ function eg_social_timeline_get_icon($platform, $software = '') {
         'forgejo' => 'forgejo.svg',
         'peertube' => 'peertube.svg',
         'pixelfed' => 'pixelfed.svg',
-        'blog' => 'blog.svg'
+        'listenbrainz' => 'listenbrainz.svg',
+        'rss' => 'rss.svg'
     );
 
     // Pleroma e Akkoma condividono l'API con Mastodon ma non il logo. Akkoma
@@ -3378,7 +3906,7 @@ function eg_social_timeline_scope_declarations($settings, $context) {
     $card_polarity    = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
     $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
 
-    $icons = array('mono', 'mastodon', 'pleroma', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'blog');
+    $icons = array('mono', 'mastodon', 'pleroma', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz', 'rss');
     $declarations = array();
 
     // Primo piano della scheda.

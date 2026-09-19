@@ -2,22 +2,22 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.10.1\n"
+"Project-Id-Version: EG Social Timeline 1.11.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-timeline\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-19T21:49:59+00:00\n"
+"POT-Creation-Date: 2026-09-19T21:56:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: eg-social-timeline\n"
 
 #. Plugin Name of the plugin
 #: eg-social-timeline.php
-#: eg-social-timeline.php:52
 #: eg-social-timeline.php:53
+#: eg-social-timeline.php:54
 msgid "EG Social Timeline"
 msgstr ""
 
@@ -28,7 +28,7 @@ msgstr ""
 
 #. Description of the plugin
 #: eg-social-timeline.php
-msgid "Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo and Lemmy. Zero JavaScript, zero tracking."
+msgid "Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking."
 msgstr ""
 
 #. Author of the plugin
@@ -41,714 +41,826 @@ msgstr ""
 msgid "https://emanuelegori.uno"
 msgstr ""
 
-#: eg-social-timeline.php:105
+#: eg-social-timeline.php:112
 msgid "Social Profiles Configuration"
 msgstr ""
 
-#: eg-social-timeline.php:111
+#: eg-social-timeline.php:118
 msgid "Mastodon / Pleroma / Akkoma — Instance URL"
 msgstr ""
 
-#: eg-social-timeline.php:112
+#: eg-social-timeline.php:119
 msgid "Mastodon / Pleroma / Akkoma — Username"
 msgstr ""
 
-#: eg-social-timeline.php:113
+#: eg-social-timeline.php:120
 msgid "Lemmy — Instance URL"
 msgstr ""
 
-#: eg-social-timeline.php:114
+#: eg-social-timeline.php:121
 msgid "Lemmy — Username"
 msgstr ""
 
-#: eg-social-timeline.php:115
+#: eg-social-timeline.php:122
 msgid "Forgejo / Gitea — Instance URL"
 msgstr ""
 
-#: eg-social-timeline.php:116
+#: eg-social-timeline.php:123
 msgid "Forgejo / Gitea — Username"
 msgstr ""
 
-#: eg-social-timeline.php:117
+#: eg-social-timeline.php:124
 msgid "PeerTube — Instance URL"
 msgstr ""
 
-#: eg-social-timeline.php:118
+#: eg-social-timeline.php:125
 msgid "PeerTube — Account or channel"
 msgstr ""
 
-#: eg-social-timeline.php:119
+#: eg-social-timeline.php:126
 msgid "Pixelfed — Instance URL"
 msgstr ""
 
-#: eg-social-timeline.php:120
+#: eg-social-timeline.php:127
 msgid "Pixelfed — Username"
 msgstr ""
 
-#: eg-social-timeline.php:121
+#: eg-social-timeline.php:128
 msgid "Bluesky — Service"
 msgstr ""
 
-#: eg-social-timeline.php:122
+#: eg-social-timeline.php:129
 msgid "Bluesky — Handle"
 msgstr ""
 
-#: eg-social-timeline.php:137
+#: eg-social-timeline.php:130
+msgid "ListenBrainz — API URL"
+msgstr ""
+
+#: eg-social-timeline.php:131
+msgid "ListenBrainz — Username"
+msgstr ""
+
+#: eg-social-timeline.php:132
+msgid "RSS or Atom feed — URL"
+msgstr ""
+
+#: eg-social-timeline.php:133
+msgid "RSS or Atom feed — Label"
+msgstr ""
+
+#: eg-social-timeline.php:148
 msgid "Per-Platform Post Limits"
 msgstr ""
 
-#: eg-social-timeline.php:144
+#: eg-social-timeline.php:155
 msgid "Max Mastodon Posts"
 msgstr ""
 
-#: eg-social-timeline.php:152
+#: eg-social-timeline.php:163
 msgid "Max Lemmy Posts"
 msgstr ""
 
-#: eg-social-timeline.php:160
+#: eg-social-timeline.php:171
 msgid "Max Forgejo Commits"
 msgstr ""
 
-#: eg-social-timeline.php:168
+#: eg-social-timeline.php:179
 msgid "Max Bluesky Posts"
 msgstr ""
 
-#: eg-social-timeline.php:176
+#: eg-social-timeline.php:187
 msgid "Max PeerTube Videos"
 msgstr ""
 
-#: eg-social-timeline.php:184
+#: eg-social-timeline.php:195
 msgid "Max Pixelfed Posts"
 msgstr ""
 
-#: eg-social-timeline.php:192
+#: eg-social-timeline.php:203
+msgid "Max ListenBrainz Listens"
+msgstr ""
+
+#: eg-social-timeline.php:211
+msgid "Max Feed Items"
+msgstr ""
+
+#: eg-social-timeline.php:219
 msgid "Number of Posts to Show"
 msgstr ""
 
-#: eg-social-timeline.php:200
+#: eg-social-timeline.php:227
 msgid "Cache Duration"
 msgstr ""
 
-#: eg-social-timeline.php:208
+#: eg-social-timeline.php:235
 msgid "Include Boosts/Reposts"
 msgstr ""
 
-#: eg-social-timeline.php:216
+#: eg-social-timeline.php:243
 msgid "Show Statistics"
 msgstr ""
 
-#: eg-social-timeline.php:224
+#: eg-social-timeline.php:251
 msgid "Post Text Length"
 msgstr ""
 
-#: eg-social-timeline.php:232
+#: eg-social-timeline.php:259
 msgid "Show Image Previews"
 msgstr ""
 
-#: eg-social-timeline.php:240
+#: eg-social-timeline.php:267
 msgid "Appearance"
 msgstr ""
 
-#: eg-social-timeline.php:247
+#: eg-social-timeline.php:274
 msgid "Timeline Background"
 msgstr ""
 
-#: eg-social-timeline.php:255
+#: eg-social-timeline.php:282
 msgid "Card Background"
 msgstr ""
 
-#: eg-social-timeline.php:263
+#: eg-social-timeline.php:290
 msgid "Platform Icon Style"
 msgstr ""
 
-#: eg-social-timeline.php:272
+#: eg-social-timeline.php:299
 msgid "Configure your social profiles to display a unified timeline. At least one profile is required."
 msgstr ""
 
-#: eg-social-timeline.php:276
+#: eg-social-timeline.php:303
 msgid "Limit the maximum number of posts per platform. This prevents a very active platform (e.g. Forgejo) from filling all available slots. Set 0 for no limit."
 msgstr ""
 
-#: eg-social-timeline.php:657
+#: eg-social-timeline.php:705
 msgid "GoToSocial requires authentication for the accounts API, so a public timeline cannot be read."
 msgstr ""
 
-#: eg-social-timeline.php:658
+#: eg-social-timeline.php:706
 msgid "Friendica requires a login for the Mastodon-compatible API."
 msgstr ""
 
-#: eg-social-timeline.php:659
+#: eg-social-timeline.php:707
 msgid "Misskey uses its own API, not the Mastodon one."
 msgstr ""
 
-#: eg-social-timeline.php:660
+#: eg-social-timeline.php:708
 msgid "Sharkey uses its own API, not the Mastodon one."
 msgstr ""
 
-#: eg-social-timeline.php:661
+#: eg-social-timeline.php:709
 msgid "Firefish uses its own API, not the Mastodon one."
 msgstr ""
 
-#: eg-social-timeline.php:662
+#: eg-social-timeline.php:710
 msgid "Iceshrimp uses its own API, not the Mastodon one."
 msgstr ""
 
-#: eg-social-timeline.php:663
+#: eg-social-timeline.php:711
 msgid "Pixelfed answers the account lookup but redirects the statuses endpoint to the login page."
 msgstr ""
 
-#: eg-social-timeline.php:664
+#: eg-social-timeline.php:712
 msgid "This is a Lemmy instance: use the Lemmy fields instead."
 msgstr ""
 
-#: eg-social-timeline.php:665
+#: eg-social-timeline.php:713
 msgid "This is a PeerTube instance: use the PeerTube fields instead."
 msgstr ""
 
-#: eg-social-timeline.php:717
+#: eg-social-timeline.php:765
 msgid "The server where your account lives, HTTPS only. Mastodon, Pleroma and Akkoma expose the public API this plugin reads; GoToSocial and Friendica require a login, Misskey and Sharkey use a different API."
 msgstr ""
 
-#: eg-social-timeline.php:729
+#: eg-social-timeline.php:777
 msgid "Username, or paste the full profile address (/@name, /users/name or name@instance)."
 msgstr ""
 
-#: eg-social-timeline.php:741
+#: eg-social-timeline.php:789
 msgid "Your Lemmy instance, HTTPS only. The user feed works only on the instance where the account is registered, not on another one that federates with it."
 msgstr ""
 
-#: eg-social-timeline.php:753
+#: eg-social-timeline.php:801
 msgid "Username, or paste the full profile address: from https://lemmy.ml/u/1Malayali the name is 1Malayali. The platform name shown on the cards comes from the instance domain."
 msgstr ""
 
-#: eg-social-timeline.php:765
+#: eg-social-timeline.php:813
 msgid "Instance hosting your repositories, HTTPS only. Default: https://gitea.com"
 msgstr ""
 
-#: eg-social-timeline.php:777
+#: eg-social-timeline.php:825
 msgid "Commits are read from the public repositories of this account."
 msgstr ""
 
-#: eg-social-timeline.php:789
+#: eg-social-timeline.php:837
 msgid "The PeerTube instance hosting your videos, HTTPS only. Leave the address of a remote channel in the name field instead and this is filled in from it."
 msgstr ""
 
-#: eg-social-timeline.php:801
+#: eg-social-timeline.php:849
 msgid "Account or channel name, or paste the full address: /c/name is a channel, /a/name an account. On PeerTube videos usually live in a channel."
 msgstr ""
 
-#: eg-social-timeline.php:813
+#: eg-social-timeline.php:861
 msgid "The Pixelfed instance hosting your photos, HTTPS only."
 msgstr ""
 
-#: eg-social-timeline.php:825
+#: eg-social-timeline.php:873
 msgid "Username, or paste the full profile address. Pixelfed posts are read from the public Atom feed, which carries photos and captions but no interaction counts."
 msgstr ""
 
-#: eg-social-timeline.php:834
-msgid "Bluesky is not split across instances the way the fediverse is: the public API endpoint is the same for everyone, so there is nothing to choose here."
+#: eg-social-timeline.php:885
+msgid "The ListenBrainz API, HTTPS only. Change it only if you run your own instance. Default: https://api.listenbrainz.org"
 msgstr ""
 
-#: eg-social-timeline.php:847
-msgid "Full handle, without the leading @. It already contains its own domain."
+#: eg-social-timeline.php:897
+msgid "Your ListenBrainz username. Listens are read from the public API, which needs no token; each card shows artist and track, with no interaction counts."
 msgstr ""
 
-#: eg-social-timeline.php:863
-msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10"
+#: eg-social-timeline.php:909
+msgid "Address of an RSS 2.0 or Atom feed, HTTPS only. Anything with a feed fits here: a blog, a newsletter, a podcast."
 msgstr ""
 
-#: eg-social-timeline.php:880
-msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20"
+#: eg-social-timeline.php:920
+msgid "My blog"
 msgstr ""
 
-#: eg-social-timeline.php:896
-msgid "Maximum number of Lemmy posts included in the timeline. 0 = no limit. Default: 10"
-msgstr ""
-
-#: eg-social-timeline.php:913
-msgid "Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5"
+#: eg-social-timeline.php:921
+msgid "Name shown on the cards and in the filter. Left empty, the feed title is used, and failing that the domain."
 msgstr ""
 
 #: eg-social-timeline.php:930
-msgid "Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5"
+msgid "Bluesky is not split across instances the way the fediverse is: the public API endpoint is the same for everyone, so there is nothing to choose here."
 msgstr ""
 
-#: eg-social-timeline.php:946
-msgid "Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 10"
+#: eg-social-timeline.php:943
+msgid "Full handle, without the leading @. It already contains its own domain."
 msgstr ""
 
-#: eg-social-timeline.php:963
-msgid "Maximum number of posts to show in the timeline (1–100). Default: 10"
-msgstr ""
-
-#: eg-social-timeline.php:974
-msgid "minutes"
-msgstr ""
-
-#: eg-social-timeline.php:975
-msgid "hour"
+#: eg-social-timeline.php:959
+msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10"
 msgstr ""
 
 #: eg-social-timeline.php:976
-#: eg-social-timeline.php:977
-#: eg-social-timeline.php:978
-#: eg-social-timeline.php:979
+msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20"
+msgstr ""
+
+#: eg-social-timeline.php:992
+msgid "Maximum number of Lemmy posts included in the timeline. 0 = no limit. Default: 10"
+msgstr ""
+
+#: eg-social-timeline.php:1009
+msgid "Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5"
+msgstr ""
+
+#: eg-social-timeline.php:1026
+msgid "Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5"
+msgstr ""
+
+#: eg-social-timeline.php:1042
+msgid "Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 10"
+msgstr ""
+
+#: eg-social-timeline.php:1058
+msgid "Maximum number of listens included in the timeline. 0 = no limit. Default: 10"
+msgstr ""
+
+#: eg-social-timeline.php:1074
+msgid "Maximum number of feed items included in the timeline. 0 = no limit. Default: 10"
+msgstr ""
+
+#: eg-social-timeline.php:1091
+msgid "Maximum number of posts to show in the timeline (1–100). Default: 10"
+msgstr ""
+
+#: eg-social-timeline.php:1102
+msgid "minutes"
+msgstr ""
+
+#: eg-social-timeline.php:1103
+msgid "hour"
+msgstr ""
+
+#: eg-social-timeline.php:1104
+#: eg-social-timeline.php:1105
+#: eg-social-timeline.php:1106
+#: eg-social-timeline.php:1107
 msgid "hours"
 msgstr ""
 
-#: eg-social-timeline.php:982
+#: eg-social-timeline.php:1110
 msgid "Feed cache duration. Longer cache = fewer requests to servers. Default: 1 hour"
 msgstr ""
 
-#: eg-social-timeline.php:997
+#: eg-social-timeline.php:1125
 msgid "Include boosts and reposts in the timeline"
 msgstr ""
 
-#: eg-social-timeline.php:1000
+#: eg-social-timeline.php:1128
 msgid "If disabled, shows only original posts (no boosts/reblogs)."
 msgstr ""
 
-#: eg-social-timeline.php:1015
+#: eg-social-timeline.php:1143
 msgid "Show like/boost/reply counts"
 msgstr ""
 
-#: eg-social-timeline.php:1018
+#: eg-social-timeline.php:1146
 msgid "Display interaction statistics below each post."
 msgstr ""
 
-#: eg-social-timeline.php:1033
+#: eg-social-timeline.php:1161
 msgid "Show the first image attached to posts (when available)"
 msgstr ""
 
-#: eg-social-timeline.php:1036
+#: eg-social-timeline.php:1164
 msgid "Supported by Mastodon and Pixelfed. Disabled by default: most useful if you use Pixelfed."
 msgstr ""
 
-#: eg-social-timeline.php:1053
+#: eg-social-timeline.php:1181
 msgid "Maximum number of characters shown per post (50–600). Set 0 to show full text with no limit (not recommended: may break mobile layout). Default: 300"
 msgstr ""
 
-#: eg-social-timeline.php:1059
+#: eg-social-timeline.php:1187
 msgid "Colors of the timeline. Choose a background for the timeline and one for the cards: text, borders and icons are derived from the color you pick, measuring its contrast, so they stay readable on any surface."
 msgstr ""
 
-#: eg-social-timeline.php:1157
+#: eg-social-timeline.php:1285
 msgid "Custom color:"
 msgstr ""
 
 #. translators: %s: rapporto di contrasto raggiunto, es. 2.9
-#: eg-social-timeline.php:1210
+#: eg-social-timeline.php:1338
 msgid "Careful: with this color the text reaches a contrast ratio of only %s:1, below the 4.5:1 required by WCAG AA. Pick a clearly lighter or darker color."
 msgstr ""
 
-#: eg-social-timeline.php:1222
+#: eg-social-timeline.php:1350
 msgid "Transparent (theme background)"
 msgstr ""
 
-#: eg-social-timeline.php:1223
+#: eg-social-timeline.php:1351
 msgid "Neutral preset"
 msgstr ""
 
-#: eg-social-timeline.php:1224
-#: eg-social-timeline.php:1249
+#: eg-social-timeline.php:1352
+#: eg-social-timeline.php:1377
 msgid "Follow the visitor browser"
 msgstr ""
 
-#: eg-social-timeline.php:1225
-#: eg-social-timeline.php:1250
+#: eg-social-timeline.php:1353
+#: eg-social-timeline.php:1378
 msgid "Custom color"
 msgstr ""
 
-#: eg-social-timeline.php:1229
+#: eg-social-timeline.php:1357
 msgid "Background behind the cards. Set it apart from the card background to make the cards stand out. \"Follow the visitor browser\" uses a light grey or a very dark grey according to the prefers-color-scheme setting. Default: Transparent"
 msgstr ""
 
-#: eg-social-timeline.php:1235
+#: eg-social-timeline.php:1363
 msgid "The color above applies only with \"Custom color\"."
 msgstr ""
 
-#: eg-social-timeline.php:1247
+#: eg-social-timeline.php:1375
 msgid "Neutral preset (white)"
 msgstr ""
 
-#: eg-social-timeline.php:1248
+#: eg-social-timeline.php:1376
 msgid "Transparent"
 msgstr ""
 
-#: eg-social-timeline.php:1254
+#: eg-social-timeline.php:1382
 msgid "Background of each post card. \"Transparent\" drops the card surface and its shadow, leaving only the border. Default: Neutral preset"
 msgstr ""
 
-#: eg-social-timeline.php:1260
+#: eg-social-timeline.php:1388
 msgid "The color above applies only with \"Custom color\". Pick a dark one and the post text, the stats and the icons switch to their light variants on their own."
 msgstr ""
 
-#: eg-social-timeline.php:1272
+#: eg-social-timeline.php:1400
 msgid "Platform colors"
 msgstr ""
 
-#: eg-social-timeline.php:1273
+#: eg-social-timeline.php:1401
 msgid "Single color (same as the post text)"
 msgstr ""
 
-#: eg-social-timeline.php:1277
+#: eg-social-timeline.php:1405
 msgid "The SVG icons are monochrome outlines and carry no color of their own: the stylesheet paints them. Platform colors use the official color of each platform, lightened when the surface is dark. A single color follows the post text, so the icons turn white on a dark card. Default: Platform colors"
 msgstr ""
 
-#: eg-social-timeline.php:1328
-#: eg-social-timeline.php:1384
+#: eg-social-timeline.php:1457
+#: eg-social-timeline.php:1479
+#: eg-social-timeline.php:1536
 msgid "Error:"
 msgstr ""
 
 #. translators: %s: valore inserito per l'istanza
-#: eg-social-timeline.php:1331
+#: eg-social-timeline.php:1460
 msgid "\"%s\" is not a usable instance address. Use an HTTPS address of a public server."
 msgstr ""
 
-#: eg-social-timeline.php:1385
+#. translators: %s: indirizzo inserito per il feed
+#: eg-social-timeline.php:1482
+msgid "\"%s\" is not a usable feed address. Use an HTTPS address of a public server."
+msgstr ""
+
+#: eg-social-timeline.php:1537
 msgid "You must configure at least one profile: a username together with its instance URL, or a Bluesky handle."
 msgstr ""
 
-#: eg-social-timeline.php:1403
+#: eg-social-timeline.php:1555
 msgid "Warning:"
 msgstr ""
 
 #. translators: 1: nome del software rilevato, 2: motivo per cui non e' supportato
-#: eg-social-timeline.php:1406
+#: eg-social-timeline.php:1558
 msgid "%1$s detected on that instance. %2$s"
 msgstr ""
 
-#: eg-social-timeline.php:1471
+#: eg-social-timeline.php:1629
 msgid "Settings saved successfully! Cache cleared."
 msgstr ""
 
-#: eg-social-timeline.php:1537
+#: eg-social-timeline.php:1695
 msgid "EG Social Timeline requires configuration!"
 msgstr ""
 
-#: eg-social-timeline.php:1538
+#: eg-social-timeline.php:1696
 msgid "The plugin is active but no social profile has been configured."
 msgstr ""
 
-#: eg-social-timeline.php:1540
-#: eg-social-timeline.php:2950
+#: eg-social-timeline.php:1698
+#: eg-social-timeline.php:3471
 msgid "Configure now"
 msgstr ""
 
-#: eg-social-timeline.php:1563
+#: eg-social-timeline.php:1721
 msgid "Save Settings"
 msgstr ""
 
-#: eg-social-timeline.php:1569
+#: eg-social-timeline.php:1727
 msgid "Usage"
 msgstr ""
 
-#: eg-social-timeline.php:1570
+#: eg-social-timeline.php:1728
 msgid "Once configured, you can insert the timeline in your posts using:"
 msgstr ""
 
-#: eg-social-timeline.php:1572
+#: eg-social-timeline.php:1730
 msgid "Shortcode"
 msgstr ""
 
-#: eg-social-timeline.php:1573
+#: eg-social-timeline.php:1731
 msgid "Insert in the article content:"
 msgstr ""
 
-#: eg-social-timeline.php:1576
+#: eg-social-timeline.php:1734
 msgid "Optional: limit the number of posts:"
 msgstr ""
 
-#: eg-social-timeline.php:1579
+#: eg-social-timeline.php:1737
 msgid "Flush Cache Manually"
 msgstr ""
 
-#: eg-social-timeline.php:1580
+#: eg-social-timeline.php:1738
 msgid "To force an immediate feed refresh:"
 msgstr ""
 
-#: eg-social-timeline.php:1584
+#: eg-social-timeline.php:1742
 msgid "Flush Cache Now"
 msgstr ""
 
 #. translators: %s: numero versione plugin
-#: eg-social-timeline.php:1592
+#: eg-social-timeline.php:1750
 msgid "EG Social Timeline v%s"
 msgstr ""
 
 #. translators: %s: link HTML al sito dello sviluppatore
-#: eg-social-timeline.php:1597
+#: eg-social-timeline.php:1755
 msgid "Developed by %s"
 msgstr ""
 
-#: eg-social-timeline.php:1601
+#: eg-social-timeline.php:1759
 msgid "Repository"
 msgstr ""
 
-#: eg-social-timeline.php:1602
+#: eg-social-timeline.php:1760
 msgid "License GPL-2.0-or-later"
 msgstr ""
 
-#: eg-social-timeline.php:1629
+#: eg-social-timeline.php:1787
 msgid "Cache flushed successfully!"
 msgstr ""
 
-#: eg-social-timeline.php:1706
+#: eg-social-timeline.php:1864
 msgid "The instance requires authentication for the accounts API."
 msgstr ""
 
 #. translators: 1: nome utente cercato, 2: codice di stato HTTP
-#: eg-social-timeline.php:1719
+#: eg-social-timeline.php:1877
 msgid "Account \"%1$s\" not found on that instance (HTTP %2$d)."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:1865
+#: eg-social-timeline.php:2023
 msgid "The instance did not return the feed of \"%1$s\" (HTTP %2$d). On Lemmy the user feed exists only on the instance where the account is registered."
 msgstr ""
 
 #. translators: 1: nome cercato, 2: host dell'istanza, 3: codice di stato HTTP
-#: eg-social-timeline.php:2282
+#: eg-social-timeline.php:2440
 msgid "Neither an account nor a channel named \"%1$s\" exists on %2$s (HTTP %3$d). On PeerTube videos usually live in a channel: from an address like /c/name@host use that name and the host it belongs to."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2397
+#: eg-social-timeline.php:2555
 msgid "The instance did not return the Atom feed of \"%1$s\" (HTTP %2$d)."
 msgstr ""
 
-#: eg-social-timeline.php:2417
+#: eg-social-timeline.php:2575
 msgid "The Atom feed could not be read. The instance may have changed its format."
 msgstr ""
 
-#: eg-social-timeline.php:2621
+#: eg-social-timeline.php:2683
+msgid "The feed address cannot be used: it must be an HTTPS address of a public, resolvable host."
+msgstr ""
+
+#. translators: %d: codice di stato HTTP
+#: eg-social-timeline.php:2707
+msgid "The feed did not answer (HTTP %d)."
+msgstr ""
+
+#: eg-social-timeline.php:2726
+msgid "The feed could not be read: it is not valid RSS or Atom."
+msgstr ""
+
+#: eg-social-timeline.php:2738
+msgid "The feed has no items: neither channel/item nor feed/entry found."
+msgstr ""
+
+#. translators: 1: nome utente, 2: codice di stato HTTP
+#: eg-social-timeline.php:2884
+#: eg-social-timeline.php:3244
+msgid "No listens returned for \"%1$s\" (HTTP %2$d)."
+msgstr ""
+
+#. translators: 1: artista e titolo del brano, 2: nome dell'album
+#: eg-social-timeline.php:2923
+msgid "%1$s (from %2$s)"
+msgstr ""
+
+#: eg-social-timeline.php:3075
 msgid "unknown software"
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2630
+#: eg-social-timeline.php:3084
 msgid "Account \"%1$s\" not found (HTTP %2$d)."
 msgstr ""
 
 #. translators: %d: numero di elementi nel feed
-#: eg-social-timeline.php:2651
+#: eg-social-timeline.php:3105
+#: eg-social-timeline.php:3264
 msgid "%d item in the feed"
 msgid_plural "%d items in the feed"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2660
+#: eg-social-timeline.php:3114
 msgid "No feed for \"%1$s\" on this instance (HTTP %2$d). The Lemmy user feed exists only where the account is registered."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2680
+#: eg-social-timeline.php:3134
 msgid "User \"%1$s\" not found (HTTP %2$d)."
 msgstr ""
 
-#: eg-social-timeline.php:2720
+#: eg-social-timeline.php:3174
 msgid "channel"
 msgstr ""
 
-#: eg-social-timeline.php:2720
+#: eg-social-timeline.php:3174
 msgid "account"
 msgstr ""
 
 #. translators: %d: numero di video
-#: eg-social-timeline.php:2725
+#: eg-social-timeline.php:3179
 msgid "%d video"
 msgid_plural "%d videos"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome cercato, 2: codice di stato HTTP
-#: eg-social-timeline.php:2735
+#: eg-social-timeline.php:3189
 msgid "Neither an account nor a channel named \"%1$s\" (HTTP %2$d). On PeerTube videos usually live in a channel."
 msgstr ""
 
 #. translators: %d: numero di elementi nel feed
-#: eg-social-timeline.php:2756
+#: eg-social-timeline.php:3210
 msgid "%d item in the Atom feed"
 msgid_plural "%d items in the Atom feed"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2765
+#: eg-social-timeline.php:3219
 msgid "No Atom feed for \"%1$s\" (HTTP %2$d)."
 msgstr ""
 
+#: eg-social-timeline.php:3261
+msgid "label from the feed"
+msgstr ""
+
 #. translators: %d: codice di stato HTTP
-#: eg-social-timeline.php:2788
+#: eg-social-timeline.php:3273
+msgid "No RSS or Atom items found at this address (HTTP %d)."
+msgstr ""
+
+#. translators: %d: codice di stato HTTP
+#: eg-social-timeline.php:3295
 msgid "The public API did not return this handle (HTTP %d)."
 msgstr ""
 
-#: eg-social-timeline.php:2828
+#: eg-social-timeline.php:3349
 msgid "Incomplete: the instance URL is missing, so this platform is skipped."
 msgstr ""
 
-#: eg-social-timeline.php:2829
+#: eg-social-timeline.php:3350
 msgid "Incomplete: the username is missing, so this platform is skipped."
 msgstr ""
 
-#: eg-social-timeline.php:2836
+#: eg-social-timeline.php:3357
 msgid "Configured profiles"
 msgstr ""
 
-#: eg-social-timeline.php:2840
+#: eg-social-timeline.php:3361
 msgid "Platform"
 msgstr ""
 
-#: eg-social-timeline.php:2841
+#: eg-social-timeline.php:3362
 msgid "What the plugin sees"
 msgstr ""
 
-#: eg-social-timeline.php:2842
+#: eg-social-timeline.php:3363
 msgid "Last fetch"
 msgstr ""
 
-#: eg-social-timeline.php:2857
+#: eg-social-timeline.php:3378
 msgid "Not verified yet."
 msgstr ""
 
-#: eg-social-timeline.php:2869
+#: eg-social-timeline.php:3390
 msgid "Nothing fetched yet."
 msgstr ""
 
 #. translators: %d: numero di contenuti recuperati
-#: eg-social-timeline.php:2874
+#: eg-social-timeline.php:3395
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:2880
+#: eg-social-timeline.php:3401
 msgid "No content retrieved."
 msgstr ""
 
 #. translators: %s: data e ora dell'ultima verifica
-#: eg-social-timeline.php:2893
+#: eg-social-timeline.php:3414
 msgid "Profiles verified on %s."
 msgstr ""
 
-#: eg-social-timeline.php:2897
+#: eg-social-timeline.php:3418
 msgid "Save the settings or use \"Verify profiles\" to run the checks."
 msgstr ""
 
-#: eg-social-timeline.php:2904
+#: eg-social-timeline.php:3425
 msgid "Verify profiles"
 msgstr ""
 
-#: eg-social-timeline.php:2925
+#: eg-social-timeline.php:3446
 msgid "Security check failed."
 msgstr ""
 
-#: eg-social-timeline.php:2948
+#: eg-social-timeline.php:3469
 msgid "EG Social Timeline — Configuration Required"
 msgstr ""
 
-#: eg-social-timeline.php:2949
+#: eg-social-timeline.php:3470
 msgid "No social profile configured."
 msgstr ""
 
-#: eg-social-timeline.php:2967
+#: eg-social-timeline.php:3488
 msgid "No posts available at the moment."
 msgstr ""
 
-#: eg-social-timeline.php:3024
+#: eg-social-timeline.php:3545
 msgid "Filter by platform:"
 msgstr ""
 
-#: eg-social-timeline.php:3086
+#: eg-social-timeline.php:3607
 msgid "Attached image"
 msgstr ""
 
-#: eg-social-timeline.php:3096
+#: eg-social-timeline.php:3617
 msgid "Points"
 msgstr ""
 
-#: eg-social-timeline.php:3096
+#: eg-social-timeline.php:3617
 msgid "Favourites"
 msgstr ""
 
-#: eg-social-timeline.php:3103
+#: eg-social-timeline.php:3624
 msgid "Boost"
 msgstr ""
 
-#: eg-social-timeline.php:3110
+#: eg-social-timeline.php:3631
 msgid "Comments"
 msgstr ""
 
-#: eg-social-timeline.php:3110
+#: eg-social-timeline.php:3631
 msgid "Replies"
 msgstr ""
 
-#: eg-social-timeline.php:3124
+#: eg-social-timeline.php:3645
 msgid "View commit"
 msgstr ""
 
-#: eg-social-timeline.php:3126
+#: eg-social-timeline.php:3647
 msgid "Watch video"
 msgstr ""
 
-#: eg-social-timeline.php:3128
+#: eg-social-timeline.php:3649
 msgid "View photo"
 msgstr ""
 
-#: eg-social-timeline.php:3130
+#: eg-social-timeline.php:3651
+msgid "View the recording"
+msgstr ""
+
+#: eg-social-timeline.php:3653
+msgid "Read the post"
+msgstr ""
+
+#: eg-social-timeline.php:3655
 msgid "View original post"
 msgstr ""
 
-#: eg-social-timeline.php:3145
+#: eg-social-timeline.php:3670
 msgid "Mastodon"
 msgstr ""
 
-#: eg-social-timeline.php:3146
+#: eg-social-timeline.php:3671
 msgid "Lemmy"
 msgstr ""
 
-#: eg-social-timeline.php:3147
+#: eg-social-timeline.php:3672
 msgid "Bluesky"
 msgstr ""
 
-#: eg-social-timeline.php:3148
+#: eg-social-timeline.php:3673
 msgid "Forgejo"
 msgstr ""
 
-#: eg-social-timeline.php:3149
+#: eg-social-timeline.php:3674
 msgid "PeerTube"
 msgstr ""
 
-#: eg-social-timeline.php:3150
+#: eg-social-timeline.php:3675
 msgid "Pixelfed"
 msgstr ""
 
+#: eg-social-timeline.php:3676
+msgid "ListenBrainz"
+msgstr ""
+
+#: eg-social-timeline.php:3677
+msgid "Feed"
+msgstr ""
+
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:3215
+#: eg-social-timeline.php:3743
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:3219
+#: eg-social-timeline.php:3747
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:3223
+#: eg-social-timeline.php:3751
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:3506
+#: eg-social-timeline.php:4034
 msgid "Settings"
 msgstr ""
 
-#: eg-social-timeline.php:3507
+#: eg-social-timeline.php:4035
 msgid "Documentation"
 msgstr ""

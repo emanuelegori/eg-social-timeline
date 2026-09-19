@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.10.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.11.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -15,6 +15,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Supported platforms**:
   - **Mastodon**, plus the Mastodon-compatible **Pleroma** and **Akkoma**
   - **Lemmy**, any instance, with full statistics
+  - **ListenBrainz** (public API, no token: your recent listens)
+  - **Any RSS 2.0 or Atom feed**: blog, newsletter, podcast
   - **Forgejo/Gitea** (repository commits)
   - **Bluesky** (public ATP API, no authentication required)
   - **Pixelfed** (public Atom feed: photos and captions, no counts)
@@ -228,6 +230,19 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.11.0] - 2026-09-19
+
+#### Added
+- **RSS/Atom source**: the address of any feed, with an optional label. One parser reads both formats; the name on the cards comes from the label, the feed title or the domain.
+- **ListenBrainz**: recent listens through the public API, no token needed. "Artist — Track" with the album when present, linking to the MusicBrainz recording when the identifier is available.
+- A plain music note icon drawn for the plugin, used for ListenBrainz.
+
+#### Changed
+- Removed the leftover `blog` slug, which no fetcher produced and whose icon file did not exist; the feed source takes its place.
+
+#### Fixed
+- The feed fetcher returned silently when the address was unusable; the reason now reaches the settings table.
 
 ### [1.10.1] - 2026-09-19
 
