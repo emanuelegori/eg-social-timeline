@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.12.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.12.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.3] - 2026-09-20
+
+#### Changed
+- La pagina delle impostazioni alterna gli sfondi delle righe: sono una trentina di campi in colonna e WordPress non lo fa di suo. I color picker hanno una cornice visibile, per non confondersi con il grigio delle righe pari.
 
 ### [1.12.2] - 2026-09-20
 

@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.12.3] - 2026-09-20
+
+### Changed
+- **Righe alternate nella pagina delle impostazioni.** Sono una trentina di campi in colonna e WordPress non alterna gli sfondi delle `form-table`: con le righe tutte uguali si perdeva la corrispondenza fra etichetta e campo. CSS iniettato su `common` solo nella schermata del plugin (`settings_page_eg-social-timeline`), nessun file nuovo nel pacchetto.
+- I color picker hanno ora una cornice visibile, altrimenti sul grigio delle righe pari si confondevano con lo sfondo.
+
+### Note
+- Riordino dei campi per fonte, diagnostica dentro il blocco di ogni piattaforma e navigazione a schede sono **rimandati a dopo la pubblicazione su WordPress.org** (decisione dell'utente, 2026-09-20): sono modifiche all'interfaccia che non toccano ciò che il team revisiona, e conviene farle in un colpo solo.
+
 ## [1.12.2] - 2026-09-20
 
 ### Security

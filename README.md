@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.12.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.12.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.12.3] - 2026-09-20
+
+#### Changed
+- The settings page alternates row backgrounds: about thirty fields in one column, and WordPress does not stripe `form-table` rows by itself. Colour pickers get a visible frame so they stand out against the shaded rows.
 
 ### [1.12.2] - 2026-09-20
 

@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.12.2
+Stable tag: 1.12.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,9 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.12.3 - 2026-09-20 =
+* Changed: the settings page alternates row backgrounds. With around thirty fields in a single column and no striping from WordPress itself, it was easy to lose track of which field belonged to which label. Colour pickers also get a visible frame, so they stand out against the shaded rows.
+
 = 1.12.2 - 2026-09-20 =
 * Security: every outgoing request now sets `reject_unsafe_urls`, so WordPress validates redirect targets too. The plugin already refused private and reserved addresses when a profile was saved, but that check only covered the first hop: a configured server answering with a redirect could have pointed the fetch at an internal address. Hardening found in a review before submission; no exploitation observed.
 
@@ -319,6 +322,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.12.3 =
+The settings page is easier to read: alternating row backgrounds and clearer colour pickers.
 
 = 1.12.2 =
 Security hardening: outgoing requests now validate redirect targets as well, closing a server-side request forgery path through a redirecting feed or instance.

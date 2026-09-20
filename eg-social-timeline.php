@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.12.2
+ * Version: 1.12.3
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.12.2');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.12.3');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1796,6 +1796,45 @@ function eg_social_timeline_settings_page() {
         </p>
     </div>
     <?php
+}
+
+// Stile del pannello impostazioni
+add_action('admin_enqueue_scripts', 'eg_social_timeline_admin_styles');
+
+/**
+ * Righe alternate nelle tabelle delle impostazioni.
+ *
+ * La pagina ha una trentina di campi in colonna e WordPress non alterna gli
+ * sfondi: con le righe tutte uguali si perde il filo fra etichetta e campo.
+ *
+ * @param string $hook Identificatore della schermata corrente.
+ */
+function eg_social_timeline_admin_styles($hook) {
+    if ('settings_page_eg-social-timeline' !== $hook) {
+        return;
+    }
+
+    $css = '
+.settings_page_eg-social-timeline .form-table tr:nth-child(even) {
+    background: #f6f7f7;
+}
+.settings_page_eg-social-timeline .form-table th,
+.settings_page_eg-social-timeline .form-table td {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+.settings_page_eg-social-timeline .form-table th {
+    width: 250px;
+}
+/* Il riquadro di un colore personalizzato si vede anche sul grigio. */
+.settings_page_eg-social-timeline input[type="color"] {
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    padding: 2px;
+    background: #fff;
+}';
+
+    wp_add_inline_style('common', $css);
 }
 
 // Handle manual cache clear
