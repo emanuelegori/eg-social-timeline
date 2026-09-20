@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.14.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.14.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,13 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.14.1] - 2026-09-20
+
+#### Changed
+- Clearer switch names: "Include boosted posts" (whether boosted posts join the timeline) and "Interaction counts" (whether counters appear under each card).
+- Shorter field descriptions: from 201 characters at most down to 84, average 44.
+- Defaults tuned for a first install: 50 posts on the page, 30 minutes of cache, 5 items per source.
 
 ### [1.14.0] - 2026-09-20
 

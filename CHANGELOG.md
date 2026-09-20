@@ -6,6 +6,13 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.14.1] - 2026-09-20
+
+### Changed
+- **Nomi delle caselle più chiari.** "Boosts" e "Statistics" sembravano la stessa cosa e non lo sono: la prima decide se i post che hai ricondiviso entrano nella timeline, la seconda se sotto ogni scheda compaiono i contatori — e fra quei contatori c'è anche il numero di boost ricevuti, da cui la confusione. Ora si leggono **"Include boosted posts"** (su Bluesky "Include reposted posts") e **"Interaction counts"**, cioè like, boost e risposte ricevuti dal post.
+- **Descrizioni accorciate**: da 201 caratteri di massimo a 84, media 44. Erano scritte rispondendo a domande di questa conversazione, non a chi apre il pannello: nella sezione Mastodon si spiegava cosa fanno GoToSocial, Friendica, Misskey e Sharkey, che lì non c'entrano; sotto le caselle si spiegava che i boost si filtrano durante il recupero, dettaglio da sviluppatore. Via anche le introduzioni lunghe di Lemmy e PeerTube.
+- **Default per una prima installazione**: 50 post in pagina (erano 10), cache 30 minuti (era un'ora), 5 elementi per fonte, tutte le opzioni di resa attive.
+
 ## [1.14.0] - 2026-09-20
 
 ### Changed

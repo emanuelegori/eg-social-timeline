@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.14.0
+ * Version: 1.14.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.14.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.14.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -72,7 +72,7 @@ function eg_social_timeline_platforms() {
     return array(
         'mastodon' => array(
             'title'   => __('Mastodon / Pleroma / Akkoma', 'eg-social-timeline'),
-            'intro'   => __('Public accounts API, no token. GoToSocial and Friendica require a login; Misskey and Sharkey use a different API.', 'eg-social-timeline'),
+            'intro'   => __('Public accounts API, no token needed.', 'eg-social-timeline'),
             'fields'  => array(
                 'mastodon_instance' => __('Instance URL', 'eg-social-timeline'),
                 'mastodon_username' => __('Username', 'eg-social-timeline'),
@@ -92,7 +92,7 @@ function eg_social_timeline_platforms() {
         ),
         'lemmy' => array(
             'title'   => __('Lemmy', 'eg-social-timeline'),
-            'intro'   => __('Public user RSS feed: it exists only on the instance where the account is registered. Diggita is one of them.', 'eg-social-timeline'),
+            'intro'   => __('Public user feed, on the instance where your account is registered.', 'eg-social-timeline'),
             'fields'  => array(
                 'lemmy_instance' => __('Instance URL', 'eg-social-timeline'),
                 'lemmy_username' => __('Username', 'eg-social-timeline'),
@@ -112,7 +112,7 @@ function eg_social_timeline_platforms() {
         ),
         'peertube' => array(
             'title'   => __('PeerTube', 'eg-social-timeline'),
-            'intro'   => __('Videos almost always live in a channel: /c/name is a channel, /a/name an account.', 'eg-social-timeline'),
+            'intro'   => __('Public API: videos from an account or from a channel.', 'eg-social-timeline'),
             'fields'  => array(
                 'peertube_instance' => __('Instance URL', 'eg-social-timeline'),
                 'peertube_username' => __('Account or channel', 'eg-social-timeline'),
@@ -236,8 +236,8 @@ function eg_social_timeline_register_settings() {
                 'lemmy_username' => '',
                 'forgejo_username' => '',
                 'forgejo_instance' => 'https://gitea.com',
-                'post_limit' => 10,
-                'cache_duration' => 3600,
+                'post_limit' => 50,
+                'cache_duration' => 1800,
                 'show_boosts' => false,
                 'show_stats' => true,
                 'mastodon_limit' => 5,
@@ -438,11 +438,11 @@ function eg_social_timeline_display_field_callback($args) {
 
     $labels = array(
         'boosts' => ('bluesky' === $slug)
-            ? __('Reposts', 'eg-social-timeline')
-            : __('Boosts', 'eg-social-timeline'),
+            ? __('Include reposted posts', 'eg-social-timeline')
+            : __('Include boosted posts', 'eg-social-timeline'),
         'stats'  => ('lemmy' === $slug)
-            ? __('Statistics (points and comments)', 'eg-social-timeline')
-            : __('Statistics', 'eg-social-timeline'),
+            ? __('Points and comments', 'eg-social-timeline')
+            : __('Interaction counts', 'eg-social-timeline'),
         'images' => __('Image previews', 'eg-social-timeline'),
     );
 
@@ -459,15 +459,6 @@ function eg_social_timeline_display_field_callback($args) {
         <?php
     }
 
-    // I boost si filtrano al momento del recupero (su Mastodon diventano
-    // exclude_reblogs nella chiamata API), le altre due solo al disegno.
-    if (in_array('boosts', $available, true)) {
-        ?>
-        <p class="description">
-            <?php esc_html_e('Boosts are filtered while fetching, so the change applies once the cache is rebuilt; the other two only affect how cards are drawn.', 'eg-social-timeline'); ?>
-        </p>
-        <?php
-    }
 }
 
 /**
@@ -953,7 +944,7 @@ function eg_social_timeline_mastodon_instance_callback() {
         'mastodon_instance',
         $value,
         'https://mastodon.uno',
-        __('The server where your account lives, HTTPS only. Mastodon, Pleroma and Akkoma expose the public API this plugin reads; GoToSocial and Friendica require a login, Misskey and Sharkey use a different API.', 'eg-social-timeline')
+        __('The server where your account lives, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -965,7 +956,7 @@ function eg_social_timeline_mastodon_username_callback() {
         'mastodon_username',
         $value,
         'emanuelegori',
-        __('Username, or paste the full profile address (/@name, /users/name or name@instance).', 'eg-social-timeline')
+        __('Username, or paste your full profile address.', 'eg-social-timeline')
     );
 }
 
@@ -977,7 +968,7 @@ function eg_social_timeline_lemmy_instance_callback() {
         'lemmy_instance',
         $value,
         'https://diggita.com',
-        __('Your Lemmy instance, HTTPS only. The user feed works only on the instance where the account is registered, not on another one that federates with it.', 'eg-social-timeline')
+        __('Your Lemmy instance, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -989,7 +980,7 @@ function eg_social_timeline_lemmy_username_callback() {
         'lemmy_username',
         $value,
         'emanuelegori',
-        __('Username, or paste the full profile address: from https://lemmy.ml/u/1Malayali the name is 1Malayali. The platform name shown on the cards comes from the instance domain.', 'eg-social-timeline')
+        __('Username, or paste your full profile address. Cards are labelled after the instance.', 'eg-social-timeline')
     );
 }
 
@@ -1001,7 +992,7 @@ function eg_social_timeline_forgejo_instance_callback() {
         'forgejo_instance',
         $value,
         'https://gitea.com',
-        __('Instance hosting your repositories, HTTPS only. Default: https://gitea.com', 'eg-social-timeline')
+        __('The instance hosting your repositories, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -1013,7 +1004,7 @@ function eg_social_timeline_forgejo_username_callback() {
         'forgejo_username',
         $value,
         'emanuelegori',
-        __('Commits are read from the public repositories of this account.', 'eg-social-timeline')
+        __('Commits come from the public repositories of this account.', 'eg-social-timeline')
     );
 }
 
@@ -1025,7 +1016,7 @@ function eg_social_timeline_peertube_instance_callback() {
         'peertube_instance',
         $value,
         'https://peertube.uno',
-        __('The PeerTube instance hosting your videos, HTTPS only. Leave the address of a remote channel in the name field instead and this is filled in from it.', 'eg-social-timeline')
+        __('The instance hosting your videos, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -1037,7 +1028,7 @@ function eg_social_timeline_peertube_username_callback() {
         'peertube_username',
         $value,
         'emanuelegori',
-        __('Account or channel name, or paste the full address: /c/name is a channel, /a/name an account. On PeerTube videos usually live in a channel.', 'eg-social-timeline')
+        __('Account or channel name, or paste the full address.', 'eg-social-timeline')
     );
 }
 
@@ -1049,7 +1040,7 @@ function eg_social_timeline_pixelfed_instance_callback() {
         'pixelfed_instance',
         $value,
         'https://pixelfed.uno',
-        __('The Pixelfed instance hosting your photos, HTTPS only.', 'eg-social-timeline')
+        __('The instance hosting your photos, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -1061,7 +1052,7 @@ function eg_social_timeline_pixelfed_username_callback() {
         'pixelfed_username',
         $value,
         'emanuelegori',
-        __('Username, or paste the full profile address. Pixelfed posts are read from the public Atom feed, which carries photos and captions but no interaction counts.', 'eg-social-timeline')
+        __('Username, or paste your full profile address.', 'eg-social-timeline')
     );
 }
 
@@ -1091,7 +1082,7 @@ function eg_social_timeline_listenbrainz_instance_callback() {
         'listenbrainz_instance',
         $value,
         EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
-        __('The ListenBrainz API, HTTPS only. Change it only if you run your own instance. Default: https://api.listenbrainz.org', 'eg-social-timeline')
+        __('Change it only if you run your own instance.', 'eg-social-timeline')
     );
 }
 
@@ -1103,7 +1094,7 @@ function eg_social_timeline_listenbrainz_username_callback() {
         'listenbrainz_username',
         $value,
         'emanuelegori',
-        __('Your ListenBrainz username. Listens are read from the public API, which needs no token; each card shows artist and track, with no interaction counts.', 'eg-social-timeline')
+        __('Your ListenBrainz username.', 'eg-social-timeline')
     );
 }
 
@@ -1115,7 +1106,7 @@ function eg_social_timeline_rss_url_callback() {
         'rss_url',
         $value,
         'https://example.com/feed/',
-        __('Address of an RSS 2.0 or Atom feed, HTTPS only. Anything with a feed fits here: a blog, a newsletter, a podcast.', 'eg-social-timeline')
+        __('Address of an RSS or Atom feed, HTTPS only.', 'eg-social-timeline')
     );
 }
 
@@ -1127,7 +1118,7 @@ function eg_social_timeline_rss_label_callback() {
         'rss_label',
         $value,
         __('My blog', 'eg-social-timeline'),
-        __('Name shown on the cards and in the filter. Left empty, the feed title is used, and failing that the domain.', 'eg-social-timeline')
+        __('Name shown on the cards. Left empty, the feed title is used.', 'eg-social-timeline')
     );
 }
 
@@ -1136,7 +1127,7 @@ function eg_social_timeline_bluesky_instance_callback() {
         'bluesky_instance',
         EG_SOCIAL_TIMELINE_BLUESKY_SERVICE,
         '',
-        __('Bluesky is not split across instances the way the fediverse is: the public API endpoint is the same for everyone, so there is nothing to choose here.', 'eg-social-timeline'),
+        __('The public endpoint, the same for everyone.', 'eg-social-timeline'),
         true
     );
 }
@@ -1149,7 +1140,7 @@ function eg_social_timeline_bluesky_handle_callback() {
         'bluesky_handle',
         $value,
         'emanuele.bsky.social',
-        __('Full handle, without the leading @. It already contains its own domain.', 'eg-social-timeline')
+        __('Your full handle, without the leading @.', 'eg-social-timeline')
     );
 }
 
@@ -1287,7 +1278,7 @@ function eg_social_timeline_rss_limit_callback() {
 
 function eg_social_timeline_post_limit_callback() {
     $options = get_option('eg_social_timeline_options');
-    $limit = isset($options['post_limit']) ? $options['post_limit'] : 10;
+    $limit = isset($options['post_limit']) ? $options['post_limit'] : 50;
     ?>
     <input type="number" 
            id="eg_social_timeline_post_limit" 
@@ -1304,7 +1295,7 @@ function eg_social_timeline_post_limit_callback() {
 
 function eg_social_timeline_cache_duration_callback() {
     $options = get_option('eg_social_timeline_options');
-    $duration = isset($options['cache_duration']) ? $options['cache_duration'] : 3600;
+    $duration = isset($options['cache_duration']) ? $options['cache_duration'] : 1800;
     ?>
     <select id="eg_social_timeline_cache_duration" 
             name="eg_social_timeline_options[cache_duration]">
@@ -1723,7 +1714,7 @@ function eg_social_timeline_sanitize_options($input) {
         }
     }
 
-    $limit = isset($input['post_limit']) ? intval($input['post_limit']) : 10;
+    $limit = isset($input['post_limit']) ? intval($input['post_limit']) : 50;
     $output['post_limit'] = max(1, min(100, $limit));
     
     $mastodon_limit = isset($input['mastodon_limit']) ? intval($input['mastodon_limit']) : 20;
@@ -1750,7 +1741,7 @@ function eg_social_timeline_sanitize_options($input) {
     $rss_limit = isset($input['rss_limit']) ? intval($input['rss_limit']) : 10;
     $output['rss_limit'] = max(0, min(100, $rss_limit));
 
-    $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 3600;
+    $duration = isset($input['cache_duration']) ? intval($input['cache_duration']) : 1800;
     $output['cache_duration'] = in_array($duration, array(1800, 3600, 7200, 14400, 28800, 86400)) ? $duration : 3600;
     
     // Cosa mostrare e lunghezza del testo, una scelta per piattaforma. Le
@@ -3326,7 +3317,7 @@ function eg_social_timeline_fetch_all_feeds() {
         return $b['date'] - $a['date'];
     });
 
-    $cache_duration = isset($options['cache_duration']) ? intval($options['cache_duration']) : 3600;
+    $cache_duration = isset($options['cache_duration']) ? intval($options['cache_duration']) : 1800;
     set_transient('eg_social_timeline_cache', $all_posts, $cache_duration);
 
     // Esito per piattaforma, mostrato in Impostazioni: una piattaforma

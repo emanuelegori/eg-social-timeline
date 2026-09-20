@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.14.0
+Stable tag: 1.14.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -176,6 +176,11 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.14.1 - 2026-09-20 =
+* Changed: clearer switch names. "Boosts" and "Statistics" looked like the same thing while they are not: one decides whether posts you boosted join the timeline, the other whether the counters appear under each card. They now read "Include boosted posts" (or "Include reposted posts" on Bluesky) and "Interaction counts" — the likes, boosts and replies your post received.
+* Changed: shorter field descriptions. Each one now says what that field needs, without explaining platforms that are not in that box or when the cache is rebuilt.
+* Changed: defaults tuned for a first install — 50 posts on the page, 30 minutes of cache, 5 items per source, every display option enabled.
+
 = 1.14.0 - 2026-09-20 =
 * Changed: the settings page is now one box per platform, with the platform icon in the title. Labels inside a box are short — "Instance URL", "Username" — because the box already says which platform it is.
 * Changed: boosts, statistics, image previews and text length are now set per source, inside its box, and each box shows only the options that have an effect there. Boosts exist on Mastodon and Bluesky; statistics reach the timeline from Mastodon, Bluesky, Lemmy and PeerTube; images from Mastodon, Bluesky, PeerTube, Pixelfed and feeds. Forgejo and ListenBrainz carry none of the three, so they no longer offer switches that do nothing.
@@ -334,6 +339,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.14.1 =
+Clearer switch names and shorter descriptions in the settings, plus defaults tuned for a first install.
 
 = 1.14.0 =
 The settings page becomes one box per platform, and boosts, statistics, previews and text length are now set per source — each box showing only the options that actually do something there.
