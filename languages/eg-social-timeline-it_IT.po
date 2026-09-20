@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: EG Social Timeline 1.14.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-09-20T11:31:58+00:00\n"
+"POT-Creation-Date: 2026-09-20T17:21:50+00:00\n"
 "PO-Revision-Date: 2026-09-17\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -386,22 +386,18 @@ msgid "Your full handle, without the leading @."
 msgstr "Il tuo handle completo, senza la @ iniziale."
 
 #: eg-social-timeline.php:1163
-msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10"
-msgstr ""
-"Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 10"
+msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 5"
+msgstr "Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 5"
 
 #: eg-social-timeline.php:1180
-msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20"
-msgstr ""
-"Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 20"
+msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 5"
+msgstr "Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 5"
 
 #: eg-social-timeline.php:1196
 msgid ""
 "Maximum number of Lemmy posts included in the timeline. 0 = no limit. "
-"Default: 10"
-msgstr ""
-"Numero massimo di post Lemmy inclusi nella timeline. 0 = nessun limite. "
-"Default: 10"
+"Default: 5"
+msgstr "Numero massimo di post Lemmy inclusi nella timeline. 0 = nessun limite. Default: 5"
 
 #: eg-social-timeline.php:1213
 msgid ""
@@ -417,29 +413,23 @@ msgstr ""
 #: eg-social-timeline.php:1246
 msgid ""
 "Maximum number of Pixelfed posts included in the timeline. 0 = no limit. "
-"Default: 10"
-msgstr ""
-"Numero massimo di post Pixelfed inclusi nella timeline. 0 = nessun limite. "
-"Default: 10"
+"Default: 5"
+msgstr "Numero massimo di post Pixelfed inclusi nella timeline. 0 = nessun limite. Default: 5"
 
 #: eg-social-timeline.php:1262
 msgid ""
-"Maximum number of listens included in the timeline. 0 = no limit. Default: 10"
-msgstr ""
-"Numero massimo di ascolti inclusi nella timeline. 0 = nessun limite. "
-"Default: 10"
+"Maximum number of listens included in the timeline. 0 = no limit. Default: 5"
+msgstr "Numero massimo di ascolti inclusi nella timeline. 0 = nessun limite. Default: 5"
 
 #: eg-social-timeline.php:1278
 msgid ""
 "Maximum number of feed items included in the timeline. 0 = no limit. "
-"Default: 10"
-msgstr ""
-"Numero massimo di elementi del feed inclusi nella timeline. 0 = nessun "
-"limite. Default: 10"
+"Default: 5"
+msgstr "Numero massimo di elementi del feed inclusi nella timeline. 0 = nessun limite. Default: 5"
 
 #: eg-social-timeline.php:1295
-msgid "Maximum number of posts to show in the timeline (1–100). Default: 10"
-msgstr "Numero massimo di post da mostrare nella timeline (1-100). Default: 10"
+msgid "Maximum number of posts to show in the timeline (1–100). Default: 50"
+msgstr "Numero massimo di post da mostrare nella timeline (1-100). Default: 50"
 
 #: eg-social-timeline.php:1306
 msgid "minutes"
@@ -456,11 +446,9 @@ msgstr "ore"
 
 #: eg-social-timeline.php:1314
 msgid ""
-"Feed cache duration. Longer cache = fewer requests to servers. Default: 1 "
-"hour"
-msgstr ""
-"Durata della cache dei feed. Cache più lunga = meno richieste ai server. "
-"Default: 1 ora"
+"Feed cache duration. Longer cache = fewer requests to servers. Default: 30 "
+"minutes"
+msgstr "Durata della cache dei feed. Cache più lunga = meno richieste ai server. Default: 30 minuti"
 
 #: eg-social-timeline.php:1320
 msgid ""

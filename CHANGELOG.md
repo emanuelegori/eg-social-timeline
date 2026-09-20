@@ -6,6 +6,17 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.2] - 2026-09-20
+
+### Fixed
+- **Otto descrizioni citavano i default di prima della 1.14.1.** Il pannello diceva "Default: 20" per Mastodon, "Default: 10" per Bluesky, Lemmy, Pixelfed, ListenBrainz, feed RSS e per i post in pagina, "Default: 1 hour" per la cache — mentre i valori veri sono 5 per fonte, 50 post in pagina e 30 minuti. Se ne è accorto chi preparava gli screenshot per WordPress.org: nello stesso scatto si leggeva il campo a 5 e sotto "Default: 20". Forgejo e PeerTube erano già corretti.
+- **L'elenco degli screenshot nel `readme.txt`** era scritto con la sintassi immagine di Markdown e URL verso Forgejo: la directory di WordPress.org non la interpreta e sulla pagina del plugin non sarebbe comparso nulla. Ora è l'elenco numerato che il parser si aspetta, con quattro voci.
+
+### Changed
+- **Gli asset della pagina directory escono dal pacchetto** (`assets/ export-ignore`): screenshot, banner e icona restano versionati nel repository ma non vengono più scaricati da chi installa il plugin.
+
+---
+
 ## [1.15.1] - 2026-09-20
 
 ### Changed

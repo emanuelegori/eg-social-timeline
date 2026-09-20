@@ -8,3 +8,6 @@ tests/ export-ignore
 /CHANGELOG.md export-ignore
 /README.it-IT.md export-ignore
 /LICENSE.IT.md export-ignore
+# Asset della pagina WordPress.org (screenshot, banner, icona): stanno nel
+# repository, non nel pacchetto che scaricano gli utenti.
+assets/ export-ignore

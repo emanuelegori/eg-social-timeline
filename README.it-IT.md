@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.2] - 2026-09-20
+
+#### Fixed
+- Otto descrizioni citavano i default di prima della 1.14.1; ora corrispondono ai valori veri (5 per fonte, 50 post, 30 minuti di cache).
+- L'elenco degli screenshot nel `readme.txt` è ora nel formato che la directory di WordPress.org sa leggere.
+
+#### Changed
+- Gli asset della pagina directory non vengono più inclusi nel pacchetto del plugin.
 
 ### [1.15.1] - 2026-09-20
 

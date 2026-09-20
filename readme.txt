@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.15.1
+Stable tag: 1.15.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -166,16 +166,18 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Screenshots ==
 
-![Unified timeline](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-1.png)
-Unified timeline — chronological feed from Mastodon, Bluesky, Forgejo and Lemmy.
-
-![Admin settings — profiles](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-2.png)
-Admin settings — social profiles configuration.
-
-![Admin settings — limits](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-3.png)
-Admin settings — per-platform post limits for a balanced mix.
+1. The timeline on the site: one chronological feed from every source, with the compact filter bar on top.
+2. Cards carry image previews and interaction counts where the source provides them.
+3. Settings: one box per platform, with the fields and the display options that apply to it.
+4. Settings: how many posts reach the page, how long they stay cached, and the colours of the timeline.
 
 == Changelog ==
+
+= 1.15.2 - 2026-09-20 =
+* Fixed: eight field descriptions still quoted the defaults from before 1.14.1. They now match what the plugin actually does: five items per source, fifty posts on the page, thirty minutes of cache.
+* Fixed: the screenshot list is now in the format the plugin directory reads, so the screenshots appear on the plugin page.
+* Changed: the plugin directory assets (screenshots, banner, icon) are no longer shipped inside the plugin package.
+
 
 = 1.15.1 - 2026-09-20 =
 * Changed: the footer links now follow the language of the person reading them. The project page and the support page are translatable strings, so a translation can point them at its own localised pages, and a language without one simply stays on English. Nothing in the code tests for a specific locale.

@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.15.1
+ * Version: 1.15.2
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.15.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.15.2');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1160,7 +1160,7 @@ function eg_social_timeline_bluesky_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1177,7 +1177,7 @@ function eg_social_timeline_mastodon_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 20', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1193,7 +1193,7 @@ function eg_social_timeline_lemmy_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of Lemmy posts included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Lemmy posts included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1243,7 +1243,7 @@ function eg_social_timeline_pixelfed_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1259,7 +1259,7 @@ function eg_social_timeline_listenbrainz_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of listens included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of listens included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1275,7 +1275,7 @@ function eg_social_timeline_rss_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of feed items included in the timeline. 0 = no limit. Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of feed items included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1292,7 +1292,7 @@ function eg_social_timeline_post_limit_callback() {
            max="100"
            class="small-text">
     <p class="description">
-        <?php esc_html_e('Maximum number of posts to show in the timeline (1–100). Default: 10', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Maximum number of posts to show in the timeline (1–100). Default: 50', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1311,7 +1311,7 @@ function eg_social_timeline_cache_duration_callback() {
         <option value="86400" <?php selected($duration, 86400); ?>>24 <?php esc_html_e('hours', 'eg-social-timeline'); ?></option>
     </select>
     <p class="description">
-        <?php esc_html_e('Feed cache duration. Longer cache = fewer requests to servers. Default: 1 hour', 'eg-social-timeline'); ?>
+        <?php esc_html_e('Feed cache duration. Longer cache = fewer requests to servers. Default: 30 minutes', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
