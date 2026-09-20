@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.4-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -35,17 +35,25 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 
 ## Screenshot
 
-![EG Social Timeline — frontend](assets/screenshot-1.png)
+![La timeline sul sito, con la barra filtri compatta](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-1.png)
+
+![Anteprime immagini e contatori di interazione sulle schede](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-2.png)
 
 ---
 
 ## Installazione
 
-### Automatica (WordPress)
+### Dalla directory dei plugin di WordPress (consigliata)
 
-1. Scarica l'ultima versione da [Forgejo](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+1. Vai su **Plugin → Aggiungi nuovo**
+2. Cerca **EG Social Timeline**
+3. Clicca **Installa ora** e poi **Attiva**
+
+### Da uno ZIP di release
+
+1. Scarica l'ultima versione da [Forgejo](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases)
 2. Vai su **Plugin → Aggiungi nuovo → Carica plugin**
-3. Seleziona file ZIP scaricato
+3. Seleziona il file ZIP scaricato
 4. Clicca **Installa** e poi **Attiva**
 
 ### Manuale (FTP/SSH)
@@ -54,10 +62,6 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 cd wp-content/plugins
 git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 ```
-
-### EG Forgejo Updater (Consigliato)
-
-Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgejo-updater) per aggiornamenti automatici da Forgejo.
 
 ---
 
@@ -88,8 +92,8 @@ Installa [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forge
    che scegli. Scegli una scheda scura e passano da soli alle varianti chiare.
 6. Salva
 
-![Configurazione profili](assets/screenshot-2.png)
-![Limiti post per piattaforma](assets/screenshot-3.png)
+![Impostazioni: un riquadro per piattaforma, con le opzioni che la riguardano](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-3.png)
+![Impostazioni: post in pagina, durata della cache e colori della timeline](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/raw/branch/main/assets/screenshot-4.png)
 
 ---
 
@@ -230,6 +234,18 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.4] - 2026-09-20
+
+#### Changed
+- Le istruzioni di installazione partono dalla directory dei plugin di WordPress; lo ZIP di release e il repository restano documentati.
+- L'indirizzo di esempio per Lemmy non nomina più un account reale.
+
+#### Removed
+- La sezione che consigliava un updater di terze parti per le release da fuori la directory.
+
+#### Fixed
+- Gli screenshot sono referenziati per indirizzo assoluto, così funzionano anche fuori dal repository; sono elencati tutti e quattro.
 
 ### [1.15.3] - 2026-09-20
 

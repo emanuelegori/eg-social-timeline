@@ -6,6 +6,20 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.4] - 2026-09-20
+
+### Changed
+- **Le istruzioni di installazione partono dalla directory di WordPress**, che è da dove il plugin viene distribuito; prima citavano solo il download da Forgejo. Lo ZIP di release e il `git clone` restano documentati: l'accesso pubblico al sorgente è richiesto dalla linea guida 4 ed è cosa diversa da un canale di aggiornamento.
+- **L'indirizzo di esempio per Lemmy non nomina più un account reale.** Era finito nel readme l'indirizzo con cui era stato segnalato un problema del campo: è il profilo di una persona, e non ha niente da fare nella documentazione pubblica di un plugin.
+
+### Removed
+- **La sezione che consigliava un updater di terze parti** per ricevere le release da fuori la directory. Compariva in `readme.txt` — cioè sulla pagina che WordPress.org pubblica — e in entrambi i README, dove era pure marcata "(Recommended)". La linea guida 3 vuole che la versione distribuita sia quella della directory. Resta in `README.md` la voce di changelog che ne racconta l'introduzione a suo tempo: riscrivere la storia sarebbe peggio del problema.
+
+### Fixed
+- **Gli screenshot nei README sono referenziati per indirizzo assoluto.** Da quando la 1.15.2 ha messo `assets/` fuori dal pacchetto, i percorsi relativi puntavano a una cartella che nel pacchetto non esiste: nel `README.md` distribuito le immagini erano rotte. Ora sono quattro invece di tre, con le didascalie del set nuovo.
+
+---
+
 ## [1.15.3] - 2026-09-20
 
 ### Changed

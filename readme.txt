@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.15.3
+Stable tag: 1.15.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,15 +62,15 @@ With a custom limit:
 
 == Installation ==
 
-1. Upload the files to the `/wp-content/plugins/eg-social-timeline/` directory
-2. Activate the plugin from the WordPress Plugins menu
+1. In WordPress go to Plugins → Add New and search for "EG Social Timeline"
+2. Click Install Now, then Activate
 3. Go to Settings → EG Social Timeline
 4. Configure at least one social profile
 5. Insert `[eg_social_timeline]` into the desired page or post
 
-= Automatic updates =
+= Installing from a ZIP =
 
-Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgejo-updater) to receive automatic updates directly inside WordPress, exactly like plugins from the official repository.
+The source code lives at https://git.emanuelegori.uno/emanuelegori/eg-social-timeline. Download a release, then go to Plugins → Add New → Upload Plugin and select the file.
 
 = Minimum configuration =
 
@@ -83,7 +83,7 @@ Install [EG Forgejo Updater](https://git.emanuelegori.uno/emanuelegori/eg-forgej
 - OR ListenBrainz: username (the API URL is already filled in)
 - OR an RSS/Atom feed: the feed address, with an optional label
 
-You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.ml/u/1Malayali`, `https://mastodon.uno/@name`, `https://peertube.tv/c/name@host/videos`, `https://bsky.app/profile/name.bsky.social`.
+You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.ml/u/username`, `https://mastodon.uno/@name`, `https://peertube.tv/c/name@host/videos`, `https://bsky.app/profile/name.bsky.social`.
 
 = Advanced configuration =
 
@@ -172,6 +172,13 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 4. Settings: how many posts reach the page, how long they stay cached, and the colours of the timeline.
 
 == Changelog ==
+
+= 1.15.4 - 2026-09-20 =
+* Changed: the installation instructions now start from the WordPress plugin directory, which is where the plugin is distributed. The release ZIP and the source repository are still documented.
+* Removed: the section recommending a third-party updater to receive releases from outside the plugin directory.
+* Fixed: the screenshots in README.md are referenced by absolute address, so they show up outside the repository too, and all four are listed instead of three.
+* Changed: the Lemmy example address no longer names a real account.
+
 
 = 1.15.3 - 2026-09-20 =
 * Changed: this readme now carries the changelog of the current 1.15 line only. Every earlier entry moved to changelog.txt, which ships with the plugin, as the plugin directory asks.
