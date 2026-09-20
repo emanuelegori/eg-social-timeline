@@ -1,10 +1,11 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
+Donate link: https://emanuelegori.uno/sostieni/
 Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.14.1
+Stable tag: 1.15.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +176,12 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.15.0 - 2026-09-20 =
+* Added: the settings page now has a proper footer, built on the WordPress footer slots. On the left, who develops the plugin and the links that matter: documentation, repository, and a way to support the work. On the right, version and licence, where administrators already look for them.
+* Added: a donate link on the plugin directory page, pointing at the project's support page.
+* Changed: the plugin homepage now opens the project page instead of the code repository, so anyone clicking it lands on documentation rather than on a Git tree.
+* Fixed: the repository link in the footer was missing `rel="noopener noreferrer"`, unlike the developer one.
 
 = 1.14.1 - 2026-09-20 =
 * Changed: clearer switch names. "Boosts" and "Statistics" looked like the same thing while they are not: one decides whether posts you boosted join the timeline, the other whether the counters appear under each card. They now read "Include boosted posts" (or "Include reposted posts" on Bluesky) and "Interaction counts" — the likes, boosts and replies your post received.

@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: EG Social Timeline
- * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
+ * Plugin URI: https://emanuelegori.uno/plugin/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.14.1
+ * Version: 1.15.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,12 +38,19 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.14.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.15.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
 define('EG_SOCIAL_TIMELINE_BLUESKY_SERVICE', 'https://public.api.bsky.app');
 define('EG_SOCIAL_TIMELINE_LISTENBRAINZ_API', 'https://api.listenbrainz.org');
+
+// Indirizzi pubblici del progetto. Stanno qui perche' cambiare la pagina di
+// destinazione non deve voler dire rincorrere gli stessi URL sparsi nel file.
+define('EG_SOCIAL_TIMELINE_AUTHOR_URL', 'https://emanuelegori.uno');
+define('EG_SOCIAL_TIMELINE_DOCS_URL', 'https://emanuelegori.uno/plugin/eg-social-timeline/');
+define('EG_SOCIAL_TIMELINE_DONATE_URL', 'https://emanuelegori.uno/sostieni/');
+define('EG_SOCIAL_TIMELINE_REPO_URL', 'https://git.emanuelegori.uno/emanuelegori/eg-social-timeline');
 
 // Admin menu
 add_action('admin_menu', 'eg_social_timeline_admin_menu');
@@ -1906,26 +1913,100 @@ function eg_social_timeline_settings_page() {
             <input type="hidden" name="eg_social_timeline_clear_cache" value="1">
             <button type="submit" class="button"><?php esc_html_e('Flush Cache Now', 'eg-social-timeline'); ?></button>
         </form>
-        
-        <hr>
-        
-        <p style="color: #666;">
-            <strong><?php
-                /* translators: %s: numero versione plugin */
-                printf( esc_html__( 'EG Social Timeline v%s', 'eg-social-timeline' ), esc_html( EG_SOCIAL_TIMELINE_VERSION ) );
-            ?></strong><br>
-            <?php
-            printf(
-                /* translators: %s: link HTML al sito dello sviluppatore */
-                esc_html__('Developed by %s', 'eg-social-timeline'),
-                '<a href="https://emanuelegori.uno" target="_blank" rel="noopener noreferrer">Emanuele Gori</a>'
-            );
-            ?> | 
-            <a href="https://git.emanuelegori.uno/emanuelegori/eg-social-timeline" target="_blank"><?php esc_html_e('Repository', 'eg-social-timeline'); ?></a> | 
-            <?php esc_html_e('License GPL-2.0-or-later', 'eg-social-timeline'); ?>
-        </p>
     </div>
     <?php
+}
+
+// Footer del pannello impostazioni
+add_action('current_screen', 'eg_social_timeline_admin_footer_hooks');
+
+/**
+ * Aggancia il footer agli slot nativi di WordPress, e solo sulla pagina del
+ * plugin: a sinistra chi lo sviluppa e i link del progetto, a destra la
+ * versione, dove l'amministratore e' abituato a cercarla.
+ *
+ * `update_footer` va a priorita' 20 perche' a 10 c'e' gia' core_update_footer.
+ *
+ * @param WP_Screen $screen Schermata corrente.
+ * @return void
+ */
+function eg_social_timeline_admin_footer_hooks($screen) {
+    if (!isset($screen->id) || 'settings_page_eg-social-timeline' !== $screen->id) {
+        return;
+    }
+
+    add_filter('admin_footer_text', 'eg_social_timeline_admin_footer_text');
+    add_filter('update_footer', 'eg_social_timeline_admin_footer_version', 20);
+}
+
+/**
+ * Lato sinistro del footer: autore e link del progetto.
+ *
+ * Il testo passa da wp_kses invece che da esc_html perche' contiene i link:
+ * cosi' una traduzione che si portasse dietro altro HTML non lo vedrebbe
+ * comunque arrivare in pagina.
+ *
+ * @param string $text Testo predefinito di WordPress.
+ * @return string Footer del plugin.
+ */
+function eg_social_timeline_admin_footer_text($text) {
+    $author = sprintf(
+        '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+        esc_url(EG_SOCIAL_TIMELINE_AUTHOR_URL),
+        'Emanuele Gori'
+    );
+
+    $links = array(
+        sprintf(
+            '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+            esc_url(EG_SOCIAL_TIMELINE_DOCS_URL),
+            esc_html__('Documentation', 'eg-social-timeline')
+        ),
+        sprintf(
+            '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+            esc_url(EG_SOCIAL_TIMELINE_REPO_URL),
+            esc_html__('Repository', 'eg-social-timeline')
+        ),
+        sprintf(
+            '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+            esc_url(EG_SOCIAL_TIMELINE_DONATE_URL),
+            esc_html__('Support the project', 'eg-social-timeline')
+        ),
+    );
+
+    $credit = sprintf(
+        /* translators: %s: link HTML al sito dello sviluppatore */
+        __('Developed with ❤️ and a lot of spare time by %s', 'eg-social-timeline'),
+        $author
+    );
+
+    return wp_kses(
+        $credit . ' &middot; ' . implode(' &middot; ', $links),
+        array(
+            'a' => array(
+                'href'   => array(),
+                'target' => array(),
+                'rel'    => array(),
+            ),
+        )
+    );
+}
+
+/**
+ * Lato destro del footer: versione del plugin e licenza, al posto della
+ * versione di WordPress.
+ *
+ * @param string $text Testo predefinito di WordPress.
+ * @return string Versione e licenza.
+ */
+function eg_social_timeline_admin_footer_version($text) {
+    $version = sprintf(
+        /* translators: %s: numero versione plugin */
+        esc_html__('EG Social Timeline v%s', 'eg-social-timeline'),
+        esc_html(EG_SOCIAL_TIMELINE_VERSION)
+    );
+
+    return $version . ' &middot; ' . esc_html__('License GPL-2.0-or-later', 'eg-social-timeline');
 }
 
 // Stile del pannello impostazioni

@@ -6,6 +6,20 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.0] - 2026-09-20
+
+### Added
+- **Footer della pagina impostazioni.** Non più un blocco cucito in fondo alla pagina, ma gli slot nativi di WordPress: a sinistra chi sviluppa il plugin e i link che servono davvero — documentazione, repository e un modo per sostenere il lavoro — a destra versione e licenza, dove l'amministratore è abituato a cercarle.
+- **Donate link nel `readme.txt`**: genera il pulsante ufficiale sulla pagina della directory WordPress.org e punta alla pagina di sostegno del progetto.
+
+### Changed
+- **`Plugin URI` verso la pagina del progetto** invece che verso il repository. Su WordPress.org quel link diventa "Plugin homepage" e ci arriva l'utente finale: meglio farlo atterrare sulla documentazione che su un albero Git. Il repository resta linkato dal footer e dalla pagina stessa.
+
+### Fixed
+- Il link al repository nel footer non aveva `rel="noopener noreferrer"`, a differenza di quello dell'autore.
+
+---
+
 ## [1.14.1] - 2026-09-20
 
 ### Changed
