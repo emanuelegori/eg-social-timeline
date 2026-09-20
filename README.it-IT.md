@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.2-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.3] - 2026-09-20
+
+#### Changed
+- Il changelog nel `readme.txt` copre ora solo la linea 1.15; lo storico completo è in `changelog.txt`, come chiede la directory dei plugin. Il readme passa da 524 a 291 righe.
+- L'Upgrade Notice tiene le due release più recenti invece di ogni versione mai pubblicata.
 
 ### [1.15.2] - 2026-09-20
 

@@ -6,6 +6,14 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.3] - 2026-09-20
+
+### Changed
+- **Il changelog nel `readme.txt` si ferma alla linea 1.15.** La FAQ per sviluppatori di WordPress.org chiede di tenere nel readme solo la release corrente e di spostare il resto in un `changelog.txt`: qui erano 35 voci dalla 1.0.0 in poi, 179 righe, più 27 voci di Upgrade Notice. Metà del file era storia. Ora il readme passa da 524 a 291 righe e lo storico completo sta in `changelog.txt`, che viaggia dentro il pacchetto.
+- **L'Upgrade Notice tiene le due release più recenti** invece di ogni versione mai pubblicata. È il testo che appare nell'avviso di aggiornamento: serve a dire perché aggiornare adesso, non a raccontare la storia del plugin. Era anche rimasto fermo alla 1.14.1.
+
+---
+
 ## [1.15.2] - 2026-09-20
 
 ### Fixed

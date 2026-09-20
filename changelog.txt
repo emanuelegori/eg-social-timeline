@@ -1,0 +1,170 @@
+EG Social Timeline - full changelog
+===================================
+
+The readme.txt shipped with the plugin keeps the changelog of the current 1.15
+line only, as the WordPress.org plugin directory asks. Every earlier entry is
+kept here.
+
+Releases, tags and source: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases
+
+= 1.14.1 - 2026-09-20 =
+* Changed: clearer switch names. "Boosts" and "Statistics" looked like the same thing while they are not: one decides whether posts you boosted join the timeline, the other whether the counters appear under each card. They now read "Include boosted posts" (or "Include reposted posts" on Bluesky) and "Interaction counts" — the likes, boosts and replies your post received.
+* Changed: shorter field descriptions. Each one now says what that field needs, without explaining platforms that are not in that box or when the cache is rebuilt.
+* Changed: defaults tuned for a first install — 50 posts on the page, 30 minutes of cache, 5 items per source, every display option enabled.
+
+= 1.14.0 - 2026-09-20 =
+* Changed: the settings page is now one box per platform, with the platform icon in the title. Labels inside a box are short — "Instance URL", "Username" — because the box already says which platform it is.
+* Changed: boosts, statistics, image previews and text length are now set per source, inside its box, and each box shows only the options that have an effect there. Boosts exist on Mastodon and Bluesky; statistics reach the timeline from Mastodon, Bluesky, Lemmy and PeerTube; images from Mastodon, Bluesky, PeerTube, Pixelfed and feeds. Forgejo and ListenBrainz carry none of the three, so they no longer offer switches that do nothing.
+* Changed: new installs default to 5 items per source and every display option enabled. Existing settings are carried over: the previous global choices become each platform's values, so nothing changes visually until you edit something.
+* Note: boosts are filtered while fetching, so that change takes effect once the cache is rebuilt — which saving already does. Statistics, previews and text length only affect how cards are drawn.
+
+= 1.13.0 - 2026-09-20 =
+* Changed: each platform now carries its own limit right below its fields. The limits used to sit in a separate section, so configuring one platform meant scrolling back and forth between two ends of the page.
+* Changed: the general options — number of posts, cache, boosts, statistics, text length, image previews — moved out of the profiles section into their own "Timeline" section, where they belong.
+* Added: a "Show diagnostics" switch at the end of the profiles section. The "Configured profiles" table is hidden by default, so the page stays short; when a configured platform returns nothing a one-line warning appears anyway, so a problem is never silent.
+
+= 1.12.3 - 2026-09-20 =
+* Changed: the settings page alternates row backgrounds. With around thirty fields in a single column and no striping from WordPress itself, it was easy to lose track of which field belonged to which label. Colour pickers also get a visible frame, so they stand out against the shaded rows.
+
+= 1.12.2 - 2026-09-20 =
+* Security: every outgoing request now sets `reject_unsafe_urls`, so WordPress validates redirect targets too. The plugin already refused private and reserved addresses when a profile was saved, but that check only covered the first hop: a configured server answering with a redirect could have pointed the fetch at an internal address. Hardening found in a review before submission; no exploitation observed.
+
+= 1.12.1 - 2026-09-20 =
+* Changed: the compact filter bar now fits on a single line, with "Filter:" beside the icons instead of above them, and without the separator underneath.
+* Fixed: the tooltip showed the platform name without the item count. Each icon carries its own SVG title, which the browser preferred over the chip's; the icons are now inert to the pointer, so the full tooltip appears and the click still selects the filter.
+* Fixed: platform icons are marked decorative (`aria-hidden`), since the platform name already sits next to them — screen readers were announcing it twice.
+
+= 1.12.0 - 2026-09-20 =
+* Added: a compact filter bar, chosen from the new "Filter Bar Style" setting. It keeps "Filter:" and the icons alone, each in a 36px square: a platform included is in colour, one filtered out turns grey. Name and count move into the tooltip and stay in the markup for screen readers, so nothing is lost for assistive technology.
+* Changed: an excluded platform now has its icon in greyscale in both styles, not just faded, so the state reads at a glance.
+* Added: every filter chip carries a title with platform name and item count, in both styles.
+
+= 1.11.1 - 2026-09-20 =
+* Changed: a listen now links to its track page on ListenBrainz instead of the MusicBrainz recording, so the source stays the one you configured.
+* Fixed: the last-fetch column said "nothing fetched yet" after every update, because the recorded outcome was being cleared on version change. That outcome carries its own timestamp and is kept now; only the post cache is rebuilt.
+* Changed: "Flush Cache Now" rebuilds the cache right away instead of waiting for someone to open the timeline, and reports how many items it retrieved. The settings table is therefore populated as soon as you press it.
+* Fixed: a malformed feed no longer fills the site log with libxml warnings. The three XML parsers keep those errors internal and handle the failure themselves.
+
+= 1.11.0 - 2026-09-19 =
+* Added: any RSS 2.0 or Atom feed can be added as a source — a blog, a newsletter, a podcast. One parser reads both formats, and the name on the cards comes from the label you set, from the feed's own title, or from the domain.
+* Added: ListenBrainz. Recent listens through the public API, which needs no token: artist and track with the date, linking to the MusicBrainz recording when the identifier is there and to your profile otherwise.
+* Changed: removed the leftover "blog" platform slug, which no fetcher ever produced and whose icon file did not exist. The feed source takes its place.
+* Added: a plain music note icon drawn for the plugin, used for ListenBrainz — the collection the other icons come from has none, and using the MusicBrainz logo would mean labelling one project's content with another's mark.
+
+= 1.10.1 - 2026-09-19 =
+* Fixed: a half-filled profile — a username without its instance URL, or the other way round — was skipped without a word, appearing neither in the timeline nor in the settings table. It now gets a row saying what is missing.
+* Fixed: packaging. The `.gitattributes` rule excluded every markdown file from the release archive, so `LICENSE.md` and `README.md` were missing from the installed plugin; only the development files are excluded now.
+* Added: `social-icons/ICONS-LICENSE.md`, documenting where the platform icons come from (Simple Icons, CC0-1.0), that the trademarks belong to their respective projects, and how to replace an icon with your own.
+
+= 1.10.0 - 2026-09-17 =
+* Added: Pixelfed support, through the public Atom feed of the profile (`/users/{name}.atom`). Photos, captions, dates and links; no interaction counts, because the feed does not carry them. The Mastodon-compatible API cannot be used: it answers the account lookup but redirects the statuses endpoint to the login page.
+* Fixed: PeerTube channels. Videos on PeerTube almost always live in a channel rather than in the account, and the two use different API endpoints — the plugin only knew the account one, so a channel returned nothing. Both are supported now, the type is taken from the address when you paste it (`/c/` channel, `/a/` account) and otherwise discovered once and remembered.
+* Added: the full profile address is accepted in every field and split into instance and username — `https://lemmy.ml/u/name`, `https://mastodon.uno/@name`, `/users/name`, `name@instance`, `https://peertube.tv/c/name@host/videos`, `https://pixelfed.uno/name`, `https://bsky.app/profile/handle`.
+* Added: when a name carries its own origin (a remote PeerTube channel seen from another instance) the plugin queries that origin instead of the instance that federates it, so the result does not depend on the state of federation.
+* Added: a "Configured profiles" table in the settings showing what the plugin sees for each platform — instance, software, account or channel, item counts — and what the last fetch returned. The checks run on save, can be repeated with the "Verify profiles" button, and are never run while the page loads.
+* Changed: clearer failure messages, for instance "neither an account nor a channel named X exists on Y" instead of a generic invitation to check the settings.
+
+= 1.9.1 - 2026-09-17 =
+* Fixed: the `[eg_social_timeline]` shortcode was no longer registered in 1.9.0, so the tag was printed as plain text on the page. The `add_shortcode()` call sat between two functions that were rewritten and was removed with them.
+
+= 1.9.0 - 2026-09-17 =
+* Changed: every platform is now configured the same way, instance URL plus username. Mastodon used to ask for a full profile URL while Forgejo and PeerTube asked for two separate fields, with no technical reason: the code split that URL into the very same two values a couple of lines later.
+* Changed: Diggita becomes generic Lemmy support. The fetcher already spoke Lemmy — `/feeds/u/{username}.xml` is the Lemmy user feed — with the domain hardcoded; now the instance is a setting, so any Lemmy instance works. The platform name on the cards comes from the instance domain, so diggita.com still reads "Diggita" while lemmy.ml reads "Lemmy".
+* Added: the software of a fediverse instance is detected via `/.well-known/nodeinfo` (cached 7 days), so Pleroma and Akkoma get their own name and icon instead of Mastodon's. Saving an instance that runs GoToSocial, Friendica, Misskey, Sharkey, Firefish, Iceshrimp or Pixelfed now returns an explanation, because those do not serve the public API this plugin reads.
+* Added: the settings page reports what each configured platform returned on the last refresh, with the reason when a platform came back empty. Until now a wrong URL or an instance requiring authentication made a platform vanish with no message at all, because the only log was behind a debug constant that ships disabled.
+* Fixed: the profile URL parser accepted only the `/@user` form, so a perfectly valid `/users/user` address silently produced nothing. It now also reads `/users/user` and `@user@instance`, and it is used to migrate the old setting.
+* Fixed: instance URLs are normalized and validated in one place, HTTPS only, rejecting private and reserved hosts.
+* Changed: settings saved with earlier versions are converted on read — the Mastodon URL is split, Diggita becomes a Lemmy instance, per-platform limits are carried over — and the database is rewritten on your first save.
+* Changed: the real Lemmy logo replaces a hand-drawn placeholder, and the Pleroma icon is added (both from Simple Icons, CC0).
+
+= 1.8.1 - 2026-09-17 =
+* Fixed: contrast is now measured on the color you choose instead of being inferred from a color scheme. In 1.8.0 a dark card background left the post text, the borders and the icons dark on dark. The plugin now computes the WCAG contrast ratio of the chosen background and moves text, borders, badges, links and icons to the palette that contrasts more.
+* Fixed: the icons on the filter chips read their own tokens, so they no longer follow the card. A dark card used to lighten them while they sat on light chips.
+* Changed: simpler Appearance section. The "Color Scheme" setting and the light/dark color pairs are gone; each background has one menu (transparent, neutral preset, follow the visitor browser, custom color) and one color.
+* Changed: clearer icon labels, "Platform colors" and "Single color (same as the post text)". The SVG icons are monochrome outlines with no color of their own: the stylesheet paints them.
+* Added: "Transparent" card background, for a timeline with no card surfaces — only the border delimits each post, and the shadow is dropped.
+* Added: a warning in the settings when the chosen color cannot reach the WCAG AA minimum (4.5:1) with either text palette, showing the measured ratio.
+* Changed: settings saved with 1.8.0 are converted on read, so nothing is lost; the database is rewritten on your first save.
+* Changed: the stylesheet no longer contains any `prefers-color-scheme` rule. The media query is emitted only when a background follows the browser, or when both are transparent.
+
+= 1.8.0 - 2026-09-17 =
+* New "Appearance" settings section: color scheme (always light, always dark or follow the visitor browser), timeline background, card background and platform icon style.
+* The timeline background is now configurable independently from the card background, with a separate color for the light and the dark scheme.
+* Fixed: platform icons were always rendered black. The Simple Icons SVG files carry no `fill` attribute, so the `color` rules in the stylesheet had no effect and the icons became invisible on dark cards. Icons now use `fill: currentColor`, are colored per platform on the filter chips too, and use lightened brand colors on the dark scheme.
+* Changed: the dark theme is no longer forced by the browser. The default is "Always light"; the `prefers-color-scheme` media query only applies when you choose "Follow the visitor browser".
+* Changed: every color moved to custom properties (`--egst-*`) declared on the timeline container, so custom CSS can retheme the plugin from a single place.
+* Changed: the "no posts available" message is now wrapped in the timeline container and inherits the chosen colors.
+* Accessibility: the `<title>` element of the SVG icons is no longer stripped by sanitization, so each icon keeps its accessible name.
+* Tested up to WordPress 7.1.
+
+= 1.7.2 - 2026-07-05 =
+* Fixed: image previews now fill the card width uniformly across all platforms. Small source images (e.g. Mastodon `preview_url` thumbnails) were rendered at their natural, reduced size while larger ones (Bluesky, PeerTube) filled the card; added `width: 100%` to `.post-image img` so all previews are consistent.
+
+= 1.7.1 - 2026-07-05 =
+* Added: image previews for Bluesky posts, on par with Mastodon. The first image of a post (direct image embed or quote-post-with-media) is shown when the "Show Image Previews" option is enabled, including its alt text. External link-card thumbnails are intentionally ignored.
+* No new settings: reuses the existing "Show Image Previews" toggle.
+
+= 1.7.0 - 2026-07-05 =
+* Added: PeerTube integration via the public REST API (`/api/v1/accounts/{account}/videos`, no authentication). Configure your PeerTube account name and instance URL in the settings.
+* Added: PeerTube video thumbnails shown as image previews (respects the "Show Image Previews" option) and a dedicated "Watch video" link label.
+* Added: per-platform limit for PeerTube videos (default 5), platform filter, brand icon and color.
+* Security: PeerTube instance URL accepted over HTTPS only, with anti-SSRF validation (rejects private/reserved hosts).
+* Translation sync: regenerated the `.pot` and aligned the Italian translation (`it_IT` .po/.mo) with the new strings.
+
+= 1.6.7 - 2026-06-18 =
+* Fixed: three leftover Italian source strings in the admin "Usage" section are now in English (the rest of the plugin was already English)
+* Translation sync: regenerated the `.pot` and re-aligned the Italian translation (`it_IT` .po/.mo) with the current source; added the missing strings and the Italian Description
+* No functional change, no database or settings change
+
+= 1.6.6 - 2026-06-02 =
+* Fixed: `translators:` comments added to all i18n strings with placeholders
+* Fixed: `strip_tags()` replaced with `wp_strip_all_tags()` (×4)
+* Fixed: `date()` replaced with `gmdate()` for timezone safety
+* Fixed: `wp_unslash()` + `sanitize_text_field()` added to nonce verification
+* Fixed: `error_log()` calls marked with `phpcs:ignore` (already gated by `EG_SOCIAL_TIMELINE_DEBUG`)
+* Fixed: `phpcs:ignore` on SVG icon output (hardcoded, sanitized internally)
+* Fixed: `esc_html()` added to `EG_SOCIAL_TIMELINE_VERSION` constant output
+* Removed: `load_plugin_textdomain()` — not needed since WP 4.6+ with compiled `.mo` files
+* Changed: tags reduced to 5 (Plugin Check limit)
+
+= 1.4.6 - 2026-05-25 =
+* Changed: readme.txt rewritten — clearer structure, removed references to obsolete versions
+* Changed: Tested up to bumped to WordPress 7.0
+* Changed: EG Forgejo Updater replaces Git Updater in the installation instructions
+
+= 1.4.5 - 2026-05-25 =
+* Security: HTTPS validation on the Forgejo instance URL during sanitization
+* Added: frontend, configuration and post-limits screenshots
+
+= 1.4.4 - 2026-05-24 =
+* Fixed: Forgejo: repo sorting by last push date (client-side sort)
+
+= 1.4.3 - 2026-05-24 =
+* Added: Mastodon image previews (admin option, disabled by default)
+* Fixed: Forgejo: commits now come from the most recently updated repositories
+
+= 1.4.2 - 2026-05-24 =
+* Added: Italian and English translations (.pot, .po, .mo files)
+* Fixed: "View original post" link always right-aligned
+* Changed: Mastodon account ID cache extended to 30 days
+
+= 1.4.1 - 2026-05-02 =
+* Added: post text length configurable from admin (50-600, 0 = full text)
+
+= 1.4.0 - 2026-05-02 =
+* Added: Bluesky integration via the public ATP API (no authentication)
+
+= 1.3.1 - 2026-04-06 =
+* Security: XXE protection, SVG sanitization, anti-SSRF validation
+
+= 1.3.0 - 2026-01-11 =
+* Added: per-platform configurable limits
+
+= 1.2.0 - 2026-01-11 =
+* Added: Forgejo/Gitea integration
+
+= 1.1.0 - 2026-01-10 =
+* Added: migrated Mastodon to API v1, full statistics
+
+= 1.0.0 - 2026-01-10 =
+* Initial release: Mastodon and Diggita
