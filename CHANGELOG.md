@@ -6,6 +6,14 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.1] - 2026-09-20
+
+### Changed
+- **I link del footer seguono la lingua di chi li legge.** Gli indirizzi della pagina progetto, della pagina di sostegno e del sito dell'autore non sono più costanti ma stringhe traducibili: chi traduce il plugin può puntarle alle proprie pagine localizzate, e una lingua che non ne ha resta sull'inglese. È lo stesso meccanismo con cui WordPress gestisce i link alla propria documentazione, e non mette nel codice nessun controllo sul locale: in amministrazione vale la lingua scelta dall'utente, così un pannello in italiano mostra le pagine italiane e tutti gli altri l'inglese. Resta costante il solo indirizzo del repository, che è uguale in ogni lingua.
+- `Plugin URI` e `Donate link` puntano ora alle pagine inglesi: su WordPress.org servono un pubblico internazionale.
+
+---
+
 ## [1.15.0] - 2026-09-20
 
 ### Added

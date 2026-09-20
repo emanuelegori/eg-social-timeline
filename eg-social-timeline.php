@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: EG Social Timeline
- * Plugin URI: https://emanuelegori.uno/plugin/eg-social-timeline/
+ * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.15.0
+ * Version: 1.15.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,18 +38,15 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.15.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.15.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
 define('EG_SOCIAL_TIMELINE_BLUESKY_SERVICE', 'https://public.api.bsky.app');
 define('EG_SOCIAL_TIMELINE_LISTENBRAINZ_API', 'https://api.listenbrainz.org');
 
-// Indirizzi pubblici del progetto. Stanno qui perche' cambiare la pagina di
-// destinazione non deve voler dire rincorrere gli stessi URL sparsi nel file.
-define('EG_SOCIAL_TIMELINE_AUTHOR_URL', 'https://emanuelegori.uno');
-define('EG_SOCIAL_TIMELINE_DOCS_URL', 'https://emanuelegori.uno/plugin/eg-social-timeline/');
-define('EG_SOCIAL_TIMELINE_DONATE_URL', 'https://emanuelegori.uno/sostieni/');
+// L'indirizzo del codice non cambia con la lingua, gli altri si': stanno in
+// eg_social_timeline_project_urls(), qui sotto.
 define('EG_SOCIAL_TIMELINE_REPO_URL', 'https://git.emanuelegori.uno/emanuelegori/eg-social-timeline');
 
 // Admin menu
@@ -1940,6 +1937,32 @@ function eg_social_timeline_admin_footer_hooks($screen) {
 }
 
 /**
+ * Indirizzi del progetto, nella lingua di chi guarda.
+ *
+ * Sono stringhe traducibili invece che costanti: chi traduce il plugin nella
+ * propria lingua puo' puntarle alle pagine localizzate, e chi non ne ha lascia
+ * il msgid e resta sull'inglese. E' il modo in cui WordPress stesso gestisce i
+ * link alla propria documentazione, e non tratta nessuna lingua come caso
+ * speciale: niente controlli sul locale dentro al codice.
+ *
+ * In amministrazione conta la lingua scelta dall'utente, non quella del sito:
+ * un pannello in italiano mostra le pagine italiane, tutti gli altri l'inglese.
+ *
+ * @return array<string, string> Indirizzi per chiave.
+ */
+function eg_social_timeline_project_urls() {
+    return array(
+        /* translators: indirizzo del sito dell'autore. Tradurre con la versione localizzata della home, se esiste; altrimenti lasciare invariato. */
+        'author' => __('https://emanuelegori.uno/en/', 'eg-social-timeline'),
+        /* translators: indirizzo della pagina del progetto. Tradurre con la versione localizzata, se esiste; altrimenti lasciare invariato. */
+        'docs'   => __('https://emanuelegori.uno/en/plugins/eg-social-timeline/', 'eg-social-timeline'),
+        /* translators: indirizzo della pagina per sostenere il progetto. Tradurre con la versione localizzata, se esiste; altrimenti lasciare invariato. */
+        'donate' => __('https://emanuelegori.uno/en/donate/', 'eg-social-timeline'),
+        'repo'   => EG_SOCIAL_TIMELINE_REPO_URL,
+    );
+}
+
+/**
  * Lato sinistro del footer: autore e link del progetto.
  *
  * Il testo passa da wp_kses invece che da esc_html perche' contiene i link:
@@ -1950,26 +1973,28 @@ function eg_social_timeline_admin_footer_hooks($screen) {
  * @return string Footer del plugin.
  */
 function eg_social_timeline_admin_footer_text($text) {
+    $urls = eg_social_timeline_project_urls();
+
     $author = sprintf(
         '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
-        esc_url(EG_SOCIAL_TIMELINE_AUTHOR_URL),
+        esc_url($urls['author']),
         'Emanuele Gori'
     );
 
     $links = array(
         sprintf(
             '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
-            esc_url(EG_SOCIAL_TIMELINE_DOCS_URL),
+            esc_url($urls['docs']),
             esc_html__('Documentation', 'eg-social-timeline')
         ),
         sprintf(
             '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
-            esc_url(EG_SOCIAL_TIMELINE_REPO_URL),
+            esc_url($urls['repo']),
             esc_html__('Repository', 'eg-social-timeline')
         ),
         sprintf(
             '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
-            esc_url(EG_SOCIAL_TIMELINE_DONATE_URL),
+            esc_url($urls['donate']),
             esc_html__('Support the project', 'eg-social-timeline')
         ),
     );

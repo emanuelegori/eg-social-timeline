@@ -1,11 +1,11 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
-Donate link: https://emanuelegori.uno/sostieni/
+Donate link: https://emanuelegori.uno/en/donate/
 Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.15.0
+Stable tag: 1.15.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -176,6 +176,10 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.15.1 - 2026-09-20 =
+* Changed: the footer links now follow the language of the person reading them. The project page and the support page are translatable strings, so a translation can point them at its own localised pages, and a language without one simply stays on English. Nothing in the code tests for a specific locale.
+
 
 = 1.15.0 - 2026-09-20 =
 * Added: the settings page now has a proper footer, built on the WordPress footer slots. On the left, who develops the plugin and the links that matter: documentation, repository, and a way to support the work. On the right, version and licence, where administrators already look for them.

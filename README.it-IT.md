@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.1] - 2026-09-20
+
+#### Changed
+- I link del footer seguono la lingua di chi li legge: pagina progetto e pagina di sostegno sono stringhe traducibili, così ogni traduzione può puntare alle proprie pagine localizzate. Nessun controllo sul locale nel codice.
+- `Plugin URI` e `Donate link` puntano ora alle pagine inglesi.
 
 ### [1.15.0] - 2026-09-20
 
