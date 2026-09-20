@@ -6,6 +6,15 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.13.0] - 2026-09-20
+
+### Changed
+- **Ogni piattaforma ha il proprio limite sotto i propri campi.** I limiti stavano in una sezione separata (`Per-Platform Post Limits`): per configurare PeerTube si compilavano istanza e account in cima e poi bisognava scorrere fino in fondo per il numero di video. Ora l'ordine è istanza → nome → limite, piattaforma per piattaforma.
+- **Le opzioni generali escono dalla sezione dei profili.** Numero di post, durata della cache, boost, statistiche, lunghezza del testo e anteprime immagini erano registrate dentro `Social Profiles Configuration`, in coda ai campi dei profili; ora stanno in una sezione **Timeline** (la vecchia sezione dei limiti, riusata e rinominata).
+
+### Added
+- Interruttore **"Mostra diagnostica"** in fondo alla sezione dei profili: la tabella *Profili configurati* è **nascosta di default**, così la pagina resta corta. Quando una piattaforma configurata non porta nulla — o ha un profilo compilato a metà — compare comunque **un avviso di una riga** con i nomi delle piattaforme coinvolte e l'invito ad accendere la diagnostica. Un problema non resta mai muto, ma nemmeno occupa spazio quando non c'è.
+
 ## [1.12.3] - 2026-09-20
 
 ### Changed

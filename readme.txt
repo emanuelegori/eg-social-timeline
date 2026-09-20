@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.12.3
+Stable tag: 1.13.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,11 @@ Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
 
+= 1.13.0 - 2026-09-20 =
+* Changed: each platform now carries its own limit right below its fields. The limits used to sit in a separate section, so configuring one platform meant scrolling back and forth between two ends of the page.
+* Changed: the general options — number of posts, cache, boosts, statistics, text length, image previews — moved out of the profiles section into their own "Timeline" section, where they belong.
+* Added: a "Show diagnostics" switch at the end of the profiles section. The "Configured profiles" table is hidden by default, so the page stays short; when a configured platform returns nothing a one-line warning appears anyway, so a problem is never silent.
+
 = 1.12.3 - 2026-09-20 =
 * Changed: the settings page alternates row backgrounds. With around thirty fields in a single column and no striping from WordPress itself, it was easy to lose track of which field belonged to which label. Colour pickers also get a visible frame, so they stand out against the shaded rows.
 
@@ -322,6 +327,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.13.0 =
+The settings page is reorganised: every platform now has its own limit next to its fields, general options moved to a "Timeline" section, and the diagnostics table is hidden behind a switch — with a short warning when something actually fails.
 
 = 1.12.3 =
 The settings page is easier to read: alternating row backgrounds and clearer colour pickers.

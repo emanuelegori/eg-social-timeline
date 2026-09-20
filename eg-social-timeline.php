@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.12.3
+ * Version: 1.13.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.12.3');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.13.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -100,6 +100,7 @@ function eg_social_timeline_register_settings() {
                 'show_images' => false,
                 'icon_style' => 'brand',
                 'filters_style' => 'full',
+                'show_diagnostics' => false,
                 'canvas_bg' => 'none',
                 'canvas_bg_color' => '#f3f4f6',
                 'card_bg' => 'neutral',
@@ -115,23 +116,35 @@ function eg_social_timeline_register_settings() {
         'eg-social-timeline'
     );
     
+    // Ogni piattaforma con i propri campi e il proprio limite di seguito:
+    // separare i limiti in una sezione a parte costringeva a scorrere avanti
+    // e indietro per configurarne una sola.
     $profile_fields = array(
-        'mastodon_instance' => __('Mastodon / Pleroma / Akkoma — Instance URL', 'eg-social-timeline'),
-        'mastodon_username' => __('Mastodon / Pleroma / Akkoma — Username', 'eg-social-timeline'),
-        'lemmy_instance'    => __('Lemmy — Instance URL', 'eg-social-timeline'),
-        'lemmy_username'    => __('Lemmy — Username', 'eg-social-timeline'),
-        'forgejo_instance'  => __('Forgejo / Gitea — Instance URL', 'eg-social-timeline'),
-        'forgejo_username'  => __('Forgejo / Gitea — Username', 'eg-social-timeline'),
-        'peertube_instance' => __('PeerTube — Instance URL', 'eg-social-timeline'),
-        'peertube_username' => __('PeerTube — Account or channel', 'eg-social-timeline'),
-        'pixelfed_instance' => __('Pixelfed — Instance URL', 'eg-social-timeline'),
-        'pixelfed_username' => __('Pixelfed — Username', 'eg-social-timeline'),
-        'bluesky_instance'  => __('Bluesky — Service', 'eg-social-timeline'),
-        'bluesky_handle'    => __('Bluesky — Handle', 'eg-social-timeline'),
+        'mastodon_instance'     => __('Mastodon / Pleroma / Akkoma — Instance URL', 'eg-social-timeline'),
+        'mastodon_username'     => __('Mastodon / Pleroma / Akkoma — Username', 'eg-social-timeline'),
+        'mastodon_limit'        => __('Mastodon / Pleroma / Akkoma — Max posts', 'eg-social-timeline'),
+        'lemmy_instance'        => __('Lemmy — Instance URL', 'eg-social-timeline'),
+        'lemmy_username'        => __('Lemmy — Username', 'eg-social-timeline'),
+        'lemmy_limit'           => __('Lemmy — Max posts', 'eg-social-timeline'),
+        'forgejo_instance'      => __('Forgejo / Gitea — Instance URL', 'eg-social-timeline'),
+        'forgejo_username'      => __('Forgejo / Gitea — Username', 'eg-social-timeline'),
+        'forgejo_limit'         => __('Forgejo / Gitea — Max commits', 'eg-social-timeline'),
+        'peertube_instance'     => __('PeerTube — Instance URL', 'eg-social-timeline'),
+        'peertube_username'     => __('PeerTube — Account or channel', 'eg-social-timeline'),
+        'peertube_limit'        => __('PeerTube — Max videos', 'eg-social-timeline'),
+        'pixelfed_instance'     => __('Pixelfed — Instance URL', 'eg-social-timeline'),
+        'pixelfed_username'     => __('Pixelfed — Username', 'eg-social-timeline'),
+        'pixelfed_limit'        => __('Pixelfed — Max posts', 'eg-social-timeline'),
+        'bluesky_instance'      => __('Bluesky — Service', 'eg-social-timeline'),
+        'bluesky_handle'        => __('Bluesky — Handle', 'eg-social-timeline'),
+        'bluesky_limit'         => __('Bluesky — Max posts', 'eg-social-timeline'),
         'listenbrainz_instance' => __('ListenBrainz — API URL', 'eg-social-timeline'),
         'listenbrainz_username' => __('ListenBrainz — Username', 'eg-social-timeline'),
-        'rss_url'           => __('RSS or Atom feed — URL', 'eg-social-timeline'),
-        'rss_label'         => __('RSS or Atom feed — Label', 'eg-social-timeline'),
+        'listenbrainz_limit'    => __('ListenBrainz — Max listens', 'eg-social-timeline'),
+        'rss_url'               => __('RSS or Atom feed — URL', 'eg-social-timeline'),
+        'rss_label'             => __('RSS or Atom feed — Label', 'eg-social-timeline'),
+        'rss_limit'             => __('RSS or Atom feed — Max items', 'eg-social-timeline'),
+        'show_diagnostics'      => __('Show diagnostics', 'eg-social-timeline'),
     );
 
     foreach ($profile_fields as $field => $label) {
@@ -146,81 +159,25 @@ function eg_social_timeline_register_settings() {
 
     add_settings_section(
         'eg_social_timeline_limits_section',
-        __('Per-Platform Post Limits', 'eg-social-timeline'),
+        __('Timeline', 'eg-social-timeline'),
         'eg_social_timeline_limits_section_callback',
         'eg-social-timeline'
     );
     
-    add_settings_field(
-        'eg_social_timeline_mastodon_limit',
-        __('Max Mastodon Posts', 'eg-social-timeline'),
-        'eg_social_timeline_mastodon_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
     
-    add_settings_field(
-        'eg_social_timeline_lemmy_limit',
-        __('Max Lemmy Posts', 'eg-social-timeline'),
-        'eg_social_timeline_lemmy_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
     
-    add_settings_field(
-        'eg_social_timeline_forgejo_limit',
-        __('Max Forgejo Commits', 'eg-social-timeline'),
-        'eg_social_timeline_forgejo_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
-    add_settings_field(
-        'eg_social_timeline_bluesky_limit',
-        __('Max Bluesky Posts', 'eg-social-timeline'),
-        'eg_social_timeline_bluesky_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
-    add_settings_field(
-        'eg_social_timeline_peertube_limit',
-        __('Max PeerTube Videos', 'eg-social-timeline'),
-        'eg_social_timeline_peertube_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
-    add_settings_field(
-        'eg_social_timeline_pixelfed_limit',
-        __('Max Pixelfed Posts', 'eg-social-timeline'),
-        'eg_social_timeline_pixelfed_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
-    add_settings_field(
-        'eg_social_timeline_listenbrainz_limit',
-        __('Max ListenBrainz Listens', 'eg-social-timeline'),
-        'eg_social_timeline_listenbrainz_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
-    add_settings_field(
-        'eg_social_timeline_rss_limit',
-        __('Max Feed Items', 'eg-social-timeline'),
-        'eg_social_timeline_rss_limit_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_limits_section'
-    );
 
     add_settings_field(
         'eg_social_timeline_post_limit',
         __('Number of Posts to Show', 'eg-social-timeline'),
         'eg_social_timeline_post_limit_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
     
     add_settings_field(
@@ -228,7 +185,7 @@ function eg_social_timeline_register_settings() {
         __('Cache Duration', 'eg-social-timeline'),
         'eg_social_timeline_cache_duration_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
     
     add_settings_field(
@@ -236,7 +193,7 @@ function eg_social_timeline_register_settings() {
         __('Include Boosts/Reposts', 'eg-social-timeline'),
         'eg_social_timeline_show_boosts_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
     
     add_settings_field(
@@ -244,7 +201,7 @@ function eg_social_timeline_register_settings() {
         __('Show Statistics', 'eg-social-timeline'),
         'eg_social_timeline_show_stats_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
 
     add_settings_field(
@@ -252,7 +209,7 @@ function eg_social_timeline_register_settings() {
         __('Post Text Length', 'eg-social-timeline'),
         'eg_social_timeline_truncate_length_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
 
     add_settings_field(
@@ -260,7 +217,7 @@ function eg_social_timeline_register_settings() {
         __('Show Image Previews', 'eg-social-timeline'),
         'eg_social_timeline_show_images_callback',
         'eg-social-timeline',
-        'eg_social_timeline_main_section'
+        'eg_social_timeline_limits_section'
     );
 
     add_settings_section(
@@ -309,7 +266,7 @@ function eg_social_timeline_main_section_callback() {
 }
 
 function eg_social_timeline_limits_section_callback() {
-    echo '<p>' . esc_html__('Limit the maximum number of posts per platform. This prevents a very active platform (e.g. Forgejo) from filling all available slots. Set 0 for no limit.', 'eg-social-timeline') . '</p>';
+    echo '<p>' . esc_html__('How the timeline is assembled and shown. The per-platform limits live next to each platform above; this is the total that reaches the page, plus how the posts look.', 'eg-social-timeline') . '</p>';
 }
 
 /**
@@ -881,6 +838,24 @@ function eg_social_timeline_pixelfed_username_callback() {
         'emanuelegori',
         __('Username, or paste the full profile address. Pixelfed posts are read from the public Atom feed, which carries photos and captions but no interaction counts.', 'eg-social-timeline')
     );
+}
+
+function eg_social_timeline_show_diagnostics_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $show = !empty($options['show_diagnostics']);
+    ?>
+    <label>
+        <input type="checkbox"
+               id="eg_social_timeline_show_diagnostics"
+               name="eg_social_timeline_options[show_diagnostics]"
+               value="1"
+               <?php checked($show, 1); ?>>
+        <?php esc_html_e('Show the "Configured profiles" table on this page', 'eg-social-timeline'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('Off by default, to keep the page short. A short warning appears anyway when a configured platform returns nothing, so a problem is never silent. Turn this on to see what the plugin sees for each platform and to use the "Verify profiles" button.', 'eg-social-timeline'); ?>
+    </p>
+    <?php
 }
 
 function eg_social_timeline_listenbrainz_instance_callback() {
@@ -1643,6 +1618,8 @@ function eg_social_timeline_sanitize_options($input) {
 
     $filters_style = isset($input['filters_style']) ? sanitize_key($input['filters_style']) : 'full';
     $output['filters_style'] = in_array($filters_style, array('full', 'compact'), true) ? $filters_style : 'full';
+
+    $output['show_diagnostics'] = isset($input['show_diagnostics']) ? true : false;
 
     $colors = array(
         'canvas_bg_color' => '#f3f4f6',
@@ -3480,6 +3457,42 @@ function eg_social_timeline_render_diagnostics() {
     }
 
     if (empty($rows)) {
+        return;
+    }
+
+    // Piattaforme che non stanno portando nulla: profilo a meta', oppure
+    // ultimo recupero a zero. Un recupero mai avvenuto non e' un problema.
+    $in_difficolta = array();
+
+    foreach ($rows as $platform => $incomplete) {
+        $fetch = isset($status['platforms'][$platform]) ? $status['platforms'][$platform] : null;
+
+        if ('' !== $incomplete || (null !== $fetch && empty($fetch['count']))) {
+            $in_difficolta[] = eg_social_timeline_get_platform_name($platform);
+        }
+    }
+
+    $options = get_option('eg_social_timeline_options');
+
+    // Con la diagnostica spenta la pagina resta corta, ma un problema non
+    // deve restare muto: di quello si accorge solo chi guarda la timeline.
+    if (empty($options['show_diagnostics'])) {
+        if (!empty($in_difficolta)) {
+            ?>
+            <div class="notice notice-warning">
+                <p>
+                    <?php
+                    printf(
+                        /* translators: %s: elenco delle piattaforme che non hanno portato contenuti */
+                        esc_html__('%s returned nothing on the last refresh. Turn on "Show diagnostics" in the profiles section below to see why.', 'eg-social-timeline'),
+                        '<strong>' . esc_html(implode(', ', $in_difficolta)) . '</strong>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gia' escapato qui sopra
+                    );
+                    ?>
+                </p>
+            </div>
+            <?php
+        }
+
         return;
     }
     ?>

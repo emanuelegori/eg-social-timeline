@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.12.3-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.13.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.13.0] - 2026-09-20
+
+#### Changed
+- Each platform now carries its own limit right below its fields; the limits no longer sit in a separate section at the other end of the page.
+- General options (number of posts, cache, boosts, statistics, text length, image previews) moved from the profiles section into their own "Timeline" section.
+
+#### Added
+- A "Show diagnostics" switch: the "Configured profiles" table is hidden by default, with a one-line warning appearing whenever a configured platform returns nothing.
 
 ### [1.12.3] - 2026-09-20
 
