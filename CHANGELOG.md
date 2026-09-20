@@ -6,6 +6,18 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.14.0] - 2026-09-20
+
+### Changed
+- **Un riquadro per piattaforma.** Ogni fonte ha la propria sezione con l'icona nel titolo, e le etichette dentro il riquadro si accorciano (`URL istanza`, `Username`, `Max post`): il nome della piattaforma lo dice già l'intestazione, prima era ripetuto in ogni riga e occupava mezza colonna. Sono `add_settings_section` normali; il riquadro nasce da poche righe di CSS che uniscono l'`h2` alla `form-table` che lo segue, perché WordPress non avvolge titolo e tabella in un contenitore.
+- **Boost, statistiche, anteprime e lunghezza del testo diventano per fonte**, dentro il riquadro della piattaforma, e **solo dove hanno effetto** — verificato sul codice dei fetcher: i boost esistono su Mastodon e Bluesky; i contatori arrivano da Mastodon, Bluesky, Lemmy (punti e commenti) e PeerTube (like); le immagini da Mastodon, Bluesky, PeerTube, Pixelfed e dai feed. Forgejo e ListenBrainz non ne hanno nessuna delle tre e non mostrano più interruttori che non facevano nulla.
+- La lunghezza del testo è per fonte e non più unica: un ascolto è «Artista — Brano», un commit una riga, l'estratto di un articolo molto di più; un valore solo era un compromesso fra casi troppo diversi.
+- **Default delle installazioni nuove**: 5 elementi per fonte e tutte le opzioni attive.
+
+### Note
+- **Nessun cambiamento visibile per chi aggiorna**: `display_option()` e `truncate_option()` leggono prima la scelta della piattaforma, poi la vecchia opzione globale, e solo in assenza di entrambe il default. Chi aveva spento le anteprime non se le ritrova accese.
+- I boost si filtrano **durante il recupero** (su Mastodon diventano `exclude_reblogs` nella chiamata API, su Bluesky i repost vengono scartati prima di salvarli), quindi quella modifica vale quando la cache si rigenera — cosa che il salvataggio fa già. Statistiche, anteprime e lunghezza agiscono solo al disegno.
+
 ## [1.13.0] - 2026-09-20
 
 ### Changed

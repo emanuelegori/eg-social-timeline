@@ -4,7 +4,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,6 +96,7 @@ You can also paste the full profile address into either field and the plugin spl
 - Card background: neutral preset (default), transparent, follow the visitor browser, or a custom color
 - Platform icon style: platform colors, or a single color taken from the post text
 - Filter bar style: full (icon, name and count) or compact (icons only, name and count in the tooltip)
+- Per-source display options: boosts, statistics, image previews and text length are set inside each platform's own box, and only where they have an effect
 - Text, borders, badges, links and icons are not configured: they are derived from the contrast of the background you choose, and switch to their light variants on a dark surface
 
 == Frequently Asked Questions ==
@@ -174,6 +175,12 @@ Admin settings — social profiles configuration.
 Admin settings — per-platform post limits for a balanced mix.
 
 == Changelog ==
+
+= 1.14.0 - 2026-09-20 =
+* Changed: the settings page is now one box per platform, with the platform icon in the title. Labels inside a box are short — "Instance URL", "Username" — because the box already says which platform it is.
+* Changed: boosts, statistics, image previews and text length are now set per source, inside its box, and each box shows only the options that have an effect there. Boosts exist on Mastodon and Bluesky; statistics reach the timeline from Mastodon, Bluesky, Lemmy and PeerTube; images from Mastodon, Bluesky, PeerTube, Pixelfed and feeds. Forgejo and ListenBrainz carry none of the three, so they no longer offer switches that do nothing.
+* Changed: new installs default to 5 items per source and every display option enabled. Existing settings are carried over: the previous global choices become each platform's values, so nothing changes visually until you edit something.
+* Note: boosts are filtered while fetching, so that change takes effect once the cache is rebuilt — which saving already does. Statistics, previews and text length only affect how cards are drawn.
 
 = 1.13.0 - 2026-09-20 =
 * Changed: each platform now carries its own limit right below its fields. The limits used to sit in a separate section, so configuring one platform meant scrolling back and forth between two ends of the page.
@@ -327,6 +334,9 @@ Admin settings — per-platform post limits for a balanced mix.
 * Initial release: Mastodon and Diggita
 
 == Upgrade Notice ==
+
+= 1.14.0 =
+The settings page becomes one box per platform, and boosts, statistics, previews and text length are now set per source — each box showing only the options that actually do something there.
 
 = 1.13.0 =
 The settings page is reorganised: every platform now has its own limit next to its fields, general options moved to a "Timeline" section, and the diagnostics table is hidden behind a switch — with a short warning when something actually fails.

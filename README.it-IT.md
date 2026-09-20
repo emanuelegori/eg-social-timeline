@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.13.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.14.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,13 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.14.0] - 2026-09-20
+
+#### Changed
+- Un riquadro per piattaforma nelle impostazioni, con l'icona nel titolo ed etichette corte all'interno.
+- Boost, statistiche, anteprime e lunghezza del testo si impostano per fonte, e ogni riquadro offre solo le opzioni che lì hanno effetto; Forgejo e ListenBrainz non ne hanno nessuna delle tre.
+- Le installazioni nuove partono con 5 elementi per fonte e tutte le opzioni attive; le impostazioni esistenti vengono riportate senza cambiamenti.
 
 ### [1.13.0] - 2026-09-20
 
