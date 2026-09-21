@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.4-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.5-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -234,6 +234,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.5] - 2026-09-21
+
+#### Fixed
+- L'header di compatibilità dichiarava WordPress 7.1 mentre la release corrente è 7.1.1: WordPress avvisava che il plugin non era stato testato con la versione in uso.
+- L'Upgrade Notice era rimasto alla 1.15.3; ora porta le due release più recenti.
 
 ### [1.15.4] - 2026-09-20
 

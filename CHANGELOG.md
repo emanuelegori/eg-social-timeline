@@ -6,6 +6,17 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.5] - 2026-09-21
+
+### Fixed
+- **L'header di compatibilità dichiarava WordPress 7.1 mentre la release corrente è 7.1.1**, quindi chi installava il plugin leggeva *"this plugin has not been tested with your current version of WordPress"*. Verificato: `wp-includes/version.php` riporta `7.1.1` e l'API di WordPress conferma che è l'ultima. L'errore nasce da un controllo fatto a metà: la FAQ chiede di non superare la release corrente, e quella regola era stata verificata; nessuno aveva confrontato il valore con la versione effettivamente in uso.
+- **L'Upgrade Notice era rimasto alla 1.15.3.** Dalla 1.15.3 doveva contenere le due release più recenti, ma i bump successivi hanno aggiornato solo il changelog. Ora porta 1.15.5 e 1.15.4.
+
+### Nota
+- Gli screenshot che non compaiono nella scheda dedicata **non sono un difetto**: il `readme.txt` contiene solo le didascalie, mentre i file immagine WordPress.org li serve dalla cartella `assets/` di SVN, che esiste solo dopo l'approvazione. Fino ad allora qualunque lettore del readme mostra le descrizioni senza immagini.
+
+---
+
 ## [1.15.4] - 2026-09-20
 
 ### Changed

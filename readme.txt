@@ -3,9 +3,9 @@ Contributors: emanuelegori
 Donate link: https://emanuelegori.uno/en/donate/
 Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
-Tested up to: 7.1
+Tested up to: 7.1.1
 Requires PHP: 7.4
-Stable tag: 1.15.4
+Stable tag: 1.15.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,10 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.15.5 - 2026-09-21 =
+* Fixed: the compatibility header declared WordPress 7.1 while the current release is 7.1.1, so WordPress warned that the plugin had not been tested with the version people are actually running.
+* Changed: the upgrade notice carries the two most recent releases, as it was meant to from 1.15.3 onwards.
+
 = 1.15.4 - 2026-09-20 =
 * Changed: the installation instructions now start from the WordPress plugin directory, which is where the plugin is distributed. The release ZIP and the source repository are still documented.
 * Removed: the section recommending a third-party updater to receive releases from outside the plugin directory.
@@ -200,11 +204,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Upgrade Notice ==
 
-= 1.15.3 =
-Documentation only: the changelog in this readme now covers the 1.15 line, with the earlier history moved to changelog.txt. No functional change.
+= 1.15.5 =
+The compatibility header now declares WordPress 7.1.1, the current release, so the "not tested with your version" warning goes away. No functional change.
 
-= 1.15.2 =
-Eight settings descriptions still quoted the defaults of an older version; they now match what the plugin really does. No functional change.
+= 1.15.4 =
+Documentation only: the installation instructions now start from the plugin directory. No functional change.
 
 == External services ==
 
