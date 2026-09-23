@@ -3,9 +3,9 @@ Contributors: emanuelegori
 Donate link: https://emanuelegori.uno/en/donate/
 Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
-Tested up to: 7.1.1
+Tested up to: 7.1.2
 Requires PHP: 7.4
-Stable tag: 1.15.5
+Stable tag: 1.15.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,7 +83,7 @@ The source code lives at https://git.emanuelegori.uno/emanuelegori/eg-social-tim
 - OR ListenBrainz: username (the API URL is already filled in)
 - OR an RSS/Atom feed: the feed address, with an optional label
 
-You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.ml/u/username`, `https://mastodon.uno/@name`, `https://peertube.tv/c/name@host/videos`, `https://bsky.app/profile/name.bsky.social`.
+You can also paste the full profile address into either field and the plugin splits it: `https://lemmy.example/u/username`, `https://mastodon.example/@name`, `https://peertube.example/c/name@host.example/videos`, `https://bsky.app/profile/name.bsky.social`.
 
 = Advanced configuration =
 
@@ -110,7 +110,7 @@ Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea and Lemmy 
 
 On PeerTube videos almost always live in a **channel**, not directly in the account, and the two use different API endpoints. Paste the full address of your channel and the plugin sorts it out: `/c/name` is a channel, `/a/name` an account. If you only type a name, both are tried and the answer is remembered.
 
-A second detail: a channel belongs to the instance that hosts it. An address like `https://peertube.tv/c/name@tube.example/videos` means the channel lives on `tube.example` and peertube.tv only federates it — the plugin then queries the origin, which does not depend on the state of federation.
+A second detail: a channel belongs to the instance that hosts it. An address like `https://peertube.example/c/name@origin.example/videos` means the channel lives on `origin.example` and `peertube.example` only federates it — the plugin then queries the origin, which does not depend on the state of federation.
 
 = Can I add a source that is not a social platform? =
 
@@ -173,6 +173,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.15.6 - 2026-09-23 =
+* Fixed: two links in the Lemmy section pointed at pages that no longer exist. Terms and privacy policy on Lemmy are published by the instance the user chooses, so the readme now says that instead of naming one.
+* Fixed: the example addresses that show which profile formats the plugin accepts used real instances with placeholder usernames, so they resolved to missing pages. They now use reserved example domains.
+* Changed: tested up to WordPress 7.1.2.
+
 = 1.15.5 - 2026-09-21 =
 * Fixed: the compatibility header declared WordPress 7.1 while the current release is 7.1.1, so WordPress warned that the plugin had not been tested with the version people are actually running.
 * Changed: the upgrade notice carries the two most recent releases, as it was meant to from 1.15.3 onwards.
@@ -204,11 +209,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Upgrade Notice ==
 
-= 1.15.5 =
-The compatibility header now declares WordPress 7.1.1, the current release, so the "not tested with your version" warning goes away. No functional change.
+= 1.15.6 =
+Documentation only: dead and placeholder links in the readme have been corrected, and the plugin is now tested up to WordPress 7.1.2. No functional change.
 
-= 1.15.4 =
-Documentation only: the installation instructions now start from the plugin directory. No functional change.
+= 1.15.5 =
+The compatibility header now declares the current WordPress release, so the "not tested with your version" warning goes away. No functional change.
 
 == External services ==
 
@@ -287,7 +292,7 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Endpoint**: `GET /feeds/u/{username}.xml`, the public user RSS feed. It exists only on the instance where the account is registered.
 - **Data sent**: only the public username entered in the settings, as part of the URL path.
 - **Data received and stored**: public post metadata (title, link, date, vote and comment counts) parsed from the public RSS feed. Cached locally as a WordPress transient.
-- Lemmy is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance. For Diggita: https://www.diggita.com/regolamento and https://www.diggita.com/privacy
+- Lemmy is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are published by that instance.
 
 == Privacy Policy ==
 

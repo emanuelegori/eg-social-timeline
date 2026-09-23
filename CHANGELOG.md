@@ -6,6 +6,17 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.6] - 2026-09-23
+
+### Fixed
+- **Due link morti nella sezione Lemmy del `readme.txt`.** Puntavano al regolamento e alla privacy di Diggita, entrambi 404. La revisione di WordPress.org ne aveva segnalato uno solo; l'altro è emerso controllando. Sono stati tolti del tutto: su Lemmy le condizioni le pubblica l'istanza che l'utente sceglie, quindi citarne una è fragile per definizione.
+- **Gli indirizzi di esempio che mostrano quali formati di profilo il plugin accetta** usavano istanze reali con nomi utente inventati (`mastodon.uno/@name`, `peertube.tv/c/name@host/videos`), quindi rispondevano 404. Ora usano domini riservati RFC 2606, come già faceva l'esempio Forgejo. Il valore didattico non cambia: `extract_profile()` riconosce il profilo dalla forma del percorso, non dall'host. ⚠️ Controllati tutti e 21 gli URL del readme, non solo quello segnalato.
+
+### Changed
+- **Testato fino a WordPress 7.1.2**, uscita oggi.
+
+---
+
 ## [1.15.5] - 2026-09-21
 
 ### Fixed

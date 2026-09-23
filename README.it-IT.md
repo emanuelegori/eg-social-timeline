@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.5-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -234,6 +234,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.6] - 2026-09-23
+
+#### Fixed
+- Due link morti nella sezione Lemmy del `readme.txt`; su Lemmy le condizioni le pubblica l'istanza, quindi il readme lo dice invece di citarne una.
+- Gli indirizzi di esempio usavano istanze reali con nomi utente inventati e rispondevano 404; ora usano domini riservati.
+
+#### Changed
+- Testato fino a WordPress 7.1.2.
 
 ### [1.15.5] - 2026-09-21
 
