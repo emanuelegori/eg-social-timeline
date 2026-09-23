@@ -6,6 +6,26 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.7] - 2026-09-23
+
+### Fixed
+- **Su una installazione nuova, boost e anteprime immagini partivano spenti**, mentre readme e changelog dicevano che tutte le opzioni di resa sono attive per default. Le tre vecchie chiavi globali `show_boosts`/`show_stats`/`show_images` erano rimaste nell'array dei default di `register_setting`, e `display_option()` le trova come ripiego **prima** di arrivare al proprio `return true`: con `show_boosts => false` fra i default, non ci arrivava mai. Tolte dall'array. Verificato con un test sui quattro casi: installazione nuova (tutto attivo), chi aggiorna da prima della 1.14.0 (le sue scelte salvate restano), e la scelta per piattaforma che continua a vincere su tutto.
+
+- **Sette affermazioni sbagliate nella documentazione**, trovate confrontando i testi con il codice invece che a vista:
+  - `readme.txt` diceva *"from five decentralized platforms"*, ne aggrega otto
+  - la FAQ "Which platforms are supported?" ne elencava otto ma senza ListenBrainz e i feed
+  - le anteprime immagini erano attribuite a tre fonti in due punti diversi, mentre le danno **cinque** (Mastodon, Bluesky, Pixelfed, PeerTube, feed)
+  - i due README indicavano i limiti per piattaforma vecchi (20, 10, 10, 10) invece di 5: la stessa deriva corretta nel PHP dalla 1.15.2 e mai propagata
+  - la riga di presentazione dei README elencava sei fonti su otto
+  - l'elenco delle icone ne mostrava sette su dieci
+  - la struttura dei file era ferma a cinque icone, citava `LICENSE` invece di `LICENSE.md` e ignorava `changelog.txt` e `ICONS-LICENSE.md`
+  - ultimo residuo italiano: *"Diggita is one of them"* nella riga di Lemmy
+
+### Changed
+- **L'introduzione della sezione External services non enumera più le fonti.** Elencarle lì significava tenerle allineate a mano con le sezioni sottostanti, ed è esattamente il motivo per cui quelle liste marcivano a ogni fonte aggiunta. Ora rimanda alle sezioni, che sono la fonte unica.
+
+---
+
 ## [1.15.6] - 2026-09-23
 
 ### Fixed

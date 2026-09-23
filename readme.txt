@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1.2
 Requires PHP: 7.4
-Stable tag: 1.15.6
+Stable tag: 1.15.7
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Chronological timeline of your public activity across the fediverse, Bluesky, Li
 
 == Description ==
 
-EG Social Timeline aggregates in chronological order your public posts from five decentralized platforms and displays them in a single timeline via shortcode.
+EG Social Timeline aggregates in chronological order your public posts from eight sources and displays them in a single timeline via shortcode.
 
 = Supported platforms =
 
@@ -22,7 +22,7 @@ EG Social Timeline aggregates in chronological order your public posts from five
 - Pixelfed (public Atom feed: photos and captions, no interaction counts)
 - PeerTube (public REST API, videos from an account or from a channel)
 - Forgejo and Gitea (commits from your public repositories)
-- Lemmy, on any instance (public user RSS feed; Diggita is one of them)
+- Lemmy, on any instance (public user RSS feed)
 - ListenBrainz (public API, no token: what you have been listening to)
 - Any RSS 2.0 or Atom feed: a blog, a newsletter, a podcast
 
@@ -31,7 +31,7 @@ Every platform is configured the same way: the instance URL plus your username. 
 = Key features =
 
 - Interactive per-platform filters, no JavaScript required
-- Image previews for Mastodon and Bluesky posts and PeerTube video thumbnails (optional)
+- Image previews wherever the source carries one: Mastodon, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed (optional, per source)
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
@@ -88,7 +88,7 @@ You can also paste the full profile address into either field and the plugin spl
 = Advanced configuration =
 
 - Per-platform post limits (avoids one platform monopolizing the timeline)
-- Image previews for posts with attachments (Mastodon and Bluesky) and PeerTube video thumbnails
+- Image previews where the source carries one: Mastodon, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed
 - Text length for each post (50-600 characters, 0 = full text)
 - Include or exclude boosts and reposts
 - Show or hide interaction stats
@@ -104,7 +104,7 @@ You can also paste the full profile address into either field and the plugin spl
 
 = Which platforms are supported? =
 
-Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea and Lemmy (any instance).
+Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea, Lemmy (any instance), ListenBrainz, and any RSS or Atom feed.
 
 = My PeerTube videos are not showing up. =
 
@@ -173,6 +173,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.15.7 - 2026-09-23 =
+* Fixed: on a fresh install, boosts and image previews started switched off although the plugin documented every display option as enabled. The old global switches were still listed among the registered defaults, and the per-source lookup found them before reaching its own default. Existing installs keep the choices they saved.
+* Fixed: the description said the plugin aggregates five sources when it aggregates eight, the FAQ listed eight of them and left out ListenBrainz and feeds, and image previews were credited to three sources instead of five.
+* Fixed: the external services section no longer opens with a list of sources that had to be kept in step with the sections below it.
+
 = 1.15.6 - 2026-09-23 =
 * Fixed: two links in the Lemmy section pointed at pages that no longer exist. Terms and privacy policy on Lemmy are published by the instance the user chooses, so the readme now says that instead of naming one.
 * Fixed: the example addresses that show which profile formats the plugin accepts used real instances with placeholder usernames, so they resolved to missing pages. They now use reserved example domains.
@@ -209,15 +214,18 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Upgrade Notice ==
 
+= 1.15.7 =
+Fixes a real default: on a fresh install, boosts and image previews were switched off although they are documented as on. Existing installs are not affected.
+
 = 1.15.6 =
-Documentation only: dead and placeholder links in the readme have been corrected, and the plugin is now tested up to WordPress 7.1.2. No functional change.
+Documentation only: dead and placeholder links in the readme have been corrected, and the plugin is now tested up to WordPress 7.1.2.
 
 = 1.15.5 =
 The compatibility header now declares the current WordPress release, so the "not tested with your version" warning goes away. No functional change.
 
 == External services ==
 
-This plugin connects to the social platforms the user explicitly configures in the settings. No external service is contacted until the user fills in at least one profile (instance URL + username for Mastodon/Pleroma/Akkoma, Lemmy, PeerTube or Forgejo/Gitea, or a Bluesky handle). All requests are HTTP GET requests for public content; no user credentials are sent.
+This plugin connects only to the platforms and feeds the administrator explicitly configures in the settings, one section per source below. No external service is contacted until at least one source has been filled in. All requests are HTTP GET requests for public content; no user credentials are ever sent.
 
 Contacted services are cached locally for a configurable duration (30 minutes to 24 hours, default value depends on the admin setting) to minimize external traffic.
 

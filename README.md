@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.15.6-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.15.7-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea** and **Bluesky**.
+WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea**, **Bluesky**, **ListenBrainz** and any **RSS or Atom feed**.
 
 ---
 
@@ -76,12 +76,8 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
    - **PeerTube**: instance URL + account or channel (e.g. `https://peertube.uno` + `emanuelegori`)
    - **Bluesky**: handle alone (e.g. `emanuele.bsky.social`, without @) — its public API is the same for everyone
 3. Configure per-platform limits (optional):
-   - Max Mastodon posts (default: 20, 0 = unlimited)
-   - Max Lemmy posts (default: 10, 0 = unlimited)
-   - Max Forgejo commits (default: 5, 0 = unlimited)
-   - Max Bluesky posts (default: 10, 0 = unlimited)
-   - Max PeerTube videos (default: 5, 0 = unlimited)
-   - Max Pixelfed posts (default: 10, 0 = unlimited)
+   - Every source defaults to 5 items, 0 = unlimited
+   - Mastodon, Lemmy, Bluesky, Pixelfed, PeerTube, Forgejo, ListenBrainz and the RSS feed each have their own limit
 4. Adjust cache and display settings
 5. Adjust the **Appearance** section (optional):
    - Timeline background: transparent (default) · neutral preset · follow the visitor browser · custom color
@@ -150,7 +146,10 @@ social-icons/
 ├── pixelfed.svg
 ├── forgejo.svg
 ├── peertube.svg
-└── bluesky.svg
+├── bluesky.svg
+├── listenbrainz.svg
+├── rss.svg
+└── generic.svg      # fallback for an unknown source
 ```
 
 **To customize:**
@@ -209,17 +208,14 @@ Plain rules still work, of course:
 ```
 eg-social-timeline/
 ├── eg-social-timeline.php    # Main plugin
-├── eg-social-timeline.css     # Styles
-├── social-icons/              # SVG icons
-│   ├── mastodon.svg
-│   ├── pleroma.svg
-│   ├── lemmy.svg
-│   ├── forgejo.svg
-│   └── bluesky.svg
-├── languages/                 # Translations
+├── eg-social-timeline.css    # Styles
+├── social-icons/             # SVG icons, one per source
+│   └── ICONS-LICENSE.md      # Provenance and terms of the icons
+├── languages/                # Translations
 ├── README.md
-├── readme.txt                 # WordPress readme
-└── LICENSE
+├── readme.txt                # WordPress readme
+├── changelog.txt             # Full history, older than the current line
+└── LICENSE.md
 ```
 
 ### APIs used
@@ -234,6 +230,15 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.7] - 2026-09-23
+
+#### Fixed
+- On a fresh install, boosts and image previews started switched off although they are documented as enabled. The old global switches were still among the registered defaults and the per-source lookup found them first. Existing installs keep their saved choices.
+- Seven factual errors in the documentation: five sources instead of eight, the FAQ missing ListenBrainz and feeds, image previews credited to three sources instead of five, the old per-platform limits in both READMEs, an incomplete intro line, seven icons listed out of ten, and a stale file tree.
+
+#### Changed
+- The external services intro no longer enumerates the sources; the per-source sections below are the single source of truth.
 
 ### [1.15.6] - 2026-09-23
 

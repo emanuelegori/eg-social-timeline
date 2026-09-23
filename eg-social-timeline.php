@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.15.6
+ * Version: 1.15.7
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.15.6');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.15.7');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -242,8 +242,11 @@ function eg_social_timeline_register_settings() {
                 'forgejo_instance' => 'https://gitea.com',
                 'post_limit' => 50,
                 'cache_duration' => 1800,
-                'show_boosts' => false,
-                'show_stats' => true,
+                // Le tre chiavi globali show_boosts/show_stats/show_images non
+                // stanno qui di proposito: display_option() le usa come ripiego
+                // per chi aggiorna da prima della 1.14.0, e trovarle fra i
+                // default spegneva boost e anteprime sulle installazioni nuove,
+                // che invece devono partire con tutto attivo.
                 'mastodon_limit' => 5,
                 'lemmy_limit' => 5,
                 'forgejo_limit' => 5,
@@ -263,7 +266,6 @@ function eg_social_timeline_register_settings() {
                 'rss_limit' => 5,
                 'peertube_limit' => 5,
                 'truncate_length' => 300,
-                'show_images' => false,
                 'icon_style' => 'brand',
                 'filters_style' => 'full',
                 'show_diagnostics' => false,
