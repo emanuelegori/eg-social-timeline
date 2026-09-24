@@ -6,6 +6,17 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.9] - 2026-09-24
+
+### Fixed
+- **`Tested up to` torna a `7.1`.** Plugin Check dà **ERROR `invalid_tested_upto_minor`** su un valore con la patch: quel campo vuole solo la versione maggiore. Verificato nel codice dello strumento (`Plugin_Readme_Check.php:242` e `Version_Utils.php:24`): `get_wordpress_stable_version()` tronca a `^\d+\.\d` e restituisce `7.1`, poi l'errore scatta se il valore ha tre componenti.
+
+  ⚠️ **L'errore l'avevo introdotto io nella 1.15.5.** Era comparso l'avviso *"this plugin has not been tested with your current version of WordPress"* e avevo concluso che il rimedio fosse allineare l'header alla versione in uso: prima `7.1.1`, poi `7.1.2`. Sbagliato. L'avviso nasce altrove, e la catena è questa: `eg-forgejo-updater` legge `Tested up to` dal readme (`class-eg-forgejo-api.php:123`) e lo passa come `$info['tested']` a `plugins_api` (`class-eg-forgejo-updater.php:216`); il core in `plugin-install.php:804` fa `version_compare( get_bloginfo('version'), $api->tested, '<=' )`, quindi su un sito 7.1.2 con `tested` = 7.1 l'avviso compare **per costruzione**, ed è corretto che il readme dica 7.1.
+
+  Morale: quell'avviso è un effetto del canale di aggiornamento self-hosted sui siti propri, non un problema del readme. Silenziarlo cambiando l'header introduce un errore bloccante in revisione.
+
+---
+
 ## [1.15.8] - 2026-09-24
 
 ### Changed
