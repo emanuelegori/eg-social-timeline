@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.7-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.15.8-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -233,6 +233,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.8] - 2026-09-24
+
+#### Changed
+- Tre chiavi di cache avevano un identificatore corto e ora portano il prefisso completo da 18 caratteri, come ogni altro nome. Sono transient e si rigenerano da sole: nessuna impostazione viene toccata.
+- La traduzione italiana non viaggia più nel pacchetto; per i plugin ospitati su WordPress.org le traduzioni arrivano da translate.wordpress.org. Per tenerla sul proprio sito, il `.mo` va in `wp-content/languages/plugins/`.
 
 ### [1.15.7] - 2026-09-23
 

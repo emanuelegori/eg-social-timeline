@@ -11,3 +11,9 @@ tests/ export-ignore
 # Asset della pagina WordPress.org (screenshot, banner, icona): stanno nel
 # repository, non nel pacchetto che scaricano gli utenti.
 assets/ export-ignore
+# Traduzione italiana fuori dal pacchetto: su WordPress.org le traduzioni le
+# genera e le distribuisce translate.wordpress.org, e i file inclusi nel
+# plugin sono stati segnalati in revisione. Il .po resta qui per chi lavora
+# dal repository; il .pot serve ai traduttori e resta nel pacchetto.
+/languages/eg-social-timeline-it_IT.po export-ignore
+/languages/eg-social-timeline-it_IT.mo export-ignore

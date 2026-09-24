@@ -6,6 +6,14 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.15.8] - 2026-09-24
+
+### Changed
+- **Tre chiavi di cache avevano un identificatore corto** e ora portano il prefisso completo del plugin: `eg_st_software_` → `eg_social_timeline_software_`, `eg_st_pt_kind_` → `eg_social_timeline_pt_kind_`, `eg_mastodon_id_` → `eg_social_timeline_mastodon_id_`. Segnalate nella revisione di WordPress.org, ed erano il rilievo fondato: la documentazione ufficiale chiede *"a unique identifier… at least 4 letters long, though we recommend 5"*, e `eg_st` ne aveva quattro, `eg_` due. Ora **ogni** nome globale del plugin — 7 costanti, 4 option, 5 transient, il gruppo settings, lo shortcode e 95 funzioni — porta lo stesso identificatore da 18 caratteri. ⚠️ Sono transient, cioè cache: si rigenerano al primo recupero successivo, nessuna impostazione viene toccata. Le chiavi vecchie restano nel database finché non scadono da sole (7 giorni, 30 giorni, 1 mese) e WordPress le rimuove con la sua pulizia dei transient scaduti.
+- **La traduzione italiana esce dal pacchetto** (`export-ignore` su `.po` e `.mo`): per i plugin ospitati su WordPress.org le traduzioni le genera e le distribuisce translate.wordpress.org, e i file inclusi erano stati segnalati in revisione. Restano nel repository per chi lavora da lì, e il `.pot` resta nel pacchetto perché serve ai traduttori. ⚠️ Chi installa dallo ZIP — compresi i siti aggiornati via EG Forgejo Updater — **non avrà più l'italiano nella cartella del plugin**: il `.mo` va messo in `wp-content/languages/plugins/`, che WordPress consulta per primo e che sopravvive agli aggiornamenti.
+
+---
+
 ## [1.15.7] - 2026-09-23
 
 ### Fixed

@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1.2
 Requires PHP: 7.4
-Stable tag: 1.15.7
+Stable tag: 1.15.8
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,10 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.15.8 - 2026-09-24 =
+* Changed: three cache keys used a short identifier (`eg_st_`, `eg_mastodon_`) and now carry the plugin's full prefix, like every other name in the plugin. They are transients, so they simply rebuild themselves on the next fetch; no setting is affected.
+* Changed: the Italian translation is no longer shipped inside the package. Translations for plugins hosted on WordPress.org are generated and delivered by translate.wordpress.org.
+
 = 1.15.7 - 2026-09-23 =
 * Fixed: on a fresh install, boosts and image previews started switched off although the plugin documented every display option as enabled. The old global switches were still listed among the registered defaults, and the per-source lookup found them before reaching its own default. Existing installs keep the choices they saved.
 * Fixed: the description said the plugin aggregates five sources when it aggregates eight, the FAQ listed eight of them and left out ListenBrainz and feeds, and image previews were credited to three sources instead of five.
@@ -213,6 +217,9 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 * Fixed: the repository link in the footer was missing `rel="noopener noreferrer"`, unlike the developer one.
 
 == Upgrade Notice ==
+
+= 1.15.8 =
+Three cache keys now carry the plugin's full prefix, and the bundled Italian translation moves to translate.wordpress.org. No setting is affected.
 
 = 1.15.7 =
 Fixes a real default: on a fresh install, boosts and image previews were switched off although they are documented as on. Existing installs are not affected.

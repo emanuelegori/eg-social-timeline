@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.15.7
+ * Version: 1.15.8
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.15.7');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.15.8');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -843,7 +843,7 @@ function eg_social_timeline_detect_software($instance) {
         return '';
     }
 
-    $cache_key = 'eg_st_software_' . md5($instance);
+    $cache_key = 'eg_social_timeline_software_' . md5($instance);
     $cached = get_transient($cache_key);
 
     if (false !== $cached) {
@@ -2204,7 +2204,7 @@ function eg_social_timeline_get_mastodon_account_id($instance, $username) {
         return false;
     }
 
-    $cache_key = 'eg_mastodon_id_' . md5($instance . '/' . $username);
+    $cache_key = 'eg_social_timeline_mastodon_id_' . md5($instance . '/' . $username);
     $cached_id = get_transient($cache_key);
 
     if ($cached_id !== false) {
@@ -2775,7 +2775,7 @@ function eg_social_timeline_fetch_peertube($username, $instance, $limit = 0, $ty
     // Su PeerTube i video stanno quasi sempre in un canale, non nell'account:
     // l'indirizzo /c/nome e' un canale, /a/nome un account. Quando il tipo non
     // e' noto si provano entrambi e l'esito resta in cache.
-    $cache_key = 'eg_st_pt_kind_' . md5($instance . '/' . $username);
+    $cache_key = 'eg_social_timeline_pt_kind_' . md5($instance . '/' . $username);
 
     if (!in_array($type, array('account', 'channel'), true)) {
         $cached_kind = get_transient($cache_key);
@@ -3584,7 +3584,7 @@ function eg_social_timeline_verify_profiles() {
         }
 
         if ('' !== $found) {
-            set_transient('eg_st_pt_kind_' . md5($profile['instance'] . '/' . $profile['username']), $found, MONTH_IN_SECONDS);
+            set_transient('eg_social_timeline_pt_kind_' . md5($profile['instance'] . '/' . $profile['username']), $found, MONTH_IN_SECONDS);
 
             $report['platforms']['peertube'] = array(
                 'ok'     => true,

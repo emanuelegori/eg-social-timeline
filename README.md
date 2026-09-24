@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.15.7-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.15.8-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -230,6 +230,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.15.8] - 2026-09-24
+
+#### Changed
+- Three cache keys used a short identifier and now carry the plugin's full 18-character prefix, like every other name. They are transients and rebuild themselves; no setting is affected.
+- The Italian translation is no longer shipped inside the package; translate.wordpress.org handles translations for hosted plugins. Put the `.mo` in `wp-content/languages/plugins/` to keep it on your own site.
 
 ### [1.15.7] - 2026-09-23
 
