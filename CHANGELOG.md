@@ -6,7 +6,7 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
-## [1.16.0] - 2026-09-27
+## [1.16.0] - 2026-09-26
 
 ### Added
 - **Riquadri GoToSocial e Friendica.** La loro API compatibile con Mastodon risponde solo a chi ha effettuato l'accesso, quindi il plugin legge il **feed pubblico del profilo**: `/@{nome}/feed.rss` su GoToSocial, `/feed/{nickname}/` (Atom) su Friendica. Istanza + nome come le altre piattaforme; l'indirizzo completo del profilo o del feed, oppure `nome@istanza`, viene riconosciuto in entrambi i campi. Opzioni: numero di elementi, anteprime immagini, lunghezza del testo. Niente contatori né condivisioni: i feed non li portano.

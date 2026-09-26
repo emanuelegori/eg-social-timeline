@@ -179,7 +179,7 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
-= 1.16.0 - 2026-09-27 =
+= 1.16.0 - 2026-09-26 =
 * New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
 * New: on GoToSocial the RSS feed is off by default, and the settings page now says so and links the account settings, instead of reporting an empty source. When the account domain differs from the server, the plugin finds the server when you save.
 * New: entering a GoToSocial or Friendica instance in the Mastodon field points to the right section.

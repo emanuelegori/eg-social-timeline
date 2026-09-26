@@ -239,7 +239,7 @@ eg-social-timeline/
 
 ## Changelog
 
-### [1.16.0] - 2026-09-27
+### [1.16.0] - 2026-09-26
 
 #### Added
 - **GoToSocial** and **Friendica** sections, reading the public feed of the profile: RSS on GoToSocial, Atom on Friendica. Own icon, name and colour; images when the feed carries them.

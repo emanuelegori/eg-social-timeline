@@ -244,7 +244,7 @@ eg-social-timeline/
 
 ## Changelog
 
-### [1.16.0] - 2026-09-27
+### [1.16.0] - 2026-09-26
 
 #### Aggiunto
 - Riquadri **GoToSocial** e **Friendica**, che leggono il feed pubblico del profilo: RSS su GoToSocial, Atom su Friendica. Icona, nome e colore propri; immagini quando il feed le porta.
