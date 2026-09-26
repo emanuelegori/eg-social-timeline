@@ -250,6 +250,7 @@ eg-social-timeline/
 - Riquadri **GoToSocial** e **Friendica**, che leggono il feed pubblico del profilo: RSS su GoToSocial, Atom su Friendica. Icona, nome e colore propri; immagini quando il feed le porta.
 - Su GoToSocial il feed è spento di default: il pannello lo dice e rimanda alle impostazioni dell'account. Se il dominio dell'account è diverso dal server, al salvataggio il server viene trovato via webfinger.
 - Un'istanza GoToSocial o Friendica inserita nel campo Mastodon ora rimanda al riquadro giusto.
+- I riquadri delle piattaforme nel pannello si chiudono senza JavaScript (`<details>`), mostrano lo stato accanto al titolo e partono chiusi, tranne quelli che richiedono attenzione.
 
 #### Corretto
 - La FAQ del readme diceva che le schede ListenBrainz linkano a MusicBrainz: linkano a ListenBrainz.

@@ -2031,6 +2031,129 @@ function eg_social_timeline_admin_notice() {
 }
 
 // Settings page
+/**
+ * Stato di un riquadro di piattaforma: cosa scrivere accanto al titolo e se
+ * aprirlo.
+ *
+ * I riquadri partono chiusi; si apre da solo soltanto quello che chiede
+ * attenzione: profilo a meta', errore al salvataggio, verifica non riuscita
+ * o ultimo recupero senza contenuti. Un recupero mai avvenuto non conta.
+ *
+ * @param string $slug        Slug della piattaforma.
+ * @param array  $rows        Esito di eg_social_timeline_profile_rows().
+ * @param array  $errors      Codici degli errori di salvataggio correnti.
+ * @return array array con open (bool), kind (empty|ok|warn) e text.
+ */
+function eg_social_timeline_box_state($slug, $rows, $errors) {
+    $profiles = eg_social_timeline_profiles();
+    $status = get_option('eg_social_timeline_status');
+    $diagnostics = get_option('eg_social_timeline_diagnostics');
+
+    if (!isset($rows[$slug])) {
+        return array('open' => false, 'kind' => 'empty', 'text' => __('Not configured', 'eg-social-timeline'));
+    }
+
+    if ('' !== $rows[$slug]) {
+        return array('open' => true, 'kind' => 'warn', 'text' => __('Incomplete profile', 'eg-social-timeline'));
+    }
+
+    $own_errors = array('invalid_instance_' . $slug);
+
+    if ('mastodon' === $slug) {
+        $own_errors[] = 'unsupported_software';
+    }
+
+    if ('rss' === $slug) {
+        $own_errors[] = 'invalid_feed_url';
+    }
+
+    if (array_intersect($own_errors, $errors)) {
+        return array('open' => true, 'kind' => 'warn', 'text' => __('Check the message at the top of the page', 'eg-social-timeline'));
+    }
+
+    if (isset($diagnostics['platforms'][$slug]['ok']) && !$diagnostics['platforms'][$slug]['ok']) {
+        return array('open' => true, 'kind' => 'warn', 'text' => __('The last check found a problem', 'eg-social-timeline'));
+    }
+
+    if (isset($status['platforms'][$slug]) && empty($status['platforms'][$slug]['count'])) {
+        return array('open' => true, 'kind' => 'warn', 'text' => __('Nothing on the last refresh', 'eg-social-timeline'));
+    }
+
+    $profile = $profiles[$slug];
+
+    if ('rss' === $slug) {
+        $text = wp_parse_url($profile['url'], PHP_URL_HOST) . ('' !== $profile['label'] ? ' · ' . $profile['label'] : '');
+    } elseif ('bluesky' === $slug) {
+        $text = $profile['username'];
+    } else {
+        $text = wp_parse_url($profile['instance'], PHP_URL_HOST) . ' · ' . $profile['username'];
+    }
+
+    return array('open' => false, 'kind' => 'ok', 'text' => $text);
+}
+
+/**
+ * Stampa le sezioni della pagina, come do_settings_sections(), ma con i
+ * riquadri delle piattaforme dentro un <details>: si aprono e si chiudono
+ * senza JavaScript, e i campi di un riquadro chiuso vengono inviati lo stesso.
+ */
+function eg_social_timeline_do_settings_sections() {
+    global $wp_settings_sections, $wp_settings_fields;
+
+    $page = 'eg-social-timeline';
+
+    if (empty($wp_settings_sections[$page])) {
+        return;
+    }
+
+    $platforms = eg_social_timeline_platforms();
+    $rows = eg_social_timeline_profile_rows();
+    $errors = wp_list_pluck(get_settings_errors('eg_social_timeline_options'), 'code');
+
+    foreach ((array) $wp_settings_sections[$page] as $section) {
+        $slug = str_replace(array('eg_social_timeline_', '_section'), '', $section['id']);
+        $has_fields = !empty($wp_settings_fields[$page][$section['id']]);
+
+        if (isset($platforms[$slug])) {
+            $state = eg_social_timeline_box_state($slug, $rows, $errors);
+            ?>
+            <details class="egst-box egst-box-<?php echo esc_attr($state['kind']); ?>"<?php echo $state['open'] ? ' open' : ''; ?>>
+                <summary>
+                    <?php echo $section['title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- titolo composto in register_settings da icona sanitizzata e testo escapato ?>
+                    <span class="egst-box-state"><?php echo esc_html(('ok' === $state['kind'] ? '✓ ' : ('warn' === $state['kind'] ? '⚠ ' : '')) . $state['text']); ?></span>
+                </summary>
+                <?php
+                if ($section['callback']) {
+                    call_user_func($section['callback'], $section);
+                }
+
+                if ($has_fields) {
+                    echo '<table class="form-table" role="presentation">';
+                    do_settings_fields($page, $section['id']);
+                    echo '</table>';
+                }
+                ?>
+            </details>
+            <?php
+            continue;
+        }
+
+        if ($section['title']) {
+            echo '<h2>' . $section['title'] . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- come do_settings_sections(): titoli registrati dal plugin, gia' escapati
+        }
+
+        if ($section['callback']) {
+            call_user_func($section['callback'], $section);
+        }
+
+        if ($has_fields) {
+            echo '<table class="form-table" role="presentation">';
+            do_settings_fields($page, $section['id']);
+            echo '</table>';
+        }
+    }
+}
+
 function eg_social_timeline_settings_page() {
     if (!current_user_can('manage_options')) {
         return;
@@ -2044,7 +2167,7 @@ function eg_social_timeline_settings_page() {
         <form action="options.php" method="post">
             <?php
             settings_fields('eg_social_timeline_settings');
-            do_settings_sections('eg-social-timeline');
+            eg_social_timeline_do_settings_sections();
             submit_button(__('Save Settings', 'eg-social-timeline'));
             ?>
         </form>
@@ -2259,6 +2382,68 @@ function eg_social_timeline_admin_styles($hook) {
     background: #fff;
     border: 1px solid #c3c4c7;
     border-top: 0;
+    border-radius: 0 0 6px 6px;
+}
+/* Riquadri delle piattaforme: <details> che si apre senza JavaScript. */
+.settings_page_eg-social-timeline details.egst-box {
+    margin: 14px 0 0;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 6px;
+}
+.settings_page_eg-social-timeline details.egst-box > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2327;
+}
+.settings_page_eg-social-timeline details.egst-box > summary::-webkit-details-marker {
+    display: none;
+}
+.settings_page_eg-social-timeline details.egst-box > summary::before {
+    content: "";
+    border-left: 6px solid #50575e;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    transition: transform 0.15s;
+}
+.settings_page_eg-social-timeline details.egst-box[open] > summary::before {
+    transform: rotate(90deg);
+}
+.settings_page_eg-social-timeline details.egst-box[open] > summary {
+    border-bottom: 1px solid #dcdcde;
+}
+.settings_page_eg-social-timeline details.egst-box > summary:focus-visible {
+    outline: 2px solid #2271b1;
+    outline-offset: -2px;
+    border-radius: 6px;
+}
+.settings_page_eg-social-timeline .egst-box-state {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 400;
+    color: #646970;
+}
+.settings_page_eg-social-timeline .egst-box-ok .egst-box-state {
+    color: #00712e;
+}
+.settings_page_eg-social-timeline .egst-box-warn .egst-box-state {
+    color: #8a5a00;
+    font-weight: 600;
+}
+.settings_page_eg-social-timeline details.egst-box > p.description {
+    margin: 0;
+    padding: 10px 16px 0;
+    color: #50575e;
+}
+.settings_page_eg-social-timeline details.egst-box .form-table {
+    border: 0;
     border-radius: 0 0 6px 6px;
 }
 .settings_page_eg-social-timeline .egst-section-icon svg {
@@ -4273,12 +4458,15 @@ function eg_social_timeline_verify_profiles() {
 }
 
 /**
- * Tabella in Impostazioni con l'esito delle verifiche e dell'ultimo recupero.
+ * Piattaforme configurate, con il motivo quando il profilo e' a meta'.
+ *
+ * Una piattaforma senza nessun dato non compare. Il valore e' una stringa
+ * vuota per un profilo completo, il motivo per uno compilato a meta'.
+ *
+ * @return array Coppie slug => motivo ('' se completo).
  */
-function eg_social_timeline_render_diagnostics() {
+function eg_social_timeline_profile_rows() {
     $profiles = eg_social_timeline_profiles();
-    $diagnostics = get_option('eg_social_timeline_diagnostics');
-    $status = get_option('eg_social_timeline_status');
     $rows = array();
 
     foreach ($profiles as $platform => $profile) {
@@ -4318,6 +4506,20 @@ function eg_social_timeline_render_diagnostics() {
             ? __('Incomplete: the instance URL is missing, so this platform is skipped.', 'eg-social-timeline')
             : __('Incomplete: the username is missing, so this platform is skipped.', 'eg-social-timeline');
     }
+
+    return $rows;
+}
+
+/**
+ * Tabella in Impostazioni con l'esito delle verifiche e dell'ultimo recupero.
+ */
+function eg_social_timeline_render_diagnostics() {
+    $profiles = eg_social_timeline_profiles();
+    $diagnostics = get_option('eg_social_timeline_diagnostics');
+    $status = get_option('eg_social_timeline_status');
+    $rows = array();
+
+    $rows = eg_social_timeline_profile_rows();
 
     if (empty($rows)) {
         return;

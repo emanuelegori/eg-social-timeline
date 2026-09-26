@@ -183,12 +183,13 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 * New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
 * New: on GoToSocial the RSS feed is off by default, and the settings page now says so and links the account settings, instead of reporting an empty source. When the account domain differs from the server, the plugin finds the server when you save.
 * New: entering a GoToSocial or Friendica instance in the Mastodon field points to the right section.
+* New: the platform boxes in the settings fold, with no JavaScript. Each one shows its state next to the title — the configured profile, "Not configured", or what needs attention — and they all start closed, except the ones with a problem: an incomplete profile, an error on save, a failed check or nothing on the last refresh.
 * Fixed: the FAQ said ListenBrainz cards link to MusicBrainz; they link to the recording on ListenBrainz.
 
 == Upgrade Notice ==
 
 = 1.16.0 =
-GoToSocial and Friendica get their own sections, reading the public feed of the profile. On GoToSocial the feed must be turned on in the account settings.
+GoToSocial and Friendica get their own sections, reading the public feed of the profile. The platform boxes now fold and open by themselves only when something needs attention.
 
 = 1.15.9 =
 Corrects the "tested up to" header, which must carry the major version only. No functional change.

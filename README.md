@@ -245,6 +245,7 @@ eg-social-timeline/
 - **GoToSocial** and **Friendica** sections, reading the public feed of the profile: RSS on GoToSocial, Atom on Friendica. Own icon, name and colour; images when the feed carries them.
 - On GoToSocial the feed is off by default: the settings page says so and links the account settings. When the account domain differs from the server, the server is looked up via webfinger when saving.
 - A GoToSocial or Friendica instance entered in the Mastodon field now points to the right section.
+- Platform boxes in the settings fold without JavaScript (`<details>`), show their state next to the title, and start closed except the ones that need attention.
 
 #### Fixed
 - The readme FAQ said ListenBrainz cards link to MusicBrainz; they link to ListenBrainz.
