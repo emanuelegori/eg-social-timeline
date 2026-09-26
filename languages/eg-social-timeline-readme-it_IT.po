@@ -1,0 +1,586 @@
+# Traduzione italiana di EG Social Timeline - Stable Readme
+# This file is distributed under the same license as the plugin.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-09-26 06:34+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
+"Last-Translator: Emanuele Gori\n"
+"Language-Team: Italian\n"
+"Project-Id-Version: Plugins - EG Social Timeline - Stable Readme (latest release)\n"
+
+msgid "Chronological timeline of your public activity across the fediverse, Bluesky, ListenBrainz and any RSS feed. Zero JavaScript, zero tracking."
+msgstr "Timeline cronologica della tua attività pubblica sul fediverso, Bluesky, ListenBrainz e qualsiasi feed RSS. Zero JavaScript, zero tracciamento."
+
+msgid "EG Social Timeline"
+msgstr "EG Social Timeline"
+
+msgid "Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds and the icon style. Every color in the stylesheet comes from a custom property declared on the <code>.eg-social-timeline</code> container: two source palettes (<code>--egst-light-*</code> and <code>--egst-dark-*</code>) and the active tokens that read from them (<code>--egst-text</code>, <code>--egst-card-bg</code>, <code>--egst-chip-bg</code>, …), so a few lines of theme CSS are enough to retheme the whole timeline. The icons are SVG files you can replace in the <code>social-icons/</code> folder."
+msgstr "Sì. Impostazioni → EG Social Timeline → Aspetto comprende i due sfondi e lo stile delle icone. Ogni colore del foglio di stile viene da una custom property dichiarata sul contenitore <code>.eg-social-timeline</code>: due palette sorgente (<code>--egst-light-*</code> e <code>--egst-dark-*</code>) e i token attivi che le leggono (<code>--egst-text</code>, <code>--egst-card-bg</code>, <code>--egst-chip-bg</code>, …), quindi poche righe di CSS nel tema bastano a ricolorare l'intera timeline. Le icone sono file SVG che puoi sostituire nella cartella <code>social-icons/</code>."
+
+msgid "That was a bug in 1.8.0, fixed in 1.8.1: contrast was inferred from a global color scheme instead of being measured on the color of the surface. Text, borders, badges, links and icons now follow the background you actually chose."
+msgstr "Era un difetto della 1.8.0, corretto nella 1.8.1: il contrasto veniva dedotto da uno schema di colori globale invece di essere misurato sul colore della superficie. Testo, bordi, badge, link e icone ora seguono lo sfondo che hai scelto davvero."
+
+msgid "Up to version 1.7.2 the timeline always followed the <code>prefers-color-scheme</code> setting of the visitor browser, so it turned dark even on a light theme. Since 1.8.1 the stylesheet carries no <code>prefers-color-scheme</code> rule at all: the timeline goes dark only if you set a background to \"Follow the visitor browser\", or if both backgrounds are transparent and there is no color to measure."
+msgstr "Fino alla versione 1.7.2 la timeline seguiva sempre l'impostazione <code>prefers-color-scheme</code> del browser di chi guarda, quindi diventava scura anche su un tema chiaro. Dalla 1.8.1 il foglio di stile non contiene più nessuna regola <code>prefers-color-scheme</code>: la timeline diventa scura solo se imposti uno sfondo su \"Segue il browser del visitatore\", oppure se entrambi gli sfondi sono trasparenti e non c'è nessun colore da misurare."
+
+msgid "Posts are temporarily stored to reduce calls to the external APIs. You can configure the duration from 30 minutes to 24 hours. The cache is automatically cleared when settings are saved."
+msgstr "I post vengono conservati temporaneamente per ridurre le chiamate alle API esterne. Puoi configurare la durata da 30 minuti a 24 ore. La cache viene svuotata automaticamente quando salvi le impostazioni."
+
+msgid "The plugin retrieves only public content. It does not track site visitors and does not send data to third-party services."
+msgstr "Il plugin recupera soltanto contenuti pubblici. Non traccia chi visita il sito e non invia dati a servizi di terze parti."
+
+msgid "Each platform has a configurable limit on the number of posts included in the timeline. This prevents a very active platform (e.g. Forgejo with many commits) from filling all available slots, ensuring a balanced mix."
+msgstr "Ogni piattaforma ha un limite configurabile sul numero di post inclusi nella timeline. Questo evita che una piattaforma molto attiva (per esempio Forgejo con tanti commit) occupi tutti i posti disponibili, e mantiene un mix equilibrato."
+
+msgid "Yes. Just configure at least one profile. Unconfigured platforms are simply ignored."
+msgstr "Sì. Basta configurare almeno un profilo. Le piattaforme non configurate vengono semplicemente ignorate."
+
+msgid "No. They use only CSS with the checkbox/label pattern and work even with JavaScript disabled in the browser."
+msgstr "No. Usano solo CSS con lo schema checkbox/label e funzionano anche con JavaScript disattivato nel browser."
+
+msgid "The settings page, in the \"Configured profiles\" table. It shows what the plugin sees for each platform — instance, software, account or channel — and what the last fetch returned, with the reason when a platform came back empty: an instance requiring authentication, an account not found, a Lemmy feed requested where that account is not registered. The checks run when you save the settings and can be repeated with the \"Verify profiles\" button; the page itself never queries the instances while loading."
+msgstr "Nella pagina delle impostazioni, nella tabella \"Profili configurati\". Mostra che cosa il plugin vede per ogni piattaforma — istanza, software, account o canale — e che cosa ha restituito l'ultimo recupero, con il motivo quando una piattaforma è tornata vuota: un'istanza che richiede autenticazione, un account inesistente, un feed Lemmy chiesto dove quell'account non è registrato. I controlli girano quando salvi le impostazioni e si possono ripetere con il pulsante \"Verifica profili\"; la pagina non interroga mai le istanze mentre si carica."
+
+msgid "No, and it is worth knowing why. The plugin reads the public accounts API (<code>/api/v1/accounts/lookup</code> and <code>/api/v1/accounts/{id}/statuses</code>), which Mastodon, Pleroma and Akkoma serve without authentication. GoToSocial and Friendica answer those endpoints with HTTP 401, Misskey and Sharkey use a different API, and Pixelfed answers the lookup but redirects the statuses endpoint to its login page. When you save an instance running one of those, the settings page says so instead of leaving you with a platform that never appears."
+msgstr "No, e vale la pena sapere perché. Il plugin legge l'API pubblica degli account (<code>/api/v1/accounts/lookup</code> e <code>/api/v1/accounts/{id}/statuses</code>), che Mastodon, Pleroma e Akkoma servono senza autenticazione. GoToSocial e Friendica rispondono a quegli endpoint con HTTP 401, Misskey e Sharkey usano un'API diversa, e Pixelfed risponde al lookup ma reindirizza l'endpoint degli statuses alla propria pagina di accesso. Quando salvi un'istanza che usa uno di questi software, la pagina delle impostazioni te lo dice, invece di lasciarti con una piattaforma che non comparirà mai."
+
+msgid "Because its public Atom feed does not carry them. Pixelfed answers the Mastodon-compatible account lookup but redirects the statuses endpoint to its login page, so the feed is the only way to read a profile without credentials: it gives photos, captions, dates and links, and no counts."
+msgstr "Perché il suo feed Atom pubblico non li contiene. Pixelfed risponde al lookup dell'account compatibile con Mastodon ma reindirizza l'endpoint degli statuses alla pagina di accesso, quindi il feed è l'unico modo per leggere un profilo senza credenziali: dà foto, didascalie, date e link, e nessun contatore."
+
+msgid "Your recent listens: artist and track, with the date. The public API needs no token. Each card links to the recording on MusicBrainz when the identifier is available, otherwise to your ListenBrainz profile. No interaction counts, because listens do not have any."
+msgstr "I tuoi ascolti recenti: artista e brano, con la data. L'API pubblica non richiede token. Ogni scheda rimanda alla registrazione su MusicBrainz quando l'identificativo è disponibile, altrimenti al tuo profilo ListenBrainz. Nessun contatore di interazione, perché gli ascolti non ne hanno."
+
+msgid "Yes. The \"RSS or Atom feed\" fields take the address of any feed — your blog, a newsletter, a podcast — and its items join the timeline like any other source, with their own filter. The label you give it is the name shown on the cards; left empty, the feed's own title is used."
+msgstr "Sì. I campi \"Feed RSS o Atom\" accettano l'indirizzo di qualsiasi feed — il tuo blog, una newsletter, un podcast — e i suoi elementi entrano nella timeline come ogni altra fonte, con un filtro proprio. L'etichetta che gli dai è il nome mostrato sulle schede; se la lasci vuota viene usato il titolo del feed."
+
+msgid "A second detail: a channel belongs to the instance that hosts it. An address like <code>https://peertube.example/c/name@origin.example/videos</code> means the channel lives on <code>origin.example</code> and <code>peertube.example</code> only federates it — the plugin then queries the origin, which does not depend on the state of federation."
+msgstr "Un secondo dettaglio: un canale appartiene all'istanza che lo ospita. Un indirizzo come <code>https://peertube.example/c/name@origin.example/videos</code> significa che il canale vive su <code>origin.example</code> e che <code>peertube.example</code> si limita a federarlo — il plugin interroga quindi l'origine, senza dipendere dallo stato della federazione."
+
+msgid "On PeerTube videos almost always live in a <strong>channel</strong>, not directly in the account, and the two use different API endpoints. Paste the full address of your channel and the plugin sorts it out: <code>/c/name</code> is a channel, <code>/a/name</code> an account. If you only type a name, both are tried and the answer is remembered."
+msgstr "Su PeerTube i video stanno quasi sempre in un <strong>canale</strong>, non direttamente nell'account, e i due usano endpoint API diversi. Incolla l'indirizzo completo del tuo canale e il plugin si regola da sé: <code>/c/name</code> è un canale, <code>/a/name</code> un account. Se scrivi solo un nome, prova entrambi e ricorda la risposta."
+
+msgid "Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea, Lemmy (any instance), ListenBrainz, and any RSS or Atom feed."
+msgstr "Mastodon, Pleroma, Akkoma, Bluesky, Pixelfed, PeerTube, Forgejo/Gitea, Lemmy (qualsiasi istanza), ListenBrainz e qualsiasi feed RSS o Atom."
+
+msgid "Can I customize the style?"
+msgstr "Posso personalizzare lo stile?"
+
+msgid "I picked a dark card background but the text stayed dark."
+msgstr "Ho scelto uno sfondo scuro per le schede ma il testo è rimasto scuro."
+
+msgid "Why does the timeline look dark on my light theme?"
+msgstr "Perché la timeline appare scura sul mio tema chiaro?"
+
+msgid "How does the cache work?"
+msgstr "Come funziona la cache?"
+
+msgid "Is data private?"
+msgstr "I dati sono privati?"
+
+msgid "How do the per-platform limits work?"
+msgstr "Come funzionano i limiti per piattaforma?"
+
+msgid "Can I use the plugin with a single platform?"
+msgstr "Posso usare il plugin con una sola piattaforma?"
+
+msgid "Do the platform filters require JavaScript?"
+msgstr "I filtri per piattaforma richiedono JavaScript?"
+
+msgid "A platform I configured does not show up. Where do I look?"
+msgstr "Una piattaforma che ho configurato non compare. Dove devo guardare?"
+
+msgid "Does the Mastodon field work with every fediverse server?"
+msgstr "Il campo Mastodon funziona con qualsiasi server del fediverso?"
+
+msgid "Why does Pixelfed show no likes or comments?"
+msgstr "Perché Pixelfed non mostra like o commenti?"
+
+msgid "What does the ListenBrainz source show?"
+msgstr "Che cosa mostra la fonte ListenBrainz?"
+
+msgid "Can I add a source that is not a social platform?"
+msgstr "Posso aggiungere una fonte che non è una piattaforma social?"
+
+msgid "My PeerTube videos are not showing up."
+msgstr "I miei video PeerTube non compaiono."
+
+msgid "Which platforms are supported?"
+msgstr "Quali piattaforme sono supportate?"
+
+msgid "You can also paste the full profile address into either field and the plugin splits it: <code>https://lemmy.example/u/username</code>, <code>https://mastodon.example/@name</code>, <code>https://peertube.example/c/name@host.example/videos</code>, <code>https://bsky.app/profile/name.bsky.social</code>."
+msgstr "Puoi anche incollare l'indirizzo completo del profilo in uno qualsiasi dei due campi e il plugin lo divide: <code>https://lemmy.example/u/username</code>, <code>https://mastodon.example/@name</code>, <code>https://peertube.example/c/name@host.example/videos</code>, <code>https://bsky.app/profile/name.bsky.social</code>."
+
+msgid "The source code lives at https://git.emanuelegori.uno/emanuelegori/eg-social-timeline. Download a release, then go to Plugins → Add New → Upload Plugin and select the file."
+msgstr "Il codice sorgente sta su https://git.emanuelegori.uno/emanuelegori/eg-social-timeline. Scarica una release, poi vai su Plugin → Aggiungi nuovo → Carica plugin e seleziona il file."
+
+msgid "Text, borders, badges, links and icons are not configured: they are derived from the contrast of the background you choose, and switch to their light variants on a dark surface"
+msgstr "Testo, bordi, badge, link e icone non si impostano: vengono derivati dal contrasto dello sfondo che scegli, e passano alle varianti chiare su una superficie scura"
+
+msgid "Per-source display options: boosts, statistics, image previews and text length are set inside each platform's own box, and only where they have an effect"
+msgstr "Opzioni di resa per fonte: boost, statistiche, anteprime immagini e lunghezza del testo si impostano nel riquadro della singola piattaforma, e solo dove hanno effetto"
+
+msgid "Filter bar style: full (icon, name and count) or compact (icons only, name and count in the tooltip)"
+msgstr "Stile della barra filtri: completa (icona, nome e conteggio) o compatta (solo icone, nome e conteggio nel tooltip)"
+
+msgid "Platform icon style: platform colors, or a single color taken from the post text"
+msgstr "Stile delle icone: colori delle piattaforme, oppure un solo colore preso dal testo dei post"
+
+msgid "Card background: neutral preset (default), transparent, follow the visitor browser, or a custom color"
+msgstr "Sfondo delle schede: preset neutro (predefinito), trasparente, segue il browser del visitatore, oppure un colore personalizzato"
+
+msgid "Timeline background: transparent (default), neutral preset, follow the visitor browser, or a custom color"
+msgstr "Sfondo della timeline: trasparente (predefinito), preset neutro, segue il browser del visitatore, oppure un colore personalizzato"
+
+msgid "Cache duration from 30 minutes to 24 hours"
+msgstr "Durata della cache da 30 minuti a 24 ore"
+
+msgid "Show or hide interaction stats"
+msgstr "Mostra o nascondi i contatori di interazione"
+
+msgid "Include or exclude boosts and reposts"
+msgstr "Includi o escludi boost e ricondivisioni"
+
+msgid "Text length for each post (50-600 characters, 0 = full text)"
+msgstr "Lunghezza del testo per ogni post (50-600 caratteri, 0 = testo completo)"
+
+msgid "Image previews where the source carries one: Mastodon, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed"
+msgstr "Anteprime immagini dove la fonte ne porta una: Mastodon, Bluesky, Pixelfed, miniature PeerTube e immagini trovate in un feed"
+
+msgid "Per-platform post limits (avoids one platform monopolizing the timeline)"
+msgstr "Limiti di post per piattaforma (evita che una sola piattaforma monopolizzi la timeline)"
+
+msgid "OR an RSS/Atom feed: the feed address, with an optional label"
+msgstr "OPPURE un feed RSS/Atom: l'indirizzo del feed, con un'etichetta facoltativa"
+
+msgid "OR ListenBrainz: username (the API URL is already filled in)"
+msgstr "OPPURE ListenBrainz: nome utente (l'indirizzo dell'API è già compilato)"
+
+msgid "OR Bluesky: handle alone (e.g. emanuele.bsky.social)"
+msgstr "OPPURE Bluesky: solo l'handle (per esempio emanuele.bsky.social)"
+
+msgid "OR Forgejo/Gitea: instance URL + username"
+msgstr "OPPURE Forgejo/Gitea: URL dell'istanza + nome utente"
+
+msgid "OR PeerTube: instance URL + account or channel (e.g. https://peertube.uno + yourname)"
+msgstr "OPPURE PeerTube: URL dell'istanza + account o canale (per esempio https://peertube.uno + tuonome)"
+
+msgid "OR Pixelfed: instance URL + username (e.g. https://pixelfed.uno + yourname)"
+msgstr "OPPURE Pixelfed: URL dell'istanza + nome utente (per esempio https://pixelfed.uno + tuonome)"
+
+msgid "OR Lemmy: instance URL + username (e.g. https://diggita.com + username)"
+msgstr "OPPURE Lemmy: URL dell'istanza + nome utente (per esempio https://diggita.com + username)"
+
+msgid "Mastodon, Pleroma or Akkoma: instance URL + username (e.g. https://mastodon.uno + username)"
+msgstr "Mastodon, Pleroma o Akkoma: URL dell'istanza + nome utente (per esempio https://mastodon.uno + username)"
+
+msgid "Insert <code>[eg_social_timeline]</code> into the desired page or post"
+msgstr "Inserisci <code>[eg_social_timeline]</code> nella pagina o nell'articolo che vuoi"
+
+msgid "Configure at least one social profile"
+msgstr "Configura almeno un profilo social"
+
+msgid "Go to Settings → EG Social Timeline"
+msgstr "Vai su Impostazioni → EG Social Timeline"
+
+msgid "Click Install Now, then Activate"
+msgstr "Clicca Installa ora, poi Attiva"
+
+msgid "In WordPress go to Plugins → Add New and search for \"EG Social Timeline\""
+msgstr "In WordPress vai su Plugin → Aggiungi nuovo e cerca \"EG Social Timeline\""
+
+msgid "Advanced configuration"
+msgstr "Configurazione avanzata"
+
+msgid "Minimum configuration"
+msgstr "Configurazione minima"
+
+msgid "Installing from a ZIP"
+msgstr "Installazione da uno ZIP"
+
+msgid "EG Social Timeline retrieves only public content from the configured platforms. It does not track site visitors, does not send data to third-party services, and does not set cookies. The cache is local to the WordPress database."
+msgstr "EG Social Timeline recupera soltanto contenuti pubblici dalle piattaforme configurate. Non traccia chi visita il sito, non invia dati a servizi di terze parti e non imposta cookie. La cache è locale al database di WordPress."
+
+msgid "Contacted services are cached locally for a configurable duration (30 minutes to 24 hours, default value depends on the admin setting) to minimize external traffic."
+msgstr "I servizi contattati vengono messi in cache localmente per una durata configurabile (da 30 minuti a 24 ore, il valore predefinito dipende dall'impostazione dell'amministratore) per ridurre al minimo il traffico esterno."
+
+msgid "This plugin connects only to the platforms and feeds the administrator explicitly configures in the settings, one section per source below. No external service is contacted until at least one source has been filled in. All requests are HTTP GET requests for public content; no user credentials are ever sent."
+msgstr "Questo plugin si collega soltanto alle piattaforme e ai feed che l'amministratore configura esplicitamente nelle impostazioni, una sezione per fonte qui sotto. Nessun servizio esterno viene contattato finché non è stata compilata almeno una fonte. Tutte le richieste sono richieste HTTP GET di contenuti pubblici; nessuna credenziale dell'utente viene mai inviata."
+
+msgid "With a custom limit:"
+msgstr "Con un limite personalizzato:"
+
+msgid "Configure the profiles in the settings, then insert the shortcode:"
+msgstr "Configura i profili nelle impostazioni, poi inserisci lo shortcode:"
+
+msgid "Every platform is configured the same way: the instance URL plus your username. Bluesky is the exception, because its public API lives at a single address for everyone."
+msgstr "Ogni piattaforma si configura allo stesso modo: l'URL dell'istanza più il tuo nome utente. Bluesky fa eccezione, perché la sua API pubblica vive a un unico indirizzo per tutti."
+
+msgid "EG Social Timeline aggregates in chronological order your public posts from eight sources and displays them in a single timeline via shortcode."
+msgstr "EG Social Timeline aggrega in ordine cronologico i tuoi post pubblici da otto fonti e li mostra in un'unica timeline tramite shortcode."
+
+msgid "Issues: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/issues"
+msgstr "Segnalazioni: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/issues"
+
+msgid "Repository: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline"
+msgstr "Repository: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline"
+
+msgid "Lemmy is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are published by that instance."
+msgstr "Lemmy è decentralizzato: condizioni d'uso e informativa sulla privacy dipendono dall'istanza scelta dall'utente e sono pubblicate da quella istanza."
+
+msgid "<strong>Data received and stored</strong>: public post metadata (title, link, date, vote and comment counts) parsed from the public RSS feed. Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei post (titolo, link, data, conteggio di voti e commenti) letti dal feed RSS pubblico. Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Endpoint</strong>: <code>GET /feeds/u/{username}.xml</code>, the public user RSS feed. It exists only on the instance where the account is registered."
+msgstr "<strong>Endpoint</strong>: <code>GET /feeds/u/{username}.xml</code>, il feed RSS pubblico dell'utente. Esiste solo sull'istanza dove l'account è registrato."
+
+msgid "<strong>What</strong>: the Lemmy instance the user enters in the settings (e.g. <code>https://diggita.com</code>)."
+msgstr "<strong>Che cosa</strong>: l'istanza Lemmy che l'utente inserisce nelle impostazioni (per esempio <code>https://diggita.com</code>)."
+
+msgid "Terms and privacy policy depend on the site the user chooses."
+msgstr "Condizioni d'uso e informativa sulla privacy dipendono dal sito scelto dall'utente."
+
+msgid "<strong>Data received and stored</strong>: title, link, summary, date and, when present, the item's image. Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: titolo, link, riassunto, data e, quando presente, l'immagine dell'elemento. Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: nothing beyond the request for the feed."
+msgstr "<strong>Dati inviati</strong>: nulla oltre alla richiesta del feed."
+
+msgid "<strong>Endpoint</strong>: a <code>GET</code> request to the address itself."
+msgstr "<strong>Endpoint</strong>: una richiesta <code>GET</code> all'indirizzo stesso."
+
+msgid "<strong>What</strong>: the feed address the user enters in the settings; it can be any site."
+msgstr "<strong>Che cosa</strong>: l'indirizzo del feed che l'utente inserisce nelle impostazioni; può essere qualsiasi sito."
+
+msgid "Privacy policy: https://metabrainz.org/privacy — terms: https://metabrainz.org/social-contract"
+msgstr "Informativa sulla privacy: https://metabrainz.org/privacy — condizioni: https://metabrainz.org/social-contract"
+
+msgid "<strong>Data received and stored</strong>: artist, track, album, listen timestamp and the recording identifier when present, used to link the track page on ListenBrainz. Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: artista, brano, album, data e ora dell'ascolto e, quando presente, l'identificativo della registrazione, usato per collegare la pagina del brano su ListenBrainz. Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Endpoint</strong>: <code>GET /1/user/{username}/listens</code>, the public listens of the account. No token is sent."
+msgstr "<strong>Endpoint</strong>: <code>GET /1/user/{username}/listens</code>, gli ascolti pubblici dell'account. Nessun token viene inviato."
+
+msgid "<strong>What</strong>: the ListenBrainz API the user enters in the settings (by default <code>https://api.listenbrainz.org</code>)."
+msgstr "<strong>Che cosa</strong>: l'API ListenBrainz che l'utente inserisce nelle impostazioni (per impostazione predefinita <code>https://api.listenbrainz.org</code>)."
+
+msgid "Pixelfed is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance."
+msgstr "Pixelfed è decentralizzato: condizioni d'uso e informativa sulla privacy dipendono dall'istanza scelta dall'utente e sono disponibili su quella istanza."
+
+msgid "<strong>Data received and stored</strong>: public post metadata (caption, date, link, photo URL and alt text if image previews are enabled) parsed from the public Atom feed. Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei post (didascalia, data, link, URL della foto e testo alternativo se le anteprime immagini sono attive) letti dal feed Atom pubblico. Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: only the public username entered in the settings, as part of the URL path."
+msgstr "<strong>Dati inviati</strong>: soltanto il nome utente pubblico inserito nelle impostazioni, come parte del percorso dell'URL."
+
+msgid "<strong>Endpoint</strong>: <code>GET /users/{username}.atom</code>, the public Atom feed of the profile."
+msgstr "<strong>Endpoint</strong>: <code>GET /users/{username}.atom</code>, il feed Atom pubblico del profilo."
+
+msgid "<strong>When</strong>: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the \"Verify profiles\" button is used."
+msgstr "<strong>Quando</strong>: ogni volta che la cache della timeline scade e viene generata una pagina che contiene lo shortcode, più una volta al salvataggio delle impostazioni o all'uso del pulsante \"Verifica profili\"."
+
+msgid "<strong>What</strong>: the Pixelfed instance the user enters in the settings (e.g. <code>https://pixelfed.uno</code>)."
+msgstr "<strong>Che cosa</strong>: l'istanza Pixelfed che l'utente inserisce nelle impostazioni (per esempio <code>https://pixelfed.uno</code>)."
+
+msgid "Forgejo and Gitea are open-source git hosting platforms. Their terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance."
+msgstr "Forgejo e Gitea sono piattaforme di hosting git open source. Le loro condizioni d'uso e informative sulla privacy dipendono dall'istanza scelta dall'utente e sono disponibili su quella istanza."
+
+msgid "<strong>Data received and stored</strong>: public commit metadata (message, date, repository name, commit hash and link). Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei commit (messaggio, data, nome del repository, hash del commit e link). Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: only the public username entered in the settings, as a URL parameter."
+msgstr "<strong>Dati inviati</strong>: soltanto il nome utente pubblico inserito nelle impostazioni, come parametro dell'URL."
+
+msgid "<strong>Endpoints</strong>: <code>GET /api/v1/users/{username}/repos</code> and <code>GET /api/v1/repos/{owner}/{repo}/commits</code> for the user's public repositories."
+msgstr "<strong>Endpoint</strong>: <code>GET /api/v1/users/{username}/repos</code> e <code>GET /api/v1/repos/{owner}/{repo}/commits</code> per i repository pubblici dell'utente."
+
+msgid "<strong>What</strong>: the Forgejo or Gitea instance the user enters in the settings (e.g. <code>https://git.example.com</code>)."
+msgstr "<strong>Che cosa</strong>: l'istanza Forgejo o Gitea che l'utente inserisce nelle impostazioni (per esempio <code>https://git.example.com</code>)."
+
+msgid "PeerTube is decentralized federated video hosting: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance."
+msgstr "PeerTube è un sistema decentralizzato e federato per ospitare video: condizioni d'uso e informativa sulla privacy dipendono dall'istanza scelta dall'utente e sono disponibili su quella istanza."
+
+msgid "<strong>Data received and stored</strong>: public video metadata (title, description, date, link, thumbnail URL and like count). Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei video (titolo, descrizione, data, link, URL della miniatura e numero di like). Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: only the public account name entered in the settings, as part of the URL path."
+msgstr "<strong>Dati inviati</strong>: soltanto il nome pubblico dell'account inserito nelle impostazioni, come parte del percorso dell'URL."
+
+msgid "<strong>Endpoints</strong>: <code>GET /api/v1/accounts/{account}/videos</code> and <code>GET /api/v1/video-channels/{channel}/videos</code> for the public videos of an account or of a channel."
+msgstr "<strong>Endpoint</strong>: <code>GET /api/v1/accounts/{account}/videos</code> e <code>GET /api/v1/video-channels/{channel}/videos</code> per i video pubblici di un account o di un canale."
+
+msgid "<strong>What</strong>: the PeerTube instance the user enters in the settings (e.g. <code>https://peertube.uno</code>)."
+msgstr "<strong>Che cosa</strong>: l'istanza PeerTube che l'utente inserisce nelle impostazioni (per esempio <code>https://peertube.uno</code>)."
+
+msgid "Privacy policy: https://bsky.social/about/support/privacy-policy"
+msgstr "Informativa sulla privacy: https://bsky.social/about/support/privacy-policy"
+
+msgid "Terms of service: https://bsky.social/about/support/tos"
+msgstr "Condizioni d'uso: https://bsky.social/about/support/tos"
+
+msgid "<strong>Data received and stored</strong>: public post metadata (text, date, link, image preview URL and alt text if image previews are enabled, like/repost/reply counts). Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei post (testo, data, link, URL dell'anteprima immagine e testo alternativo se le anteprime sono attive, conteggio di like, ricondivisioni e risposte). Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: only the public handle entered in the settings (e.g. <code>username.bsky.social</code>)."
+msgstr "<strong>Dati inviati</strong>: soltanto l'handle pubblico inserito nelle impostazioni (per esempio <code>username.bsky.social</code>)."
+
+msgid "<strong>Endpoint</strong>: <code>GET https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor={handle}</code>."
+msgstr "<strong>Endpoint</strong>: <code>GET https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor={handle}</code>."
+
+msgid "<strong>What</strong>: the Bluesky public API at <code>https://public.api.bsky.app</code>."
+msgstr "<strong>Che cosa</strong>: l'API pubblica di Bluesky all'indirizzo <code>https://public.api.bsky.app</code>."
+
+msgid "Mastodon is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance."
+msgstr "Mastodon è decentralizzato: condizioni d'uso e informativa sulla privacy dipendono dall'istanza scelta dall'utente e sono disponibili su quella istanza."
+
+msgid "<strong>Data received and stored</strong>: public post metadata (text, date, link, media preview URL and alt text if image previews are enabled, like/boost/reply counts). Cached locally as a WordPress transient."
+msgstr "<strong>Dati ricevuti e conservati</strong>: metadati pubblici dei post (testo, data, link, URL dell'anteprima del media e testo alternativo se le anteprime sono attive, conteggio di like, boost e risposte). Messi in cache localmente come transient di WordPress."
+
+msgid "<strong>Data sent</strong>: only the public username/handle entered in the settings, as a URL parameter."
+msgstr "<strong>Dati inviati</strong>: soltanto il nome utente o handle pubblico inserito nelle impostazioni, come parametro dell'URL."
+
+msgid "<strong>Endpoints</strong>: <code>GET /.well-known/nodeinfo</code> and the linked nodeinfo document (to read which software the instance runs, cached 7 days), <code>GET /api/v1/accounts/lookup</code> (account ID lookup, cached 30 days) and <code>GET /api/v1/accounts/{id}/statuses</code> (public statuses)."
+msgstr "<strong>Endpoint</strong>: <code>GET /.well-known/nodeinfo</code> e il documento nodeinfo collegato (per leggere quale software usa l'istanza, in cache 7 giorni), <code>GET /api/v1/accounts/lookup</code> (ricerca dell'ID dell'account, in cache 30 giorni) e <code>GET /api/v1/accounts/{id}/statuses</code> (post pubblici)."
+
+msgid "<strong>When</strong>: each time the timeline cache expires and a page containing the shortcode is rendered."
+msgstr "<strong>Quando</strong>: ogni volta che la cache della timeline scade e viene generata una pagina che contiene lo shortcode."
+
+msgid "<strong>What</strong>: the Mastodon, Pleroma or Akkoma instance whose URL the user enters in the settings (e.g. <code>https://mastodon.uno</code>)."
+msgstr "<strong>Che cosa</strong>: l'istanza Mastodon, Pleroma o Akkoma il cui URL l'utente inserisce nelle impostazioni (per esempio <code>https://mastodon.uno</code>)."
+
+msgid "No cookies set by the plugin"
+msgstr "Nessun cookie impostato dal plugin"
+
+msgid "Local cache in the WordPress database"
+msgstr "Cache locale nel database di WordPress"
+
+msgid "No data sent to third parties"
+msgstr "Nessun dato inviato a terze parti"
+
+msgid "No user tracking"
+msgstr "Nessun tracciamento degli utenti"
+
+msgid "Retrieves only public posts from the configured platforms"
+msgstr "Recupera soltanto i post pubblici dalle piattaforme configurate"
+
+msgid "Privacy-friendly: public data only, no trackers"
+msgstr "Rispettoso della privacy: solo dati pubblici, nessun tracciante"
+
+msgid "Modular and customizable SVG icons"
+msgstr "Icone SVG modulari e personalizzabili"
+
+msgid "Shortcode with optional limit parameter"
+msgstr "Shortcode con parametro di limite facoltativo"
+
+msgid "Responsive design"
+msgstr "Design responsive"
+
+msgid "Text, borders and icons derived from the contrast of the color you pick, so they stay readable"
+msgstr "Testo, bordi e icone derivati dal contrasto del colore che scegli, così restano leggibili"
+
+msgid "Timeline and card backgrounds configurable independently, each with its own color"
+msgstr "Sfondo della timeline e sfondo delle schede configurabili in modo indipendente, ciascuno con il proprio colore"
+
+msgid "Configurable cache (30 minutes - 24 hours)"
+msgstr "Cache configurabile (da 30 minuti a 24 ore)"
+
+msgid "Interaction stats: likes, boosts, comments"
+msgstr "Contatori di interazione: like, boost, commenti"
+
+msgid "Per-platform configurable limits for a balanced mix"
+msgstr "Limiti configurabili per piattaforma, per un mix equilibrato"
+
+msgid "Image previews wherever the source carries one: Mastodon, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed (optional, per source)"
+msgstr "Anteprime immagini ovunque la fonte ne porti una: Mastodon, Bluesky, Pixelfed, miniature PeerTube e immagini trovate in un feed (facoltative, per fonte)"
+
+msgid "Interactive per-platform filters, no JavaScript required"
+msgstr "Filtri interattivi per piattaforma, senza JavaScript"
+
+msgid "Any RSS 2.0 or Atom feed: a blog, a newsletter, a podcast"
+msgstr "Qualsiasi feed RSS 2.0 o Atom: un blog, una newsletter, un podcast"
+
+msgid "ListenBrainz (public API, no token: what you have been listening to)"
+msgstr "ListenBrainz (API pubblica, senza token: quello che hai ascoltato)"
+
+msgid "Lemmy, on any instance (public user RSS feed)"
+msgstr "Lemmy, su qualsiasi istanza (feed RSS pubblico dell'utente)"
+
+msgid "Forgejo and Gitea (commits from your public repositories)"
+msgstr "Forgejo e Gitea (commit dai tuoi repository pubblici)"
+
+msgid "PeerTube (public REST API, videos from an account or from a channel)"
+msgstr "PeerTube (API REST pubblica, video da un account o da un canale)"
+
+msgid "Pixelfed (public Atom feed: photos and captions, no interaction counts)"
+msgstr "Pixelfed (feed Atom pubblico: foto e didascalie, senza contatori di interazione)"
+
+msgid "Bluesky (public API, no authentication required)"
+msgstr "Bluesky (API pubblica, nessuna autenticazione richiesta)"
+
+msgid "Mastodon, and the Mastodon-compatible Pleroma and Akkoma (public accounts API, no authentication)"
+msgstr "Mastodon, e i compatibili Pleroma e Akkoma (API pubblica degli account, nessuna autenticazione)"
+
+msgid "Support"
+msgstr "Supporto"
+
+msgid "Privacy Policy"
+msgstr "Informativa sulla privacy"
+
+msgid "Lemmy"
+msgstr "Lemmy"
+
+msgid "RSS or Atom feed"
+msgstr "Feed RSS o Atom"
+
+msgid "ListenBrainz"
+msgstr "ListenBrainz"
+
+msgid "Pixelfed"
+msgstr "Pixelfed"
+
+msgid "Forgejo / Gitea"
+msgstr "Forgejo / Gitea"
+
+msgid "PeerTube"
+msgstr "PeerTube"
+
+msgid "Bluesky"
+msgstr "Bluesky"
+
+msgid "Mastodon"
+msgstr "Mastodon"
+
+msgid "External services"
+msgstr "Servizi esterni"
+
+msgid "Privacy"
+msgstr "Privacy"
+
+msgid "Usage"
+msgstr "Utilizzo"
+
+msgid "Key features"
+msgstr "Caratteristiche principali"
+
+msgid "Supported platforms"
+msgstr "Piattaforme supportate"
+
+msgid "Settings: how many posts reach the page, how long they stay cached, and the colours of the timeline."
+msgstr "Impostazioni: quanti post arrivano in pagina, quanto restano in cache e i colori della timeline."
+
+msgid "Settings: one box per platform, with the fields and the display options that apply to it."
+msgstr "Impostazioni: un riquadro per piattaforma, con i campi e le opzioni di resa che la riguardano."
+
+msgid "Cards carry image previews and interaction counts where the source provides them."
+msgstr "Le schede portano anteprime immagini e contatori di interazione dove la fonte li fornisce."
+
+msgid "The timeline on the site: one chronological feed from every source, with the compact filter bar on top."
+msgstr "La timeline sul sito: un unico flusso cronologico da tutte le fonti, con la barra filtri compatta in cima."
+
+msgid "Fixed: the repository link in the footer was missing <code>rel=\"noopener noreferrer\"</code>, unlike the developer one."
+msgstr "Corretto: al link del repository nel footer mancava <code>rel=\"noopener noreferrer\"</code>, a differenza di quello dello sviluppatore."
+
+msgid "Changed: the plugin homepage now opens the project page instead of the code repository, so anyone clicking it lands on documentation rather than on a Git tree."
+msgstr "Modificato: la homepage del plugin apre ora la pagina del progetto invece del repository del codice, così chi ci clicca arriva sulla documentazione e non su un albero Git."
+
+msgid "Added: a donate link on the plugin directory page, pointing at the project's support page."
+msgstr "Aggiunto: un link per le donazioni sulla pagina della directory dei plugin, che rimanda alla pagina di sostegno del progetto."
+
+msgid "Added: the settings page now has a proper footer, built on the WordPress footer slots. On the left, who develops the plugin and the links that matter: documentation, repository, and a way to support the work. On the right, version and licence, where administrators already look for them."
+msgstr "Aggiunto: la pagina delle impostazioni ha ora un footer vero, costruito sugli slot nativi di WordPress. A sinistra chi sviluppa il plugin e i link che contano: documentazione, repository e un modo per sostenere il lavoro. A destra versione e licenza, dove gli amministratori sono abituati a cercarle."
+
+msgid "Changed: the footer links now follow the language of the person reading them. The project page and the support page are translatable strings, so a translation can point them at its own localised pages, and a language without one simply stays on English. Nothing in the code tests for a specific locale."
+msgstr "Modificato: i link del footer seguono ora la lingua di chi li legge. La pagina del progetto e quella di sostegno sono stringhe traducibili, così una traduzione può puntarle alle proprie pagine localizzate, e una lingua che non ne ha resta semplicemente sull'inglese. Niente nel codice verifica un locale specifico."
+
+msgid "Changed: the plugin directory assets (screenshots, banner, icon) are no longer shipped inside the plugin package."
+msgstr "Modificato: gli asset della pagina della directory (screenshot, banner, icona) non vengono più inclusi nel pacchetto del plugin."
+
+msgid "Fixed: the screenshot list is now in the format the plugin directory reads, so the screenshots appear on the plugin page."
+msgstr "Corretto: l'elenco degli screenshot è ora nel formato che la directory dei plugin sa leggere, così gli screenshot compaiono sulla pagina del plugin."
+
+msgid "Fixed: eight field descriptions still quoted the defaults from before 1.14.1. They now match what the plugin actually does: five items per source, fifty posts on the page, thirty minutes of cache."
+msgstr "Corretto: otto descrizioni dei campi citavano ancora i valori predefiniti di prima della 1.14.1. Ora corrispondono a quello che il plugin fa davvero: cinque elementi per fonte, cinquanta post in pagina, trenta minuti di cache."
+
+msgid "Changed: the upgrade notice keeps the two most recent releases instead of every version ever published."
+msgstr "Modificato: l'avviso di aggiornamento conserva le due release più recenti invece di ogni versione mai pubblicata."
+
+msgid "Changed: this readme now carries the changelog of the current 1.15 line only. Every earlier entry moved to changelog.txt, which ships with the plugin, as the plugin directory asks."
+msgstr "Modificato: questo readme porta ora soltanto il changelog della linea 1.15 corrente. Ogni voce precedente è stata spostata in changelog.txt, che viaggia con il plugin, come chiede la directory."
+
+msgid "Changed: the Lemmy example address no longer names a real account."
+msgstr "Modificato: l'indirizzo di esempio per Lemmy non nomina più un account reale."
+
+msgid "Fixed: the screenshots in README.md are referenced by absolute address, so they show up outside the repository too, and all four are listed instead of three."
+msgstr "Corretto: gli screenshot in README.md sono referenziati con indirizzo assoluto, così compaiono anche fuori dal repository, e sono elencati tutti e quattro invece di tre."
+
+msgid "Removed: the section recommending a third-party updater to receive releases from outside the plugin directory."
+msgstr "Rimosso: la sezione che consigliava un updater di terze parti per ricevere le release da fuori la directory dei plugin."
+
+msgid "Changed: the installation instructions now start from the WordPress plugin directory, which is where the plugin is distributed. The release ZIP and the source repository are still documented."
+msgstr "Modificato: le istruzioni di installazione partono ora dalla directory dei plugin di WordPress, che è da dove il plugin viene distribuito. Lo ZIP di release e il repository del sorgente restano documentati."
+
+msgid "Changed: the upgrade notice carries the two most recent releases, as it was meant to from 1.15.3 onwards."
+msgstr "Modificato: l'avviso di aggiornamento porta le due release più recenti, come doveva essere dalla 1.15.3 in poi."
+
+msgid "Fixed: the compatibility header declared WordPress 7.1 while the current release is 7.1.1, so WordPress warned that the plugin had not been tested with the version people are actually running."
+msgstr "Corretto: l'header di compatibilità dichiarava WordPress 7.1 mentre la release corrente era la 7.1.1, quindi WordPress avvisava che il plugin non era stato testato con la versione effettivamente in uso."
+
+msgid "Changed: tested up to WordPress 7.1.2."
+msgstr "Modificato: testato fino a WordPress 7.1.2."
+
+msgid "Fixed: the example addresses that show which profile formats the plugin accepts used real instances with placeholder usernames, so they resolved to missing pages. They now use reserved example domains."
+msgstr "Corretto: gli indirizzi di esempio che mostrano quali formati di profilo il plugin accetta usavano istanze reali con nomi utente inventati, quindi puntavano a pagine inesistenti. Ora usano domini di esempio riservati."
+
+msgid "Fixed: two links in the Lemmy section pointed at pages that no longer exist. Terms and privacy policy on Lemmy are published by the instance the user chooses, so the readme now says that instead of naming one."
+msgstr "Corretto: due link nella sezione Lemmy puntavano a pagine che non esistono più. Su Lemmy condizioni d'uso e informativa sulla privacy le pubblica l'istanza scelta dall'utente, quindi ora il readme dice questo invece di nominarne una."
+
+msgid "Fixed: the external services section no longer opens with a list of sources that had to be kept in step with the sections below it."
+msgstr "Corretto: la sezione dei servizi esterni non si apre più con un elenco di fonti che andava tenuto allineato a mano con le sezioni sottostanti."
+
+msgid "Fixed: the description said the plugin aggregates five sources when it aggregates eight, the FAQ listed eight of them and left out ListenBrainz and feeds, and image previews were credited to three sources instead of five."
+msgstr "Corretto: la descrizione diceva che il plugin aggrega cinque fonti mentre ne aggrega otto, la FAQ ne elencava otto lasciando fuori ListenBrainz e i feed, e le anteprime immagini erano attribuite a tre fonti invece di cinque."
+
+msgid "Fixed: on a fresh install, boosts and image previews started switched off although the plugin documented every display option as enabled. The old global switches were still listed among the registered defaults, and the per-source lookup found them before reaching its own default. Existing installs keep the choices they saved."
+msgstr "Corretto: su un'installazione nuova boost e anteprime immagini partivano spenti, benché il plugin documentasse tutte le opzioni di resa come attive. Le vecchie opzioni globali erano rimaste fra i valori predefiniti registrati, e la ricerca per fonte le trovava prima di arrivare al proprio valore predefinito. Le installazioni esistenti conservano le scelte che avevano salvato."
+
+msgid "Changed: the Italian translation is no longer shipped inside the package. Translations for plugins hosted on WordPress.org are generated and delivered by translate.wordpress.org."
+msgstr "Modificato: la traduzione italiana non viene più inclusa nel pacchetto. Per i plugin ospitati su WordPress.org le traduzioni le genera e le distribuisce translate.wordpress.org."
+
+msgid "Changed: three cache keys used a short identifier (<code>eg_st_</code>, <code>eg_mastodon_</code>) and now carry the plugin's full prefix, like every other name in the plugin. They are transients, so they simply rebuild themselves on the next fetch; no setting is affected."
+msgstr "Modificato: tre chiavi di cache usavano un identificatore corto (<code>eg_st_</code>, <code>eg_mastodon_</code>) e ora portano il prefisso completo del plugin, come ogni altro nome. Sono transient, quindi si rigenerano da sole al recupero successivo; nessuna impostazione viene toccata."
+
+msgid "Fixed: the \"tested up to\" header carried a point release, which the plugin directory rejects: that field takes the major version only. It is back to 7.1."
+msgstr "Corretto: l'header \"tested up to\" portava una release di manutenzione, che la directory dei plugin rifiuta: quel campo accetta solo la versione maggiore. È tornato a 7.1."
+
+msgid "1.15.0 - 2026-09-20"
+msgstr "1.15.0 - 2026-09-20"
+
+msgid "1.15.1 - 2026-09-20"
+msgstr "1.15.1 - 2026-09-20"
+
+msgid "1.15.2 - 2026-09-20"
+msgstr "1.15.2 - 2026-09-20"
+
+msgid "1.15.3 - 2026-09-20"
+msgstr "1.15.3 - 2026-09-20"
+
+msgid "1.15.4 - 2026-09-20"
+msgstr "1.15.4 - 2026-09-20"
+
+msgid "1.15.5 - 2026-09-21"
+msgstr "1.15.5 - 2026-09-21"
+
+msgid "1.15.6 - 2026-09-23"
+msgstr "1.15.6 - 2026-09-23"
+
+msgid "1.15.7 - 2026-09-23"
+msgstr "1.15.7 - 2026-09-23"
+
+msgid "1.15.8 - 2026-09-24"
+msgstr "1.15.8 - 2026-09-24"
+
+msgid "1.15.9 - 2026-09-24"
+msgstr "1.15.9 - 2026-09-24"

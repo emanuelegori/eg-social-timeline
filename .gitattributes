@@ -17,3 +17,4 @@ assets/ export-ignore
 # dal repository; il .pot serve ai traduttori e resta nel pacchetto.
 /languages/eg-social-timeline-it_IT.po export-ignore
 /languages/eg-social-timeline-it_IT.mo export-ignore
+/languages/eg-social-timeline-readme-it_IT.po export-ignore
