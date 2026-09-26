@@ -78,6 +78,38 @@ the timeline always names the software actually detected.
 - The RSS feed icon is a widely used generic mark, not the logo of any single
   project.
 
+## Icons derived from official logos
+
+Simple Icons has no glyph for these two platforms. The icons below are
+single-colour versions of each project's official logo, reduced to one path so
+the stylesheet can colour them like the others.
+
+### GoToSocial — `gotosocial.svg`
+
+A single-colour silhouette of the GoToSocial sloth: the outline of the fur,
+the face cut out, and the two eye patches. Nose, mouth and closed eyes are left
+out because they do not survive at icon size.
+
+- Original artwork: the GoToSocial sloth logo by Anna Abramek,
+  https://abramek.art/
+- Source file: https://codeberg.org/superseriousbusiness/gotosocial/src/branch/main/web/assets/logo.svg
+- Licence of the original: Creative Commons Attribution-ShareAlike 4.0
+  International, https://creativecommons.org/licenses/by-sa/4.0/
+- Changes: colours removed, shapes merged into one path, details dropped,
+  rescaled to a 24×24 view box.
+- Licence of this file: **CC BY-SA 4.0**, as the original requires. This file
+  alone is under that licence; the rest of the plugin is not.
+
+### Friendica — `friendica.svg`
+
+The shape of the official Friendica logo, without its blue background, rescaled
+to a 24×24 view box.
+
+- Source file: https://github.com/friendica/friendica/blob/develop/images/friendica.svg
+- Status: public domain, as simple geometry ineligible for copyright:
+  https://commons.wikimedia.org/wiki/File:Friendica_Logo.svg
+- Project: https://friendi.ca/
+
 ## Icons drawn for this plugin
 
 ### `listenbrainz.svg`

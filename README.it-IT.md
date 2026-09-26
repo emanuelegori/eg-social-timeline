@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.15.9-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.16.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon** (anche Pleroma e Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea**, **Bluesky**, **ListenBrainz** e qualsiasi **feed RSS o Atom**.
+Plugin WordPress per mostrare una timeline cronologica unificata delle tue attività social da **Mastodon** (anche Pleroma e Akkoma), **GoToSocial**, **Friendica**, **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea**, **Bluesky**, **ListenBrainz** e qualsiasi **feed RSS o Atom**.
 
 ---
 
@@ -14,6 +14,8 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Timeline Unificata**: Aggrega post da multiple piattaforme in ordine cronologico
 - **Piattaforme Supportate**:
   - **Mastodon**, più Pleroma e Akkoma che ne condividono l'API
+  - **GoToSocial** (feed RSS pubblico del profilo, da attivare nelle impostazioni dell'account)
+  - **Friendica** (feed Atom pubblico del profilo)
   - **Lemmy**, qualsiasi istanza, con statistiche complete
   - **ListenBrainz** (API pubblica, senza token: i tuoi ascolti recenti)
   - **Qualsiasi feed RSS 2.0 o Atom**: blog, newsletter, podcast
@@ -70,6 +72,8 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 1. Vai su **Impostazioni → EG Social Timeline**
 2. Configura almeno un profilo:
    - **Mastodon / Pleroma / Akkoma**: URL istanza + username (es: `https://mastodon.uno` + `emanuelegori`)
+   - **GoToSocial**: URL istanza + username; prima attiva il feed RSS nelle impostazioni dell'account
+   - **Friendica**: URL istanza + nickname (il nome in `/profile/nickname`)
    - **Lemmy**: URL istanza + username (es: `https://diggita.com` + `emanuelegori`)
    - **Forgejo / Gitea**: URL istanza + username (es: `https://git.emanuelegori.uno`)
    - **Pixelfed**: URL istanza + username (es: `https://pixelfed.uno` + `emanuelegori`)
@@ -77,7 +81,7 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
    - **Bluesky**: solo handle (es: `emanuele.bsky.social`, senza @) — la sua API pubblica è la stessa per tutti
 3. Configura limiti per piattaforma (opzionale):
    - Ogni fonte parte da 5 elementi, 0 = illimitato
-   - Mastodon, Lemmy, Bluesky, Pixelfed, PeerTube, Forgejo, ListenBrainz e il feed RSS hanno ciascuno il proprio limite
+   - Mastodon, GoToSocial, Friendica, Lemmy, Bluesky, Pixelfed, PeerTube, Forgejo, ListenBrainz e il feed RSS hanno ciascuno il proprio limite
 4. Regola impostazioni cache e visualizzazione
 5. Regola la sezione **Aspetto** (opzionale):
    - Sfondo timeline: trasparente (default) · preset neutro · segue il browser del visitatore · colore personalizzato
@@ -142,6 +146,8 @@ Le icone sono file SVG in `social-icons/`:
 social-icons/
 ├── mastodon.svg
 ├── pleroma.svg      # usata per Pleroma e Akkoma
+├── gotosocial.svg   # derivata dal logo ufficiale, CC BY-SA 4.0
+├── friendica.svg    # derivata dal logo ufficiale, pubblico dominio
 ├── lemmy.svg
 ├── pixelfed.svg
 ├── forgejo.svg
@@ -212,6 +218,8 @@ eg-social-timeline/
 ├── social-icons/              # Icone SVG
 │   ├── mastodon.svg
 │   ├── pleroma.svg
+│   ├── gotosocial.svg
+│   ├── friendica.svg
 │   ├── lemmy.svg
 │   ├── forgejo.svg
 │   └── bluesky.svg
@@ -225,6 +233,8 @@ eg-social-timeline/
 
 - **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, più `/.well-known/nodeinfo` per distinguere il software
 - **Lemmy**: RSS `/feeds/u/{username}.xml` (con parsing statistiche), su qualsiasi istanza
+- **GoToSocial**: RSS `/@{username}/feed.rss` (spento di default), più `/.well-known/webfinger` al salvataggio, per trovare il server dell'account
+- **Friendica**: Atom `/feed/{nickname}/` (post senza risposte)
 - **Pixelfed**: Atom `/users/{username}.atom` (foto e didascalie, senza statistiche)
 - **PeerTube**: `/api/v1/accounts/{nome}/videos` oppure `/api/v1/video-channels/{nome}/videos`
 - **Forgejo**: `/api/v1/users/{username}/repos` + `/api/v1/repos/{owner}/{repo}/commits`
@@ -233,6 +243,16 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.16.0] - 2026-09-27
+
+#### Aggiunto
+- Riquadri **GoToSocial** e **Friendica**, che leggono il feed pubblico del profilo: RSS su GoToSocial, Atom su Friendica. Icona, nome e colore propri; immagini quando il feed le porta.
+- Su GoToSocial il feed è spento di default: il pannello lo dice e rimanda alle impostazioni dell'account. Se il dominio dell'account è diverso dal server, al salvataggio il server viene trovato via webfinger.
+- Un'istanza GoToSocial o Friendica inserita nel campo Mastodon ora rimanda al riquadro giusto.
+
+#### Corretto
+- La FAQ del readme diceva che le schede ListenBrainz linkano a MusicBrainz: linkano a ListenBrainz.
 
 ### [1.15.9] - 2026-09-24
 

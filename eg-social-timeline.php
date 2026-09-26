@@ -2,8 +2,8 @@
 /**
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
- * Description: Unified chronological timeline of your public activity from Mastodon, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.15.9
+ * Description: Unified chronological timeline of your public activity from Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
+ * Version: 1.16.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.15.9');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.16.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -83,6 +83,26 @@ function eg_social_timeline_platforms() {
                 'mastodon_limit'    => __('Max posts', 'eg-social-timeline'),
             ),
             'display' => array('boosts', 'stats', 'images'),
+        ),
+        'gotosocial' => array(
+            'title'   => __('GoToSocial', 'eg-social-timeline'),
+            'intro'   => __('Public RSS feed of the profile, off by default: turn it on in your account settings. Public posts only, no replies or boosts.', 'eg-social-timeline'),
+            'fields'  => array(
+                'gotosocial_instance' => __('Instance URL', 'eg-social-timeline'),
+                'gotosocial_username' => __('Username', 'eg-social-timeline'),
+                'gotosocial_limit'    => __('Max posts', 'eg-social-timeline'),
+            ),
+            'display' => array('images'),
+        ),
+        'friendica' => array(
+            'title'   => __('Friendica', 'eg-social-timeline'),
+            'intro'   => __('Public Atom feed of the profile: posts without replies, no interaction counts.', 'eg-social-timeline'),
+            'fields'  => array(
+                'friendica_instance' => __('Instance URL', 'eg-social-timeline'),
+                'friendica_username' => __('Username', 'eg-social-timeline'),
+                'friendica_limit'    => __('Max posts', 'eg-social-timeline'),
+            ),
+            'display' => array('images'),
         ),
         'bluesky' => array(
             'title'   => __('Bluesky', 'eg-social-timeline'),
@@ -258,6 +278,12 @@ function eg_social_timeline_register_settings() {
                 'pixelfed_username' => '',
                 'pixelfed_instance' => '',
                 'pixelfed_limit' => 5,
+                'gotosocial_username' => '',
+                'gotosocial_instance' => '',
+                'gotosocial_limit' => 5,
+                'friendica_username' => '',
+                'friendica_instance' => '',
+                'friendica_limit' => 5,
                 'listenbrainz_username' => '',
                 'listenbrainz_instance' => EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
                 'listenbrainz_limit' => 5,
@@ -592,6 +618,13 @@ function eg_social_timeline_extract_profile($platform, $value) {
         'mastodon' => array(
             '~^https?://([^/]+)/(?:@|users/)([^/?#]+)~i' => '',
         ),
+        // Anche l'indirizzo del feed (/@nome/feed.rss) finisce qui.
+        'gotosocial' => array(
+            '~^https?://([^/]+)/(?:@|users/)([^/?#]+)~i' => '',
+        ),
+        'friendica' => array(
+            '~^https?://([^/]+)/(?:profile|feed|channel)/([^/?#]+)~i' => '',
+        ),
         'lemmy' => array(
             '~^https?://([^/]+)/u/([^/?#]+)~i' => '',
         ),
@@ -748,6 +781,16 @@ function eg_social_timeline_profiles() {
             'username' => ltrim(sanitize_text_field($get('pixelfed_username')), '@'),
             'limit'    => $limit('pixelfed_limit', 5),
         ),
+        'gotosocial' => array(
+            'instance' => eg_social_timeline_normalize_instance($get('gotosocial_instance')),
+            'username' => ltrim(sanitize_text_field($get('gotosocial_username')), '@'),
+            'limit'    => $limit('gotosocial_limit', 5),
+        ),
+        'friendica' => array(
+            'instance' => eg_social_timeline_normalize_instance($get('friendica_instance')),
+            'username' => ltrim(sanitize_text_field($get('friendica_username')), '@'),
+            'limit'    => $limit('friendica_limit', 5),
+        ),
         'bluesky' => array(
             'instance' => EG_SOCIAL_TIMELINE_BLUESKY_SERVICE,
             'username' => ltrim(sanitize_text_field($get('bluesky_handle')), '@'),
@@ -789,7 +832,7 @@ function eg_social_timeline_has_profiles() {
         }
 
         // Le piattaforme federate servono a poco senza l'istanza.
-        if (in_array($slug, array('mastodon', 'lemmy', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz'), true) && '' === $profile['instance']) {
+        if (in_array($slug, array('mastodon', 'gotosocial', 'friendica', 'lemmy', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz'), true) && '' === $profile['instance']) {
             continue;
         }
 
@@ -890,8 +933,8 @@ function eg_social_timeline_detect_software($instance) {
  */
 function eg_social_timeline_unsupported_software() {
     return array(
-        'gotosocial' => __('GoToSocial requires authentication for the accounts API, so a public timeline cannot be read.', 'eg-social-timeline'),
-        'friendica'  => __('Friendica requires a login for the Mastodon-compatible API.', 'eg-social-timeline'),
+        'gotosocial' => __('Its Mastodon-compatible API requires a login: use the GoToSocial fields instead, which read the public feed.', 'eg-social-timeline'),
+        'friendica'  => __('Its Mastodon-compatible API requires a login: use the Friendica fields instead, which read the public feed.', 'eg-social-timeline'),
         'misskey'    => __('Misskey uses its own API, not the Mastodon one.', 'eg-social-timeline'),
         'sharkey'    => __('Sharkey uses its own API, not the Mastodon one.', 'eg-social-timeline'),
         'firefish'   => __('Firefish uses its own API, not the Mastodon one.', 'eg-social-timeline'),
@@ -910,9 +953,11 @@ function eg_social_timeline_unsupported_software() {
  */
 function eg_social_timeline_fediverse_label($software) {
     $labels = array(
-        'mastodon' => 'Mastodon',
-        'pleroma'  => 'Pleroma',
-        'akkoma'   => 'Akkoma',
+        'mastodon'   => 'Mastodon',
+        'pleroma'    => 'Pleroma',
+        'akkoma'     => 'Akkoma',
+        'gotosocial' => 'GoToSocial',
+        'friendica'  => 'Friendica',
     );
 
     return isset($labels[$software]) ? $labels[$software] : 'Mastodon';
@@ -1059,6 +1104,54 @@ function eg_social_timeline_pixelfed_username_callback() {
         $value,
         'emanuelegori',
         __('Username, or paste your full profile address.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_gotosocial_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['gotosocial_instance']) ? $options['gotosocial_instance'] : eg_social_timeline_profiles()['gotosocial']['instance'];
+
+    eg_social_timeline_profile_field(
+        'gotosocial_instance',
+        $value,
+        'https://gts.example.org',
+        __('The server hosting your account, HTTPS only: the address you log in to.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_gotosocial_username_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['gotosocial_username']) ? $options['gotosocial_username'] : eg_social_timeline_profiles()['gotosocial']['username'];
+
+    eg_social_timeline_profile_field(
+        'gotosocial_username',
+        $value,
+        'emanuelegori',
+        __('Username, or paste your full profile address.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_friendica_instance_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['friendica_instance']) ? $options['friendica_instance'] : eg_social_timeline_profiles()['friendica']['instance'];
+
+    eg_social_timeline_profile_field(
+        'friendica_instance',
+        $value,
+        'https://friendica.example.org',
+        __('The server hosting your account, HTTPS only.', 'eg-social-timeline')
+    );
+}
+
+function eg_social_timeline_friendica_username_callback() {
+    $options = get_option('eg_social_timeline_options');
+    $value = isset($options['friendica_username']) ? $options['friendica_username'] : eg_social_timeline_profiles()['friendica']['username'];
+
+    eg_social_timeline_profile_field(
+        'friendica_username',
+        $value,
+        'emanuelegori',
+        __('Nickname, or paste your full profile address.', 'eg-social-timeline')
     );
 }
 
@@ -1246,6 +1339,38 @@ function eg_social_timeline_pixelfed_limit_callback() {
            class="small-text">
     <p class="description">
         <?php esc_html_e('Maximum number of Pixelfed posts included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_gotosocial_limit_callback() {
+    $limit = eg_social_timeline_profiles()['gotosocial']['limit'];
+    ?>
+    <input type="number"
+           id="eg_social_timeline_gotosocial_limit"
+           name="eg_social_timeline_options[gotosocial_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="20"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of GoToSocial posts included in the timeline. The feed carries the latest 20. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_friendica_limit_callback() {
+    $limit = eg_social_timeline_profiles()['friendica']['limit'];
+    ?>
+    <input type="number"
+           id="eg_social_timeline_friendica_limit"
+           name="eg_social_timeline_options[friendica_limit]"
+           value="<?php echo esc_attr($limit); ?>"
+           min="0"
+           max="100"
+           class="small-text">
+    <p class="description">
+        <?php esc_html_e('Maximum number of Friendica posts included in the timeline. 0 = no limit. Default: 5', 'eg-social-timeline'); ?>
     </p>
     <?php
 }
@@ -1576,6 +1701,8 @@ function eg_social_timeline_sanitize_options($input) {
         'forgejo'  => 'https://gitea.com',
         'peertube' => '',
         'pixelfed' => '',
+        'gotosocial' => '',
+        'friendica' => '',
         'listenbrainz' => EG_SOCIAL_TIMELINE_LISTENBRAINZ_API,
     );
 
@@ -1652,6 +1779,28 @@ function eg_social_timeline_sanitize_options($input) {
     $parsed_bluesky = eg_social_timeline_extract_profile('bluesky', $raw_bluesky);
     $output['bluesky_handle'] = sanitize_text_field(ltrim($parsed_bluesky ? $parsed_bluesky['username'] : $raw_bluesky, '@'));
 
+    // GoToSocial: il dominio dell'account puo' non essere il server, e il feed
+    // esiste solo sul server. Una richiesta al salvataggio, non a ogni recupero.
+    if ('' !== $output['gotosocial_instance'] && '' !== $output['gotosocial_username']) {
+        $server = eg_social_timeline_resolve_gotosocial_host($output['gotosocial_instance'], $output['gotosocial_username']);
+
+        if ('' !== $server && $server !== $output['gotosocial_instance']) {
+            add_settings_error(
+                'eg_social_timeline_options',
+                'gotosocial_server',
+                sprintf(
+                    /* translators: 1: dominio dell'account, 2: server che lo ospita */
+                    __('GoToSocial: the account on %1$s is hosted on %2$s, so the instance address now points there.', 'eg-social-timeline'),
+                    esc_html(wp_parse_url($output['gotosocial_instance'], PHP_URL_HOST)),
+                    esc_html(wp_parse_url($server, PHP_URL_HOST))
+                ),
+                'info'
+            );
+
+            $output['gotosocial_instance'] = $server;
+        }
+    }
+
     // Tipo del profilo PeerTube: noto se l'indirizzo lo diceva, altrimenti si
     // scopre al primo recupero. Se il profilo non cambia si conserva quello
     // gia' trovato, per non ripetere la scoperta a ogni salvataggio.
@@ -1712,7 +1861,7 @@ function eg_social_timeline_sanitize_options($input) {
                 sprintf(
                     /* translators: 1: nome del software rilevato, 2: motivo per cui non e' supportato */
                     __('%1$s detected on that instance. %2$s', 'eg-social-timeline'),
-                    esc_html(ucfirst($software)),
+                    esc_html(in_array($software, array('gotosocial', 'friendica'), true) ? eg_social_timeline_fediverse_label($software) : ucfirst($software)),
                     esc_html($unsupported[$software])
                 ),
                 'warning'
@@ -1740,6 +1889,13 @@ function eg_social_timeline_sanitize_options($input) {
 
     $pixelfed_limit = isset($input['pixelfed_limit']) ? intval($input['pixelfed_limit']) : 10;
     $output['pixelfed_limit'] = max(0, min(100, $pixelfed_limit));
+
+    // Il feed di GoToSocial porta gli ultimi 20 post: oltre non c'e' nulla.
+    $gotosocial_limit = isset($input['gotosocial_limit']) ? intval($input['gotosocial_limit']) : 5;
+    $output['gotosocial_limit'] = max(0, min(20, $gotosocial_limit));
+
+    $friendica_limit = isset($input['friendica_limit']) ? intval($input['friendica_limit']) : 5;
+    $output['friendica_limit'] = max(0, min(100, $friendica_limit));
 
     $listenbrainz_limit = isset($input['listenbrainz_limit']) ? intval($input['listenbrainz_limit']) : 10;
     $output['listenbrainz_limit'] = max(0, min(100, $listenbrainz_limit));
@@ -2059,6 +2215,8 @@ function eg_social_timeline_admin_styles($hook) {
         'bluesky' => '#0085FF',
         'lemmy' => '#1A1A1A',
         'pixelfed' => '#4F46E5',
+        'gotosocial' => '#C76C33',
+        'friendica' => '#1872A2',
         'peertube' => '#F1680D',
         'forgejo' => '#609926',
         'listenbrainz' => '#A13D7A',
@@ -3065,6 +3223,327 @@ function eg_social_timeline_fetch_pixelfed($username, $instance, $limit = 0) {
 }
 
 /**
+ * Testo semplice da un frammento HTML di un feed.
+ *
+ * I paragrafi e gli a capo diventano ritorni a capo prima di togliere i tag,
+ * altrimenti le frasi di due paragrafi si incollano. Le entita' vengono
+ * decodificate qui perche' l'output passa gia' da esc_html().
+ *
+ * @param string $html Frammento HTML.
+ * @return string
+ */
+function eg_social_timeline_feed_text($html) {
+    $html = preg_replace('~</p>|<br\s*/?>~i', "\n", (string) $html);
+
+    return trim(html_entity_decode(wp_strip_all_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+}
+
+/**
+ * Scarica e interpreta il feed di un profilo.
+ *
+ * @param string $platform Slug, per registrare gli errori.
+ * @param string $feed_url Indirizzo del feed.
+ * @return array array con code e xml (SimpleXMLElement o false).
+ */
+function eg_social_timeline_get_profile_feed($platform, $feed_url) {
+    $response = wp_remote_get($feed_url, array(
+        'timeout'  => 15,
+        'sslverify' => true,
+        // I redirect non vengono rivalidati senza questo flag: la
+        // verifica anti-SSRF dell'URL iniziale coprirebbe solo il primo salto.
+        'reject_unsafe_urls' => true,
+    ));
+
+    if (is_wp_error($response)) {
+        eg_social_timeline_record_issue($platform, $response->get_error_message());
+
+        return array('code' => 0, 'xml' => false);
+    }
+
+    $code = (int) wp_remote_retrieve_response_code($response);
+
+    if (200 !== $code) {
+        return array('code' => $code, 'xml' => false);
+    }
+
+    // Un feed malformato non deve riempire il log del sito di warning: gli
+    // errori di libxml restano interni e il fallimento si gestisce qui.
+    $previous_errors = libxml_use_internal_errors(true);
+    $xml = simplexml_load_string(wp_remote_retrieve_body($response), 'SimpleXMLElement', LIBXML_NONET);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous_errors);
+
+    if (false === $xml) {
+        eg_social_timeline_record_issue(
+            $platform,
+            __('The feed could not be read. The instance may have changed its format.', 'eg-social-timeline')
+        );
+    }
+
+    return array('code' => $code, 'xml' => $xml);
+}
+
+/**
+ * Server che ospita davvero un account GoToSocial.
+ *
+ * GoToSocial permette un dominio dell'account diverso dal server: l'account
+ * @gotosocial@superseriousbusiness.org vive su gts.superseriousbusiness.org,
+ * e il feed esiste solo li'. Il webfinger del dominio lo dice nel link "self".
+ *
+ * @param string $instance URL scritto dall'utente.
+ * @param string $username Nome utente.
+ * @return string URL del server reale, stringa vuota se non determinabile.
+ */
+function eg_social_timeline_resolve_gotosocial_host($instance, $username) {
+    $host = wp_parse_url($instance, PHP_URL_HOST);
+
+    if (empty($host) || '' === $username) {
+        return '';
+    }
+
+    $response = wp_remote_get($instance . '/.well-known/webfinger?resource=' . rawurlencode('acct:' . $username . '@' . $host), array(
+        'timeout'  => 10,
+        'sslverify' => true,
+        'reject_unsafe_urls' => true,
+    ));
+
+    if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
+        return '';
+    }
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (empty($data['links']) || !is_array($data['links'])) {
+        return '';
+    }
+
+    foreach ($data['links'] as $link) {
+        if (isset($link['rel'], $link['href']) && 'self' === $link['rel']) {
+            return eg_social_timeline_normalize_instance(wp_parse_url($link['href'], PHP_URL_HOST));
+        }
+    }
+
+    return '';
+}
+
+/**
+ * Fetch dei post GoToSocial dal feed RSS pubblico del profilo.
+ *
+ * L'API compatibile con Mastodon di GoToSocial chiede l'accesso, mentre il
+ * feed /@nome/feed.rss e' pubblico: e' spento di default e l'utente lo
+ * accende dalle impostazioni del proprio account. Porta gli ultimi 20 post
+ * pubblici, senza risposte ne' boost, e nessun conteggio.
+ *
+ * Il testo sta in content:encoded: la description e' un riassunto troncato
+ * che comincia con "@utente made a new post". Le immagini arrivano come
+ * enclosure, senza testo alternativo.
+ *
+ * Risposte misurate: 404 feed spento, 500 account inesistente.
+ *
+ * @param string $username Nome utente.
+ * @param string $instance URL dell'istanza.
+ * @param int    $limit    Numero massimo di post, 0 per nessun limite.
+ * @return array Post normalizzati.
+ */
+function eg_social_timeline_fetch_gotosocial($username, $instance, $limit = 0) {
+    $instance = eg_social_timeline_normalize_instance($instance);
+    $username = ltrim(trim((string) $username), '@');
+
+    if ('' === $username || '' === $instance) {
+        return array();
+    }
+
+    $feed = eg_social_timeline_get_profile_feed('gotosocial', $instance . '/@' . rawurlencode($username) . '/feed.rss');
+
+    if (404 === $feed['code']) {
+        eg_social_timeline_record_issue(
+            'gotosocial',
+            sprintf(
+                /* translators: 1: nome utente, 2: indirizzo delle impostazioni dell'account */
+                __('The RSS feed of "%1$s" is turned off. GoToSocial keeps it off by default: turn it on in the account settings (%2$s).', 'eg-social-timeline'),
+                $username,
+                $instance . '/settings'
+            )
+        );
+
+        return array();
+    }
+
+    if (200 !== $feed['code'] && 0 !== $feed['code']) {
+        eg_social_timeline_record_issue(
+            'gotosocial',
+            sprintf(
+                /* translators: 1: nome utente, 2: codice di stato HTTP */
+                __('The instance did not return the feed of "%1$s" (HTTP %2$d). A 500 usually means the account does not exist on this instance.', 'eg-social-timeline'),
+                $username,
+                $feed['code']
+            )
+        );
+
+        return array();
+    }
+
+    if (false === $feed['xml'] || !isset($feed['xml']->channel->item)) {
+        return array();
+    }
+
+    $posts = array();
+    $count = 0;
+
+    foreach ($feed['xml']->channel->item as $item) {
+        if ($limit > 0 && $count >= $limit) {
+            break;
+        }
+
+        $timestamp = strtotime((string) $item->pubDate);
+
+        if (!$timestamp) {
+            continue;
+        }
+
+        $encoded = $item->children('http://purl.org/rss/1.0/modules/content/');
+        $text = isset($encoded->encoded) ? eg_social_timeline_feed_text((string) $encoded->encoded) : '';
+
+        if ('' === $text) {
+            $text = eg_social_timeline_feed_text((string) $item->description);
+        }
+
+        $image_url = '';
+
+        if (isset($item->enclosure)) {
+            $enclosure = $item->enclosure->attributes();
+            $type = isset($enclosure['type']) ? (string) $enclosure['type'] : '';
+
+            if (isset($enclosure['url']) && 0 === strpos($type, 'image/')) {
+                $image_url = esc_url_raw((string) $enclosure['url']);
+            }
+        }
+
+        $title = strtok($text, "\n");
+
+        $posts[] = array(
+            'platform'         => 'gotosocial',
+            'platform_label'   => 'GoToSocial',
+            'date'             => $timestamp,
+            'title'            => (false !== $title) ? $title : '',
+            'content'          => $text,
+            'link'             => esc_url_raw((string) $item->link),
+            'is_boost'         => false,
+            'image_url'        => $image_url,
+            // Il feed non porta la descrizione dell'immagine.
+            'image_alt'        => '',
+            'favourites_count' => 0,
+            'reblogs_count'    => 0,
+            'replies_count'    => 0,
+        );
+
+        $count++;
+    }
+
+    return $posts;
+}
+
+/**
+ * Fetch dei post Friendica dal feed Atom pubblico del profilo.
+ *
+ * /feed/{nome}/ porta i post del profilo senza le risposte, che stanno in
+ * /feed/{nome}/activity. L'API compatibile con Mastodon chiede l'accesso.
+ * Le immagini sono link rel="enclosure", con la descrizione nel title.
+ *
+ * @param string $username Nickname.
+ * @param string $instance URL dell'istanza.
+ * @param int    $limit    Numero massimo di post, 0 per nessun limite.
+ * @return array Post normalizzati.
+ */
+function eg_social_timeline_fetch_friendica($username, $instance, $limit = 0) {
+    $instance = eg_social_timeline_normalize_instance($instance);
+    $username = ltrim(trim((string) $username), '@');
+
+    if ('' === $username || '' === $instance) {
+        return array();
+    }
+
+    $feed = eg_social_timeline_get_profile_feed('friendica', $instance . '/feed/' . rawurlencode($username) . '/');
+
+    if (200 !== $feed['code'] && 0 !== $feed['code']) {
+        eg_social_timeline_record_issue(
+            'friendica',
+            sprintf(
+                /* translators: 1: nickname, 2: codice di stato HTTP */
+                __('The instance did not return the feed of "%1$s" (HTTP %2$d). Check the nickname: it is the name in the profile address.', 'eg-social-timeline'),
+                $username,
+                $feed['code']
+            )
+        );
+
+        return array();
+    }
+
+    if (false === $feed['xml'] || !isset($feed['xml']->entry)) {
+        return array();
+    }
+
+    $posts = array();
+    $count = 0;
+
+    foreach ($feed['xml']->entry as $entry) {
+        if ($limit > 0 && $count >= $limit) {
+            break;
+        }
+
+        $timestamp = strtotime((string) ($entry->published ? $entry->published : $entry->updated));
+
+        if (!$timestamp) {
+            continue;
+        }
+
+        $link = '';
+        $image_url = '';
+        $image_alt = '';
+
+        foreach ($entry->link as $candidate) {
+            $attributes = $candidate->attributes();
+            $rel = isset($attributes['rel']) ? (string) $attributes['rel'] : 'alternate';
+            $type = isset($attributes['type']) ? (string) $attributes['type'] : '';
+
+            if ('alternate' === $rel && '' === $link && isset($attributes['href'])) {
+                $link = (string) $attributes['href'];
+            } elseif ('enclosure' === $rel && '' === $image_url && 0 === strpos($type, 'image/') && isset($attributes['href'])) {
+                $image_url = esc_url_raw((string) $attributes['href']);
+                $image_alt = isset($attributes['title']) ? sanitize_text_field((string) $attributes['title']) : '';
+            }
+        }
+
+        if ('' === $link) {
+            $link = (string) $entry->id;
+        }
+
+        $title = sanitize_text_field((string) $entry->title);
+        $text = eg_social_timeline_feed_text((string) $entry->content);
+
+        $posts[] = array(
+            'platform'         => 'friendica',
+            'platform_label'   => 'Friendica',
+            'date'             => $timestamp,
+            'title'            => $title,
+            // Un post con titolo e corpo li mostra entrambi, come la fonte RSS.
+            'content'          => ('' === $text) ? $title : (('' !== $title && 0 !== strpos($text, $title)) ? $title . "\n\n" . $text : $text),
+            'link'             => esc_url_raw($link),
+            'is_boost'         => false,
+            'image_url'        => $image_url,
+            'image_alt'        => $image_alt,
+            'favourites_count' => 0,
+            'reblogs_count'    => 0,
+            'replies_count'    => 0,
+        );
+
+        $count++;
+    }
+
+    return $posts;
+}
+
+/**
  * Fetch di un feed RSS 2.0 o Atom qualsiasi.
  *
  * Un solo parser per i due formati: cambiano i nomi degli elementi, non la
@@ -3385,6 +3864,8 @@ function eg_social_timeline_fetch_all_feeds() {
         'forgejo'  => 'eg_social_timeline_fetch_forgejo',
         'peertube' => 'eg_social_timeline_fetch_peertube',
         'pixelfed' => 'eg_social_timeline_fetch_pixelfed',
+        'gotosocial' => 'eg_social_timeline_fetch_gotosocial',
+        'friendica' => 'eg_social_timeline_fetch_friendica',
         'listenbrainz' => 'eg_social_timeline_fetch_listenbrainz',
     );
 
@@ -3637,6 +4118,74 @@ function eg_social_timeline_verify_profiles() {
                 'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
                     /* translators: 1: nome utente, 2: codice di stato HTTP */
                     __('No Atom feed for "%1$s" (HTTP %2$d).', 'eg-social-timeline'),
+                    $profile['username'],
+                    $result['code']
+                ),
+            );
+    }
+
+    // GoToSocial: feed RSS, spento finche' l'utente non lo accende.
+    $profile = $profiles['gotosocial'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/@' . rawurlencode($profile['username']) . '/feed.rss');
+        $items = ('' !== $result['body']) ? substr_count($result['body'], '<item>') : 0;
+
+        if (200 === $result['code']) {
+            $note = sprintf(
+                /* translators: %d: numero di elementi nel feed */
+                _n('%d item in the feed', '%d items in the feed', $items, 'eg-social-timeline'),
+                $items
+            );
+        } elseif ('' !== $result['error']) {
+            $note = $result['error'];
+        } elseif (404 === $result['code']) {
+            $note = sprintf(
+                /* translators: %s: indirizzo delle impostazioni dell'account */
+                __('The RSS feed of this account is turned off. Turn it on in the account settings (%s).', 'eg-social-timeline'),
+                $profile['instance'] . '/settings'
+            );
+        } else {
+            $note = sprintf(
+                /* translators: 1: nome utente, 2: codice di stato HTTP */
+                __('Account "%1$s" not found (HTTP %2$d).', 'eg-social-timeline'),
+                $profile['username'],
+                $result['code']
+            );
+        }
+
+        $report['platforms']['gotosocial'] = array(
+            'ok'     => (200 === $result['code']),
+            'detail' => (200 === $result['code'])
+                ? sprintf('%s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $profile['username'])
+                : wp_parse_url($profile['instance'], PHP_URL_HOST),
+            'note'   => $note,
+        );
+    }
+
+    // Friendica: feed Atom del profilo.
+    $profile = $profiles['friendica'];
+
+    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+        $result = $get($profile['instance'] . '/feed/' . rawurlencode($profile['username']) . '/');
+        $entries = ('' !== $result['body']) ? preg_match_all('~<entry[\s>]~', $result['body']) : 0;
+
+        $report['platforms']['friendica'] = (200 === $result['code'])
+            ? array(
+                'ok'     => true,
+                'detail' => sprintf('%s · %s', wp_parse_url($profile['instance'], PHP_URL_HOST), $profile['username']),
+                'note'   => sprintf(
+                    /* translators: %d: numero di elementi nel feed */
+                    _n('%d item in the Atom feed', '%d items in the Atom feed', $entries, 'eg-social-timeline'),
+                    $entries
+                ),
+            )
+            : array(
+                'ok'     => false,
+                'detail' => wp_parse_url($profile['instance'], PHP_URL_HOST),
+                'note'   => ('' !== $result['error']) ? $result['error'] : sprintf(
+                    /* translators: 1: nome utente, 2: codice di stato HTTP */
+                    __('Account "%1$s" not found (HTTP %2$d).', 'eg-social-timeline'),
                     $profile['username'],
                     $result['code']
                 ),
@@ -4160,6 +4709,8 @@ function eg_social_timeline_get_platform_name($platform) {
         'forgejo' => __('Forgejo', 'eg-social-timeline'),
         'peertube' => __('PeerTube', 'eg-social-timeline'),
         'pixelfed' => __('Pixelfed', 'eg-social-timeline'),
+        'gotosocial' => __('GoToSocial', 'eg-social-timeline'),
+        'friendica' => __('Friendica', 'eg-social-timeline'),
         'listenbrainz' => __('ListenBrainz', 'eg-social-timeline'),
         'rss' => __('Feed', 'eg-social-timeline')
     );
@@ -4176,6 +4727,8 @@ function eg_social_timeline_get_icon($platform, $software = '') {
         'forgejo' => 'forgejo.svg',
         'peertube' => 'peertube.svg',
         'pixelfed' => 'pixelfed.svg',
+        'gotosocial' => 'gotosocial.svg',
+        'friendica' => 'friendica.svg',
         'listenbrainz' => 'listenbrainz.svg',
         'rss' => 'rss.svg'
     );
@@ -4402,7 +4955,7 @@ function eg_social_timeline_scope_declarations($settings, $context) {
     $card_polarity    = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
     $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
 
-    $icons = array('mono', 'mastodon', 'pleroma', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz', 'rss');
+    $icons = array('mono', 'mastodon', 'pleroma', 'gotosocial', 'friendica', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz', 'rss');
     $declarations = array();
 
     // Primo piano della scheda.

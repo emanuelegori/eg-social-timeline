@@ -42,6 +42,8 @@
     --egst-light-icon-forgejo: #609926;
     --egst-light-icon-peertube: #F1680D;
     --egst-light-icon-pixelfed: #4F46E5;
+    --egst-light-icon-gotosocial: #C76C33;
+    --egst-light-icon-friendica: #1872A2;
     --egst-light-icon-rss: #E07B39;
     --egst-light-icon-listenbrainz: #A13D7A;
     --egst-light-empty-bg: #F5F5F5;
@@ -79,6 +81,8 @@
     --egst-dark-icon-forgejo: #8FCB4F;
     --egst-dark-icon-peertube: #FF9248;
     --egst-dark-icon-pixelfed: #A5A6FF;
+    --egst-dark-icon-gotosocial: #DF8958;
+    --egst-dark-icon-friendica: #FEBF19;
     --egst-dark-icon-rss: #FFA500;
     --egst-dark-icon-listenbrainz: #E191C8;
     --egst-dark-empty-bg: #1F2937;
@@ -122,6 +126,8 @@
     --egst-icon-forgejo: var(--egst-light-icon-forgejo);
     --egst-icon-peertube: var(--egst-light-icon-peertube);
     --egst-icon-pixelfed: var(--egst-light-icon-pixelfed);
+    --egst-icon-gotosocial: var(--egst-light-icon-gotosocial);
+    --egst-icon-friendica: var(--egst-light-icon-friendica);
     --egst-icon-rss: var(--egst-light-icon-rss);
     --egst-icon-listenbrainz: var(--egst-light-icon-listenbrainz);
     --egst-empty-bg: var(--egst-light-empty-bg);
@@ -147,6 +153,8 @@
     --egst-chip-icon-forgejo: var(--egst-light-icon-forgejo);
     --egst-chip-icon-peertube: var(--egst-light-icon-peertube);
     --egst-chip-icon-pixelfed: var(--egst-light-icon-pixelfed);
+    --egst-chip-icon-gotosocial: var(--egst-light-icon-gotosocial);
+    --egst-chip-icon-friendica: var(--egst-light-icon-friendica);
     --egst-chip-icon-rss: var(--egst-light-icon-rss);
     --egst-chip-icon-listenbrainz: var(--egst-light-icon-listenbrainz);
 }
@@ -267,6 +275,8 @@
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
 #filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"]::before,
+#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"]::before,
+#filter-friendica:not(:checked) ~ * label[for="filter-friendica"]::before,
 #filter-rss:not(:checked) ~ * label[for="filter-rss"]::before,
 #filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"]::before {
     background: var(--egst-chip-bg);
@@ -281,6 +291,8 @@
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
 #filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"],
+#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"],
+#filter-friendica:not(:checked) ~ * label[for="filter-friendica"],
 #filter-rss:not(:checked) ~ * label[for="filter-rss"],
 #filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"] {
     opacity: 0.6;
@@ -299,6 +311,8 @@
 #filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"] .platform-icon-small svg,
 #filter-peertube:not(:checked) ~ * label[for="filter-peertube"] .platform-icon-small svg,
 #filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"] .platform-icon-small svg,
+#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"] .platform-icon-small svg,
+#filter-friendica:not(:checked) ~ * label[for="filter-friendica"] .platform-icon-small svg,
 #filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"] .platform-icon-small svg,
 #filter-rss:not(:checked) ~ * label[for="filter-rss"] .platform-icon-small svg {
     filter: grayscale(1);
@@ -411,6 +425,8 @@
 #filter-forgejo:checked ~ .timeline-forgejo,
 #filter-peertube:checked ~ .timeline-peertube,
 #filter-pixelfed:checked ~ .timeline-pixelfed,
+#filter-gotosocial:checked ~ .timeline-gotosocial,
+#filter-friendica:checked ~ .timeline-friendica,
 #filter-rss:checked ~ .timeline-rss,
 #filter-listenbrainz:checked ~ .timeline-listenbrainz {
     display: block !important;
@@ -573,6 +589,10 @@
 .egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-chip-icon-peertube); }
 .egst-icons-brand .platform-pixelfed .platform-icon svg { color: var(--egst-icon-pixelfed); }
 .egst-icons-brand label[for="filter-pixelfed"] .platform-icon-small svg { color: var(--egst-chip-icon-pixelfed); }
+.egst-icons-brand .platform-gotosocial .platform-icon svg { color: var(--egst-icon-gotosocial); }
+.egst-icons-brand label[for="filter-gotosocial"] .platform-icon-small svg { color: var(--egst-chip-icon-gotosocial); }
+.egst-icons-brand .platform-friendica .platform-icon svg { color: var(--egst-icon-friendica); }
+.egst-icons-brand label[for="filter-friendica"] .platform-icon-small svg { color: var(--egst-chip-icon-friendica); }
 .egst-icons-brand .platform-rss .platform-icon svg { color: var(--egst-icon-rss); }
 .egst-icons-brand label[for="filter-rss"] .platform-icon-small svg { color: var(--egst-chip-icon-rss); }
 .egst-icons-brand .platform-listenbrainz .platform-icon svg { color: var(--egst-icon-listenbrainz); }

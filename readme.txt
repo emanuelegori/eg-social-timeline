@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.15.9
+Stable tag: 1.16.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,11 +13,13 @@ Chronological timeline of your public activity across the fediverse, Bluesky, Li
 
 == Description ==
 
-EG Social Timeline aggregates in chronological order your public posts from eight sources and displays them in a single timeline via shortcode.
+EG Social Timeline aggregates in chronological order your public posts from ten sources and displays them in a single timeline via shortcode.
 
 = Supported platforms =
 
 - Mastodon, and the Mastodon-compatible Pleroma and Akkoma (public accounts API, no authentication)
+- GoToSocial (public RSS feed of the profile, which the account owner turns on in the settings: public posts and images, no interaction counts)
+- Friendica (public Atom feed of the profile: posts and images, no interaction counts)
 - Bluesky (public API, no authentication required)
 - Pixelfed (public Atom feed: photos and captions, no interaction counts)
 - PeerTube (public REST API, videos from an account or from a channel)
@@ -31,7 +33,7 @@ Every platform is configured the same way: the instance URL plus your username. 
 = Key features =
 
 - Interactive per-platform filters, no JavaScript required
-- Image previews wherever the source carries one: Mastodon, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed (optional, per source)
+- Image previews wherever the source carries one: Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube thumbnails and images found in a feed (optional, per source)
 - Per-platform configurable limits for a balanced mix
 - Interaction stats: likes, boosts, comments
 - Configurable cache (30 minutes - 24 hours)
@@ -118,7 +120,7 @@ Yes. The "RSS or Atom feed" fields take the address of any feed — your blog, a
 
 = What does the ListenBrainz source show? =
 
-Your recent listens: artist and track, with the date. The public API needs no token. Each card links to the recording on MusicBrainz when the identifier is available, otherwise to your ListenBrainz profile. No interaction counts, because listens do not have any.
+Your recent listens: artist and track, with the date. The public API needs no token. Each card links to the recording on ListenBrainz when the identifier is available, otherwise to your ListenBrainz profile. No interaction counts, because listens do not have any.
 
 = Why does Pixelfed show no likes or comments? =
 
@@ -126,7 +128,11 @@ Because its public Atom feed does not carry them. Pixelfed answers the Mastodon-
 
 = Does the Mastodon field work with every fediverse server? =
 
-No, and it is worth knowing why. The plugin reads the public accounts API (`/api/v1/accounts/lookup` and `/api/v1/accounts/{id}/statuses`), which Mastodon, Pleroma and Akkoma serve without authentication. GoToSocial and Friendica answer those endpoints with HTTP 401, Misskey and Sharkey use a different API, and Pixelfed answers the lookup but redirects the statuses endpoint to its login page. When you save an instance running one of those, the settings page says so instead of leaving you with a platform that never appears.
+No, and it is worth knowing why. The plugin reads the public accounts API (`/api/v1/accounts/lookup` and `/api/v1/accounts/{id}/statuses`), which Mastodon, Pleroma and Akkoma serve without authentication. GoToSocial and Friendica answer those endpoints only to signed-in users, so they have their own sections, which read the public feed of the profile instead. Misskey and Sharkey use a different API and are not supported at the moment. Pixelfed answers the lookup but redirects the statuses endpoint to its login page, and also has its own section. When you save an instance of another software in the Mastodon field, the settings page says so and points to the right section.
+
+= My GoToSocial posts do not show up. =
+
+GoToSocial keeps the RSS feed of a profile off by default. Turn it on in your account settings (`https://your-instance/settings`), then save the plugin settings again. The feed carries your latest 20 public posts, without replies or boosts. Also make sure the instance address is the server you log in to: when the account domain is different from the server, the plugin looks it up when you save and corrects the address.
 
 = A platform I configured does not show up. Where do I look? =
 
@@ -173,53 +179,16 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
-= 1.15.9 - 2026-09-24 =
-* Fixed: the "tested up to" header carried a point release, which the plugin directory rejects: that field takes the major version only. It is back to 7.1.
-
-= 1.15.8 - 2026-09-24 =
-* Changed: three cache keys used a short identifier (`eg_st_`, `eg_mastodon_`) and now carry the plugin's full prefix, like every other name in the plugin. They are transients, so they simply rebuild themselves on the next fetch; no setting is affected.
-* Changed: the Italian translation is no longer shipped inside the package. Translations for plugins hosted on WordPress.org are generated and delivered by translate.wordpress.org.
-
-= 1.15.7 - 2026-09-23 =
-* Fixed: on a fresh install, boosts and image previews started switched off although the plugin documented every display option as enabled. The old global switches were still listed among the registered defaults, and the per-source lookup found them before reaching its own default. Existing installs keep the choices they saved.
-* Fixed: the description said the plugin aggregates five sources when it aggregates eight, the FAQ listed eight of them and left out ListenBrainz and feeds, and image previews were credited to three sources instead of five.
-* Fixed: the external services section no longer opens with a list of sources that had to be kept in step with the sections below it.
-
-= 1.15.6 - 2026-09-23 =
-* Fixed: two links in the Lemmy section pointed at pages that no longer exist. Terms and privacy policy on Lemmy are published by the instance the user chooses, so the readme now says that instead of naming one.
-* Fixed: the example addresses that show which profile formats the plugin accepts used real instances with placeholder usernames, so they resolved to missing pages. They now use reserved example domains.
-* Changed: tested up to WordPress 7.1.2.
-
-= 1.15.5 - 2026-09-21 =
-* Fixed: the compatibility header declared WordPress 7.1 while the current release is 7.1.1, so WordPress warned that the plugin had not been tested with the version people are actually running.
-* Changed: the upgrade notice carries the two most recent releases, as it was meant to from 1.15.3 onwards.
-
-= 1.15.4 - 2026-09-20 =
-* Changed: the installation instructions now start from the WordPress plugin directory, which is where the plugin is distributed. The release ZIP and the source repository are still documented.
-* Removed: the section recommending a third-party updater to receive releases from outside the plugin directory.
-* Fixed: the screenshots in README.md are referenced by absolute address, so they show up outside the repository too, and all four are listed instead of three.
-* Changed: the Lemmy example address no longer names a real account.
-
-
-= 1.15.3 - 2026-09-20 =
-* Changed: this readme now carries the changelog of the current 1.15 line only. Every earlier entry moved to changelog.txt, which ships with the plugin, as the plugin directory asks.
-* Changed: the upgrade notice keeps the two most recent releases instead of every version ever published.
-
-= 1.15.2 - 2026-09-20 =
-* Fixed: eight field descriptions still quoted the defaults from before 1.14.1. They now match what the plugin actually does: five items per source, fifty posts on the page, thirty minutes of cache.
-* Fixed: the screenshot list is now in the format the plugin directory reads, so the screenshots appear on the plugin page.
-* Changed: the plugin directory assets (screenshots, banner, icon) are no longer shipped inside the plugin package.
-
-= 1.15.1 - 2026-09-20 =
-* Changed: the footer links now follow the language of the person reading them. The project page and the support page are translatable strings, so a translation can point them at its own localised pages, and a language without one simply stays on English. Nothing in the code tests for a specific locale.
-
-= 1.15.0 - 2026-09-20 =
-* Added: the settings page now has a proper footer, built on the WordPress footer slots. On the left, who develops the plugin and the links that matter: documentation, repository, and a way to support the work. On the right, version and licence, where administrators already look for them.
-* Added: a donate link on the plugin directory page, pointing at the project's support page.
-* Changed: the plugin homepage now opens the project page instead of the code repository, so anyone clicking it lands on documentation rather than on a Git tree.
-* Fixed: the repository link in the footer was missing `rel="noopener noreferrer"`, unlike the developer one.
+= 1.16.0 - 2026-09-27 =
+* New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
+* New: on GoToSocial the RSS feed is off by default, and the settings page now says so and links the account settings, instead of reporting an empty source. When the account domain differs from the server, the plugin finds the server when you save.
+* New: entering a GoToSocial or Friendica instance in the Mastodon field points to the right section.
+* Fixed: the FAQ said ListenBrainz cards link to MusicBrainz; they link to the recording on ListenBrainz.
 
 == Upgrade Notice ==
+
+= 1.16.0 =
+GoToSocial and Friendica get their own sections, reading the public feed of the profile. On GoToSocial the feed must be turned on in the account settings.
 
 = 1.15.9 =
 Corrects the "tested up to" header, which must carry the major version only. No functional change.
@@ -278,6 +247,24 @@ Contacted services are cached locally for a configurable duration (30 minutes to
 - **Data sent**: only the public username entered in the settings, as a URL parameter.
 - **Data received and stored**: public commit metadata (message, date, repository name, commit hash and link). Cached locally as a WordPress transient.
 - Forgejo and Gitea are open-source git hosting platforms. Their terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= GoToSocial =
+
+- **What**: the GoToSocial instance the user enters in the settings (e.g. `https://gts.example.org`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
+- **Endpoints**: `GET /@{username}/feed.rss`, the public RSS feed of the profile, which the account owner must turn on. When the settings are saved, also `GET /.well-known/webfinger?resource=acct:{username}@{domain}`, to find the server that hosts the account when its domain is different.
+- **Data sent**: only the public username entered in the settings, as part of the URL.
+- **Data received and stored**: public post metadata (text, date, link and image URL if image previews are enabled) parsed from the public RSS feed. Cached locally as a WordPress transient.
+- GoToSocial is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
+
+= Friendica =
+
+- **What**: the Friendica instance the user enters in the settings (e.g. `https://friendica.example.org`).
+- **When**: each time the timeline cache expires and a page containing the shortcode is rendered, plus once when the settings are saved or the "Verify profiles" button is used.
+- **Endpoint**: `GET /feed/{nickname}/`, the public Atom feed of the profile.
+- **Data sent**: only the public nickname entered in the settings, as part of the URL path.
+- **Data received and stored**: public post metadata (title, text, date, link, image URL and its description if image previews are enabled) parsed from the public Atom feed. Cached locally as a WordPress transient.
+- Friendica is decentralized: terms of service and privacy policy depend on the specific instance the user chooses and are available on that instance.
 
 = Pixelfed =
 

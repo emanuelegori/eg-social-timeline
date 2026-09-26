@@ -1,11 +1,11 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.15.9-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.16.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
 
-WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea**, **Bluesky**, **ListenBrainz** and any **RSS or Atom feed**.
+WordPress plugin to display a unified chronological timeline of your social activity from **Mastodon** (also Pleroma and Akkoma), **GoToSocial**, **Friendica**, **Lemmy**, **Pixelfed**, **PeerTube**, **Forgejo/Gitea**, **Bluesky**, **ListenBrainz** and any **RSS or Atom feed**.
 
 ---
 
@@ -14,6 +14,8 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Unified Timeline**: aggregates posts from multiple platforms in chronological order
 - **Supported platforms**:
   - **Mastodon**, plus the Mastodon-compatible **Pleroma** and **Akkoma**
+  - **GoToSocial** (public RSS feed of the profile, to be turned on in the account settings)
+  - **Friendica** (public Atom feed of the profile)
   - **Lemmy**, any instance, with full statistics
   - **ListenBrainz** (public API, no token: your recent listens)
   - **Any RSS 2.0 or Atom feed**: blog, newsletter, podcast
@@ -70,6 +72,8 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 1. Go to **Settings → EG Social Timeline**
 2. Configure at least one profile:
    - **Mastodon / Pleroma / Akkoma**: instance URL + username (e.g. `https://mastodon.uno` + `emanuelegori`)
+   - **GoToSocial**: instance URL + username; turn on the RSS feed in your account settings first
+   - **Friendica**: instance URL + nickname (the name in `/profile/nickname`)
    - **Lemmy**: instance URL + username (e.g. `https://diggita.com` + `emanuelegori`)
    - **Forgejo / Gitea**: instance URL + username (e.g. `https://git.emanuelegori.uno`)
    - **Pixelfed**: instance URL + username (e.g. `https://pixelfed.uno` + `emanuelegori`)
@@ -77,7 +81,7 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
    - **Bluesky**: handle alone (e.g. `emanuele.bsky.social`, without @) — its public API is the same for everyone
 3. Configure per-platform limits (optional):
    - Every source defaults to 5 items, 0 = unlimited
-   - Mastodon, Lemmy, Bluesky, Pixelfed, PeerTube, Forgejo, ListenBrainz and the RSS feed each have their own limit
+   - Mastodon, GoToSocial, Friendica, Lemmy, Bluesky, Pixelfed, PeerTube, Forgejo, ListenBrainz and the RSS feed each have their own limit
 4. Adjust cache and display settings
 5. Adjust the **Appearance** section (optional):
    - Timeline background: transparent (default) · neutral preset · follow the visitor browser · custom color
@@ -142,6 +146,8 @@ Icons are SVG files inside `social-icons/`:
 social-icons/
 ├── mastodon.svg
 ├── pleroma.svg      # used for Pleroma and Akkoma
+├── gotosocial.svg   # derived from the official logo, CC BY-SA 4.0
+├── friendica.svg    # derived from the official logo, public domain
 ├── lemmy.svg
 ├── pixelfed.svg
 ├── forgejo.svg
@@ -221,6 +227,8 @@ eg-social-timeline/
 ### APIs used
 
 - **Mastodon / Pleroma / Akkoma**: `/api/v1/accounts/lookup` + `/api/v1/accounts/{id}/statuses`, and `/.well-known/nodeinfo` to tell the software apart
+- **GoToSocial**: RSS `/@{username}/feed.rss` (off by default), plus `/.well-known/webfinger` when saving, to find the server of the account
+- **Friendica**: Atom `/feed/{nickname}/` (posts without replies)
 - **Lemmy**: RSS `/feeds/u/{username}.xml` (with stats parsing), on any instance
 - **Pixelfed**: Atom `/users/{username}.atom` (photos and captions, no counts)
 - **PeerTube**: `/api/v1/accounts/{name}/videos` or `/api/v1/video-channels/{name}/videos`
@@ -230,6 +238,16 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.16.0] - 2026-09-27
+
+#### Added
+- **GoToSocial** and **Friendica** sections, reading the public feed of the profile: RSS on GoToSocial, Atom on Friendica. Own icon, name and colour; images when the feed carries them.
+- On GoToSocial the feed is off by default: the settings page says so and links the account settings. When the account domain differs from the server, the server is looked up via webfinger when saving.
+- A GoToSocial or Friendica instance entered in the Mastodon field now points to the right section.
+
+#### Fixed
+- The readme FAQ said ListenBrainz cards link to MusicBrainz; they link to ListenBrainz.
 
 ### [1.15.9] - 2026-09-24
 

@@ -1,11 +1,57 @@
 EG Social Timeline - full changelog
 ===================================
 
-The readme.txt shipped with the plugin keeps the changelog of the current 1.15
+The readme.txt shipped with the plugin keeps the changelog of the current 1.16
 line only, as the WordPress.org plugin directory asks. Every earlier entry is
 kept here.
 
 Releases, tags and source: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases
+
+= 1.15.9 - 2026-09-24 =
+* Fixed: the "tested up to" header carried a point release, which the plugin directory rejects: that field takes the major version only. It is back to 7.1.
+
+= 1.15.8 - 2026-09-24 =
+* Changed: three cache keys used a short identifier (`eg_st_`, `eg_mastodon_`) and now carry the plugin's full prefix, like every other name in the plugin. They are transients, so they simply rebuild themselves on the next fetch; no setting is affected.
+* Changed: the Italian translation is no longer shipped inside the package. Translations for plugins hosted on WordPress.org are generated and delivered by translate.wordpress.org.
+
+= 1.15.7 - 2026-09-23 =
+* Fixed: on a fresh install, boosts and image previews started switched off although the plugin documented every display option as enabled. The old global switches were still listed among the registered defaults, and the per-source lookup found them before reaching its own default. Existing installs keep the choices they saved.
+* Fixed: the description said the plugin aggregates five sources when it aggregates eight, the FAQ listed eight of them and left out ListenBrainz and feeds, and image previews were credited to three sources instead of five.
+* Fixed: the external services section no longer opens with a list of sources that had to be kept in step with the sections below it.
+
+= 1.15.6 - 2026-09-23 =
+* Fixed: two links in the Lemmy section pointed at pages that no longer exist. Terms and privacy policy on Lemmy are published by the instance the user chooses, so the readme now says that instead of naming one.
+* Fixed: the example addresses that show which profile formats the plugin accepts used real instances with placeholder usernames, so they resolved to missing pages. They now use reserved example domains.
+* Changed: tested up to WordPress 7.1.2.
+
+= 1.15.5 - 2026-09-21 =
+* Fixed: the compatibility header declared WordPress 7.1 while the current release is 7.1.1, so WordPress warned that the plugin had not been tested with the version people are actually running.
+* Changed: the upgrade notice carries the two most recent releases, as it was meant to from 1.15.3 onwards.
+
+= 1.15.4 - 2026-09-20 =
+* Changed: the installation instructions now start from the WordPress plugin directory, which is where the plugin is distributed. The release ZIP and the source repository are still documented.
+* Removed: the section recommending a third-party updater to receive releases from outside the plugin directory.
+* Fixed: the screenshots in README.md are referenced by absolute address, so they show up outside the repository too, and all four are listed instead of three.
+* Changed: the Lemmy example address no longer names a real account.
+
+
+= 1.15.3 - 2026-09-20 =
+* Changed: this readme now carries the changelog of the current 1.15 line only. Every earlier entry moved to changelog.txt, which ships with the plugin, as the plugin directory asks.
+* Changed: the upgrade notice keeps the two most recent releases instead of every version ever published.
+
+= 1.15.2 - 2026-09-20 =
+* Fixed: eight field descriptions still quoted the defaults from before 1.14.1. They now match what the plugin actually does: five items per source, fifty posts on the page, thirty minutes of cache.
+* Fixed: the screenshot list is now in the format the plugin directory reads, so the screenshots appear on the plugin page.
+* Changed: the plugin directory assets (screenshots, banner, icon) are no longer shipped inside the plugin package.
+
+= 1.15.1 - 2026-09-20 =
+* Changed: the footer links now follow the language of the person reading them. The project page and the support page are translatable strings, so a translation can point them at its own localised pages, and a language without one simply stays on English. Nothing in the code tests for a specific locale.
+
+= 1.15.0 - 2026-09-20 =
+* Added: the settings page now has a proper footer, built on the WordPress footer slots. On the left, who develops the plugin and the links that matter: documentation, repository, and a way to support the work. On the right, version and licence, where administrators already look for them.
+* Added: a donate link on the plugin directory page, pointing at the project's support page.
+* Changed: the plugin homepage now opens the project page instead of the code repository, so anyone clicking it lands on documentation rather than on a Git tree.
+* Fixed: the repository link in the footer was missing `rel="noopener noreferrer"`, unlike the developer one.
 
 = 1.14.1 - 2026-09-20 =
 * Changed: clearer switch names. "Boosts" and "Statistics" looked like the same thing while they are not: one decides whether posts you boosted join the timeline, the other whether the counters appear under each card. They now read "Include boosted posts" (or "Include reposted posts" on Bluesky) and "Interaction counts" — the likes, boosts and replies your post received.

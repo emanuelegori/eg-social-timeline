@@ -6,6 +6,33 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.16.0] - 2026-09-27
+
+### Added
+- **Riquadri GoToSocial e Friendica.** La loro API compatibile con Mastodon risponde solo a chi ha effettuato l'accesso, quindi il plugin legge il **feed pubblico del profilo**: `/@{nome}/feed.rss` su GoToSocial, `/feed/{nickname}/` (Atom) su Friendica. Istanza + nome come le altre piattaforme; l'indirizzo completo del profilo o del feed, oppure `nome@istanza`, viene riconosciuto in entrambi i campi. Opzioni: numero di elementi, anteprime immagini, lunghezza del testo. Niente contatori né condivisioni: i feed non li portano.
+- Due fetcher dedicati (`eg_social_timeline_fetch_gotosocial()`, `eg_social_timeline_fetch_friendica()`) invece di nuove opzioni nel parser RSS generico, che resta identico. Su GoToSocial il testo si prende da `content:encoded`: la `description` è un riassunto troncato che comincia con *"@utente made a new post"*. Su Friendica le immagini sono `link rel="enclosure"` con la descrizione nel `title`, che diventa il testo alternativo. I paragrafi HTML diventano a capo prima di togliere i tag (`eg_social_timeline_feed_text()`), così le frasi di due paragrafi non si incollano.
+- **Diagnostica misurata sui server reali.** GoToSocial tiene il feed **spento di default**: 404 = feed spento, e il pannello lo dice con l'indirizzo delle impostazioni dell'account; 500 = account inesistente. Friendica: 404 = account inesistente. Righe nuove nella tabella *Profili configurati* e nella verifica dei profili.
+- **Dominio dell'account diverso dal server** (GoToSocial lo permette: `@gotosocial@superseriousbusiness.org` vive su `gts.superseriousbusiness.org`, e il feed esiste solo lì). Al salvataggio il plugin chiede al webfinger il link `self` e, se il server è un altro, salva quello e lo dice con un avviso. Una richiesta al salvataggio, non a ogni recupero.
+- **Icone.** Simple Icons non ha né GoToSocial né Friendica. `gotosocial.svg` è una silhouette a un colore del bradipo ufficiale di Anna Abramek, calcolata con operazioni booleane sulle forme originali (pelo, meno muso, più maschere degli occhi): opera derivata, quindi **CC BY-SA 4.0** con attribuzione, unico file del plugin con questa licenza. `friendica.svg` è la forma del logo ufficiale, di **pubblico dominio** (geometria semplice). Entrambe un solo `path`, come richiede il whitelist `wp_kses` di `get_icon()`. Dettagli in `social-icons/ICONS-LICENSE.md`.
+- Colori: GoToSocial `#C76C33` / `#DF8958` (arancio scuro e chiaro del pelo), Friendica `#1872A2` / `#FEBF19` (il blu del logo in chiaro, il suo giallo in scuro).
+
+### Changed
+- Un'istanza GoToSocial o Friendica inserita nel campo Mastodon ora rimanda al riquadro dedicato, invece di dire che non si può leggere. Il nome del software è scritto correttamente (prima `ucfirst()` dava "Gotosocial").
+- `readme.txt`: due sezioni nuove in *External services*, FAQ sui server del fediverso riscritta, FAQ nuova "My GoToSocial posts do not show up". Il changelog della linea 1.15 passa in `changelog.txt`, come per le linee precedenti.
+
+### Fixed
+- La FAQ di ListenBrainz diceva che le schede linkano a MusicBrainz: dalla 1.11.1 linkano alla registrazione su ListenBrainz.
+
+### Why
+- Nella pagina del plugin e nell'articolo di lancio GoToSocial e Friendica risultavano "non supportati", ma tutti e due hanno un feed pubblico che la fonte RSS generica già leggeva, male: su GoToSocial col riassunto troncato, su Friendica senza immagini, e in entrambi i casi con l'icona RSS. E chi li usava per quei server perdeva l'unica fonte RSS.
+
+### Verified
+- Fetcher provati su istanze reali (software letto da nodeinfo): GoToSocial 0.22 `gts.superseriousbusiness.org/@gotosocial` (feed attivo, 20 post, uno con immagine), `k.iim.gay/@kim` (feed spento → messaggio con `/settings`), account inesistente (500 → messaggio); Friendica 2026.08 `pirati.ca/heluecht` (10 post, 2 immagini con testo alternativo), account inesistente (404 → messaggio). Riconoscimento degli indirizzi: profilo, feed e `nome@istanza` per entrambi. Webfinger: `superseriousbusiness.org` → `gts.superseriousbusiness.org`.
+- Icone renderizzate a 48, 22 e 16 px su fondo chiaro e scuro accanto a quella di Mastodon.
+- Stesso numero di regole CSS per `pixelfed`, `gotosocial` e `friendica` (10 ciascuna): nessun filtro dimenticato.
+
+---
+
 ## [1.15.9] - 2026-09-24
 
 ### Fixed
