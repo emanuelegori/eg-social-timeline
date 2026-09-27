@@ -13,7 +13,7 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 - **Attributo `layout` dello shortcode**, che sostituisce l'impostazione per una sola pagina: `[eg_social_timeline layout="grid" limit="20"]` in home, l'elenco altrove. Un valore diverso da `list`/`grid` viene ignorato.
 
 - **Riquadro "Barra dei filtri"** nel pannello, dopo *Aspetto*, con tre impostazioni:
-  - **Visualizzazione**: *Visibile* (predefinita), *A scomparsa* (un `<details>`: la riga "🔍 Filtra" si apre con un clic), *Nascosta* (nessuna barra, tutti i post visibili). Attributo `filters="visible|collapsed|hidden"` dello shortcode per la singola pagina.
+  - **Visualizzazione**: *Visibile* (predefinita), *A scomparsa* (un `<details>`: chiusa è un pulsante "🔍 Filtra ▸" largo quanto il testo; aperta torna la barra, e nello stile compatto il titolo e le icone stanno sulla stessa riga), *Nascosta* (nessuna barra, tutti i post visibili). Attributo `filters="visible|collapsed|hidden"` dello shortcode per la singola pagina.
   - **Stile**: completo o compatto, spostato qui da *Aspetto*. *Stile icone* resta in *Aspetto* perché colora anche le schede.
   - **Sfondo**: *Neutro* (predefinito, identico a prima), *Trasparente*, *Segui il browser*, *Colore personalizzato*, con l'avviso sotto il contrasto 4,5:1 come per timeline e schede.
 - "Nascosta" era stata scartata il 20 settembre temendo una timeline vuota. Il timore non era fondato: le checkbox stanno **fuori** dalla barra, partono spuntate e restano anche quando la barra non c'è. Verificato: 3 checkbox, 0 etichette, tutte le schede visibili.

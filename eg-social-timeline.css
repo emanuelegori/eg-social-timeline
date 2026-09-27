@@ -662,14 +662,44 @@ details.eg-timeline-filters:not([open]) > summary {
     border-bottom: none;
 }
 
-/* Nello stile compatto la barra aperta resta un blocco: titolo sopra, icone
-   sotto. Un <details> come contenitore flex non e' affidabile ovunque. */
+/* Chiusa e' un pulsante, non una barra: largo quanto "Filtra", stessa
+   superficie e bordo della barra aperta. */
+details.eg-timeline-filters:not([open]) {
+    width: fit-content;
+    max-width: 100%;
+    padding: 8px 14px;
+    border-radius: 999px;
+    justify-self: start;
+}
+
+details.eg-timeline-filters:not([open]) > summary {
+    gap: 10px;
+}
+
+details.eg-timeline-filters:not([open]) > summary::after {
+    margin-left: 0;
+}
+
+/* Aperta nello stile compatto: titolo e icone sulla stessa riga, come la
+   barra compatta visibile. Elementi inline e non un <details> flex, che non
+   e' affidabile ovunque; se lo spazio non basta le icone vanno a capo. */
 .egst-filters-compact details.eg-timeline-filters {
     display: block;
 }
 
 .egst-filters-compact details.eg-timeline-filters[open] > summary {
-    margin-bottom: 10px;
+    display: inline-flex;
+    margin: 4px 12px 4px 0;
+    vertical-align: middle;
+}
+
+.egst-filters-compact details.eg-timeline-filters[open] > summary::after {
+    margin-left: 4px;
+}
+
+.egst-filters-compact details.eg-timeline-filters[open] > .filters-checkboxes {
+    display: inline-flex;
+    vertical-align: middle;
 }
 
 /* ==============================================
