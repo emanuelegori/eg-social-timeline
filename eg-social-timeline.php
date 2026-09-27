@@ -4912,28 +4912,35 @@ function eg_social_timeline_shortcode($atts) {
                    class="filter-checkbox-input"
                    checked>
         <?php endforeach; ?>
+
+        <?php
+        $filters_title = ('compact' === eg_social_timeline_appearance_settings()['filters_style'])
+            ? __('Filter:', 'eg-social-timeline')
+            : __('Filter by platform:', 'eg-social-timeline');
+        ?>
+
+        <?php if ('collapsed' === $filters_display): ?>
+            <?php // A scomparsa: una checkbox come quelle dei filtri, fuori dalla barra. Un <details> andrebbe a capo, perche' il browser ne racchiude il contenuto in un blocco. ?>
+            <input type="checkbox"
+                   id="egst-filters-toggle"
+                   class="filter-checkbox-input egst-filters-toggle"
+                   aria-label="<?php esc_attr_e('Show or hide the filters', 'eg-social-timeline'); ?>">
+        <?php endif; ?>
         
         <!-- CSS-only Filters Box (solo label, checkbox sopra) -->
         <?php if ('hidden' !== $filters_display): ?>
-        <?php // A scomparsa: un <details>, che si apre senza JavaScript. Le etichette funzionano anche dentro, perche' le checkbox restano fuori. ?>
-        <?php if ('collapsed' === $filters_display): ?>
-        <details class="eg-timeline-filters egst-filters-collapsible">
-            <summary class="filters-header">
-        <?php else: ?>
-        <div class="eg-timeline-filters">
+        <div class="<?php echo esc_attr('eg-timeline-filters' . ('collapsed' === $filters_display ? ' egst-filters-collapsible' : '')); ?>">
             <div class="filters-header">
-        <?php endif; ?>
-                <span class="filters-icon">🔍</span>
-                <h3>
-                    <?php
-                    if ('compact' === eg_social_timeline_appearance_settings()['filters_style']) {
-                        esc_html_e('Filter:', 'eg-social-timeline');
-                    } else {
-                        esc_html_e('Filter by platform:', 'eg-social-timeline');
-                    }
-                    ?>
-                </h3>
-            <?php echo ('collapsed' === $filters_display) ? '</summary>' : '</div>'; ?>
+                <?php if ('collapsed' === $filters_display): ?>
+                    <label for="egst-filters-toggle" class="egst-filters-toggle-label">
+                        <span class="filters-icon">🔍</span>
+                        <span class="egst-filters-heading"><?php echo esc_html($filters_title); ?></span>
+                    </label>
+                <?php else: ?>
+                    <span class="filters-icon">🔍</span>
+                    <h3><?php echo esc_html($filters_title); ?></h3>
+                <?php endif; ?>
+            </div>
             
             <div class="filters-checkboxes">
                 <?php foreach ($platform_counts as $platform => $count): ?>
@@ -4961,7 +4968,7 @@ function eg_social_timeline_shortcode($atts) {
                     </label>
                 <?php endforeach; ?>
             </div>
-        <?php echo ('collapsed' === $filters_display) ? '</details>' : '</div>'; ?>
+        </div>
         <?php endif; ?>
         
         <?php foreach ($posts as $post): ?>

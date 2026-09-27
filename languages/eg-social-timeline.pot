@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-27T10:44:38+00:00\n"
+"POT-Creation-Date: 2026-09-27T11:40:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: eg-social-timeline\n"
@@ -81,7 +81,7 @@ msgid "Max posts"
 msgstr ""
 
 #: eg-social-timeline.php:88
-#: eg-social-timeline.php:5081
+#: eg-social-timeline.php:5088
 msgid "GoToSocial"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgid "Public RSS feed of the profile, off by default: turn it on in your accoun
 msgstr ""
 
 #: eg-social-timeline.php:98
-#: eg-social-timeline.php:5082
+#: eg-social-timeline.php:5089
 msgid "Friendica"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgid "Public Atom feed of the profile: posts without replies, no interaction co
 msgstr ""
 
 #: eg-social-timeline.php:108
-#: eg-social-timeline.php:5077
+#: eg-social-timeline.php:5084
 msgid "Bluesky"
 msgstr ""
 
@@ -116,7 +116,7 @@ msgid "Handle"
 msgstr ""
 
 #: eg-social-timeline.php:118
-#: eg-social-timeline.php:5076
+#: eg-social-timeline.php:5083
 msgid "Lemmy"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgid "Public user feed, on the instance where your account is registered."
 msgstr ""
 
 #: eg-social-timeline.php:128
-#: eg-social-timeline.php:5080
+#: eg-social-timeline.php:5087
 msgid "Pixelfed"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgid "Public Atom feed: photos and captions, no interaction counts."
 msgstr ""
 
 #: eg-social-timeline.php:138
-#: eg-social-timeline.php:5079
+#: eg-social-timeline.php:5086
 msgid "PeerTube"
 msgstr ""
 
@@ -163,7 +163,7 @@ msgid "Max commits"
 msgstr ""
 
 #: eg-social-timeline.php:158
-#: eg-social-timeline.php:5083
+#: eg-social-timeline.php:5090
 msgid "ListenBrainz"
 msgstr ""
 
@@ -716,7 +716,7 @@ msgid "https://emanuelegori.uno/en/donate/"
 msgstr ""
 
 #: eg-social-timeline.php:2417
-#: eg-social-timeline.php:5486
+#: eg-social-timeline.php:5493
 msgid "Documentation"
 msgstr ""
 
@@ -983,101 +983,105 @@ msgstr ""
 msgid "No posts available at the moment."
 msgstr ""
 
-#: eg-social-timeline.php:4930
+#: eg-social-timeline.php:4918
 msgid "Filter:"
 msgstr ""
 
-#: eg-social-timeline.php:4932
+#: eg-social-timeline.php:4919
 msgid "Filter by platform:"
 msgstr ""
 
+#: eg-social-timeline.php:4927
+msgid "Show or hide the filters"
+msgstr ""
+
 #. translators: 1: nome della piattaforma, 2: numero di contenuti
-#: eg-social-timeline.php:4948
+#: eg-social-timeline.php:4955
 msgctxt "nome piattaforma e conteggio nel tooltip del filtro"
 msgid "%1$s (%2$d)"
 msgstr ""
 
-#: eg-social-timeline.php:5012
+#: eg-social-timeline.php:5019
 msgid "Attached image"
 msgstr ""
 
-#: eg-social-timeline.php:5022
+#: eg-social-timeline.php:5029
 msgid "Points"
 msgstr ""
 
-#: eg-social-timeline.php:5022
+#: eg-social-timeline.php:5029
 msgid "Favourites"
 msgstr ""
 
-#: eg-social-timeline.php:5029
+#: eg-social-timeline.php:5036
 msgid "Boost"
 msgstr ""
 
-#: eg-social-timeline.php:5036
+#: eg-social-timeline.php:5043
 msgid "Comments"
 msgstr ""
 
-#: eg-social-timeline.php:5036
+#: eg-social-timeline.php:5043
 msgid "Replies"
 msgstr ""
 
-#: eg-social-timeline.php:5050
+#: eg-social-timeline.php:5057
 msgid "View commit"
 msgstr ""
 
-#: eg-social-timeline.php:5052
+#: eg-social-timeline.php:5059
 msgid "Watch video"
 msgstr ""
 
-#: eg-social-timeline.php:5054
+#: eg-social-timeline.php:5061
 msgid "View photo"
 msgstr ""
 
-#: eg-social-timeline.php:5056
+#: eg-social-timeline.php:5063
 msgid "View the recording"
 msgstr ""
 
-#: eg-social-timeline.php:5058
+#: eg-social-timeline.php:5065
 msgid "Read the post"
 msgstr ""
 
-#: eg-social-timeline.php:5060
+#: eg-social-timeline.php:5067
 msgid "View original post"
 msgstr ""
 
-#: eg-social-timeline.php:5075
+#: eg-social-timeline.php:5082
 msgid "Mastodon"
 msgstr ""
 
-#: eg-social-timeline.php:5078
+#: eg-social-timeline.php:5085
 msgid "Forgejo"
 msgstr ""
 
-#: eg-social-timeline.php:5084
+#: eg-social-timeline.php:5091
 msgid "Feed"
 msgstr ""
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:5157
+#: eg-social-timeline.php:5164
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:5161
+#: eg-social-timeline.php:5168
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:5165
+#: eg-social-timeline.php:5172
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:5485
+#: eg-social-timeline.php:5492
 msgid "Settings"
 msgstr ""

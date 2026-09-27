@@ -624,47 +624,47 @@
 
 /* ==============================================
    BARRA DEI FILTRI A SCOMPARSA
-   Un <details>: si apre senza JavaScript. Le checkbox stanno fuori, quindi
-   i filtri funzionano anche a barra chiusa (restano come li hai lasciati).
+   Una checkbox nascosta, fuori dalla barra come quelle dei filtri: il titolo
+   e' la sua etichetta. Aperta, la barra e' identica a quella visibile (anche
+   compatta su una riga); chiusa, si riduce a un pulsante. Niente <details>:
+   il browser ne racchiude il contenuto in un blocco, che va sempre a capo.
    ============================================== */
 
-details.eg-timeline-filters > summary {
-    list-style: none;
+.egst-filters-toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
+    user-select: none;
 }
 
-details.eg-timeline-filters > summary::-webkit-details-marker {
-    display: none;
+.egst-filters-heading {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--egst-filters-title);
 }
 
-details.eg-timeline-filters > summary::after {
+.egst-filters-toggle-label::after {
     content: "";
-    margin-left: auto;
+    margin-left: 4px;
     border-left: 6px solid var(--egst-filters-title);
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
     transition: transform 0.15s;
 }
 
-details.eg-timeline-filters[open] > summary::after {
+.egst-filters-toggle:checked ~ .egst-filters-collapsible .egst-filters-toggle-label::after {
     transform: rotate(90deg);
 }
 
-details.eg-timeline-filters > summary:focus-visible {
+.egst-filters-toggle:focus-visible ~ .egst-filters-collapsible .egst-filters-toggle-label {
     outline: 2px solid var(--egst-chip-brand);
     outline-offset: 4px;
     border-radius: 4px;
 }
 
-details.eg-timeline-filters:not([open]) > summary {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-/* Chiusa e' un pulsante, non una barra: largo quanto "Filtra", stessa
-   superficie e bordo della barra aperta. */
-details.eg-timeline-filters:not([open]) {
+/* Chiusa: un pulsante largo quanto il titolo, stessa superficie della barra. */
+.egst-filters-toggle:not(:checked) ~ .egst-filters-collapsible {
     width: fit-content;
     max-width: 100%;
     padding: 8px 14px;
@@ -672,34 +672,14 @@ details.eg-timeline-filters:not([open]) {
     justify-self: start;
 }
 
-details.eg-timeline-filters:not([open]) > summary {
-    gap: 10px;
+.egst-filters-toggle:not(:checked) ~ .egst-filters-collapsible .filters-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
-details.eg-timeline-filters:not([open]) > summary::after {
-    margin-left: 0;
-}
-
-/* Aperta nello stile compatto: titolo e icone sulla stessa riga, come la
-   barra compatta visibile. Elementi inline e non un <details> flex, che non
-   e' affidabile ovunque; se lo spazio non basta le icone vanno a capo. */
-.egst-filters-compact details.eg-timeline-filters {
-    display: block;
-}
-
-.egst-filters-compact details.eg-timeline-filters[open] > summary {
-    display: inline-flex;
-    margin: 4px 12px 4px 0;
-    vertical-align: middle;
-}
-
-.egst-filters-compact details.eg-timeline-filters[open] > summary::after {
-    margin-left: 4px;
-}
-
-.egst-filters-compact details.eg-timeline-filters[open] > .filters-checkboxes {
-    display: inline-flex;
-    vertical-align: middle;
+.egst-filters-toggle:not(:checked) ~ .egst-filters-collapsible .filters-checkboxes {
+    display: none;
 }
 
 /* ==============================================

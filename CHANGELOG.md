@@ -13,7 +13,7 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 - **Attributo `layout` dello shortcode**, che sostituisce l'impostazione per una sola pagina: `[eg_social_timeline layout="grid" limit="20"]` in home, l'elenco altrove. Un valore diverso da `list`/`grid` viene ignorato.
 
 - **Riquadro "Barra dei filtri"** nel pannello, dopo *Aspetto*, con tre impostazioni:
-  - **Visualizzazione**: *Visibile* (predefinita), *A scomparsa* (un `<details>`: chiusa è un pulsante "🔍 Filtra ▸" largo quanto il testo; aperta torna la barra, e nello stile compatto il titolo e le icone stanno sulla stessa riga), *Nascosta* (nessuna barra, tutti i post visibili). Attributo `filters="visible|collapsed|hidden"` dello shortcode per la singola pagina.
+  - **Visualizzazione**: *Visibile* (predefinita), *A scomparsa*: chiusa è un pulsante "🔍 Filtra ▸" largo quanto il testo; aperta torna la barra identica a quella visibile, compatta compresa (titolo e icone sulla stessa riga). Funziona con una checkbox nascosta fuori dalla barra, la stessa tecnica dei filtri, il cui titolo è l'etichetta. Scartato `<details>` dopo la prova sullo stage: il browser racchiude il contenuto di `<details>` in un blocco interno, che va sempre a capo, quindi le icone finivano sotto il titolo qualunque stile si desse loro, *Nascosta* (nessuna barra, tutti i post visibili). Attributo `filters="visible|collapsed|hidden"` dello shortcode per la singola pagina.
   - **Stile**: completo o compatto, spostato qui da *Aspetto*. *Stile icone* resta in *Aspetto* perché colora anche le schede.
   - **Sfondo**: *Neutro* (predefinito, identico a prima), *Trasparente*, *Segui il browser*, *Colore personalizzato*, con l'avviso sotto il contrasto 4,5:1 come per timeline e schede.
 - "Nascosta" era stata scartata il 20 settembre temendo una timeline vuota. Il timore non era fondato: le checkbox stanno **fuori** dalla barra, partono spuntate e restano anche quando la barra non c'è. Verificato: 3 checkbox, 0 etichette, tutte le schede visibili.
@@ -34,7 +34,7 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ### Verified
 - Shortcode generato con il plugin 1.17.0 caricato al posto di quello installato, sulle impostazioni reali e in sola lettura: predefinito → elenco; `layout="grid" limit="20"` → classe `egst-layout-grid` e 20 schede; `layout="list"` vince sul pannello impostato a griglia; `layout="pippo"` ignorato.
-- Barra dei filtri: 12 combinazioni pannello × attributo `filters`, tutte con il risultato atteso e i tag `<details>`/`<summary>` bilanciati. Colori: *Neutro* non aggiunge nessuna regola (aspetto invariato); *Trasparente* e *Segui il browser* emettono la variante scura solo nella `@media`; `#e5e7eb` dà una barra grigio chiaro con chip chiari, `#000000` e `#6364ff` barra del colore scelto con chip scuri.
+- Barra dei filtri: 12 combinazioni pannello × attributo `filters`, tutte con il risultato atteso e, in modalità a scomparsa, la checkbox di apertura prima della barra e il titolo come sua etichetta. Colori: *Neutro* non aggiunge nessuna regola (aspetto invariato); *Trasparente* e *Segui il browser* emettono la variante scura solo nella `@media`; `#e5e7eb` dà una barra grigio chiaro con chip chiari, `#000000` e `#6364ff` barra del colore scelto con chip scuri.
 
 ---
 
