@@ -295,6 +295,9 @@ function eg_social_timeline_register_settings() {
                 'icon_style' => 'brand',
                 'filters_style' => 'full',
                 'layout' => 'list',
+                'filters_display' => 'visible',
+                'filters_bg' => 'neutral',
+                'filters_bg_color' => '#f8f9ff',
                 'show_diagnostics' => false,
                 'canvas_bg' => 'none',
                 'canvas_bg_color' => '#f3f4f6',
@@ -431,13 +434,6 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_appearance_section'
     );
 
-    add_settings_field(
-        'eg_social_timeline_filters_style',
-        __('Filter Bar Style', 'eg-social-timeline'),
-        'eg_social_timeline_filters_style_callback',
-        'eg-social-timeline',
-        'eg_social_timeline_appearance_section'
-    );
 
     add_settings_field(
         'eg_social_timeline_icon_style',
@@ -445,6 +441,37 @@ function eg_social_timeline_register_settings() {
         'eg_social_timeline_icon_style_callback',
         'eg-social-timeline',
         'eg_social_timeline_appearance_section'
+    );
+
+    add_settings_section(
+        'eg_social_timeline_filterbar_section',
+        __('Filter Bar', 'eg-social-timeline'),
+        'eg_social_timeline_filterbar_section_callback',
+        'eg-social-timeline'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_filters_display',
+        __('Display', 'eg-social-timeline'),
+        'eg_social_timeline_filters_display_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_filterbar_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_filters_style',
+        __('Style', 'eg-social-timeline'),
+        'eg_social_timeline_filters_style_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_filterbar_section'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_filters_bg',
+        __('Background', 'eg-social-timeline'),
+        'eg_social_timeline_filters_bg_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_filterbar_section'
     );
 }
 
@@ -1544,6 +1571,22 @@ function eg_social_timeline_appearance_settings() {
         $layout = 'list';
     }
 
+    // Barra dei filtri: visualizzazione e superficie propria. "neutral" e'
+    // il comportamento di prima della 1.17.0 (palette scelta dallo sfondo).
+    $filters_display = isset($options['filters_display']) ? $options['filters_display'] : 'visible';
+
+    if (!in_array($filters_display, array('visible', 'collapsed', 'hidden'), true)) {
+        $filters_display = 'visible';
+    }
+
+    $filters_bg = isset($options['filters_bg']) ? $options['filters_bg'] : 'neutral';
+
+    if (!in_array($filters_bg, array('neutral', 'none', 'auto', 'custom'), true)) {
+        $filters_bg = 'neutral';
+    }
+
+    $filters_color = isset($options['filters_bg_color']) ? sanitize_hex_color($options['filters_bg_color']) : null;
+
     return array(
         'canvas_bg'       => $canvas,
         'canvas_bg_color' => $canvas_color ? $canvas_color : '#f3f4f6',
@@ -1552,6 +1595,9 @@ function eg_social_timeline_appearance_settings() {
         'icon_style'      => $icon_style,
         'filters_style'   => $filters_style,
         'layout'          => $layout,
+        'filters_display' => $filters_display,
+        'filters_bg'      => $filters_bg,
+        'filters_bg_color' => $filters_color ? $filters_color : '#f8f9ff',
     );
 }
 
@@ -1697,6 +1743,59 @@ function eg_social_timeline_layout_callback() {
         ?>
     </p>
     <?php
+}
+
+function eg_social_timeline_filterbar_section_callback() {
+    echo '<p>' . esc_html__('The bar above the timeline that shows or hides each platform. It works without JavaScript.', 'eg-social-timeline') . '</p>';
+}
+
+function eg_social_timeline_filters_display_callback() {
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('filters_display', $settings['filters_display'], array(
+        'visible'   => __('Visible', 'eg-social-timeline'),
+        'collapsed' => __('Collapsible: opens with a click', 'eg-social-timeline'),
+        'hidden'    => __('Hidden: every post is shown', 'eg-social-timeline'),
+    ));
+    ?>
+    <p class="description">
+        <?php
+        echo wp_kses(
+            sprintf(
+                /* translators: %s: esempio di shortcode con l'attributo filters */
+                __('A single page can override this setting: %s. Default: Visible', 'eg-social-timeline'),
+                '<code>[eg_social_timeline filters="collapsed"]</code>'
+            ),
+            array('code' => array())
+        );
+        ?>
+    </p>
+    <?php
+}
+
+function eg_social_timeline_filters_bg_callback() {
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('filters_bg', $settings['filters_bg'], array(
+        'neutral' => __('Neutral preset', 'eg-social-timeline'),
+        'none'    => __('Transparent', 'eg-social-timeline'),
+        'auto'    => __('Follow the visitor browser', 'eg-social-timeline'),
+        'custom'  => __('Custom color', 'eg-social-timeline'),
+    ));
+    ?>
+    <p class="description">
+        <?php esc_html_e('"Neutral preset" is a very light or a very dark grey, chosen from the timeline background. "Transparent" keeps only the border. Text and icons adapt to the background on their own. Default: Neutral preset', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+    eg_social_timeline_color_field('filters_bg_color', $settings['filters_bg_color']);
+    ?>
+    <p class="description">
+        <?php esc_html_e('The color above applies only with "Custom color".', 'eg-social-timeline'); ?>
+    </p>
+    <?php
+    if ('custom' === $settings['filters_bg']) {
+        eg_social_timeline_contrast_notice($settings['filters_bg_color']);
+    }
 }
 
 function eg_social_timeline_filters_style_callback() {
@@ -1976,11 +2075,18 @@ function eg_social_timeline_sanitize_options($input) {
     $layout = isset($input['layout']) ? sanitize_key($input['layout']) : 'list';
     $output['layout'] = in_array($layout, array('list', 'grid'), true) ? $layout : 'list';
 
+    $filters_display = isset($input['filters_display']) ? sanitize_key($input['filters_display']) : 'visible';
+    $output['filters_display'] = in_array($filters_display, array('visible', 'collapsed', 'hidden'), true) ? $filters_display : 'visible';
+
+    $filters_bg = isset($input['filters_bg']) ? sanitize_key($input['filters_bg']) : 'neutral';
+    $output['filters_bg'] = in_array($filters_bg, array('neutral', 'none', 'auto', 'custom'), true) ? $filters_bg : 'neutral';
+
     $output['show_diagnostics'] = isset($input['show_diagnostics']) ? true : false;
 
     $colors = array(
         'canvas_bg_color' => '#f3f4f6',
         'card_bg_color'   => '#ffffff',
+        'filters_bg_color' => '#f8f9ff',
     );
 
     foreach ($colors as $key => $fallback) {
@@ -4727,9 +4833,16 @@ function eg_social_timeline_shortcode($atts) {
         'limit'  => $options['post_limit'],
         // Vuoto: vale l'impostazione del pannello. "list" o "grid" la sostituiscono per questa pagina.
         'layout' => '',
+        // Vuoto: vale l'impostazione. "visible", "collapsed" o "hidden" la sostituiscono.
+        'filters' => '',
     ), $atts, 'eg_social_timeline');
 
     $layout = sanitize_key($atts['layout']);
+    $filters_display = sanitize_key($atts['filters']);
+
+    if (!in_array($filters_display, array('visible', 'collapsed', 'hidden'), true)) {
+        $filters_display = eg_social_timeline_appearance_settings()['filters_display'];
+    }
     
     $limit = intval($atts['limit']);
     
@@ -4801,8 +4914,15 @@ function eg_social_timeline_shortcode($atts) {
         <?php endforeach; ?>
         
         <!-- CSS-only Filters Box (solo label, checkbox sopra) -->
+        <?php if ('hidden' !== $filters_display): ?>
+        <?php // A scomparsa: un <details>, che si apre senza JavaScript. Le etichette funzionano anche dentro, perche' le checkbox restano fuori. ?>
+        <?php if ('collapsed' === $filters_display): ?>
+        <details class="eg-timeline-filters egst-filters-collapsible">
+            <summary class="filters-header">
+        <?php else: ?>
         <div class="eg-timeline-filters">
             <div class="filters-header">
+        <?php endif; ?>
                 <span class="filters-icon">🔍</span>
                 <h3>
                     <?php
@@ -4813,7 +4933,7 @@ function eg_social_timeline_shortcode($atts) {
                     }
                     ?>
                 </h3>
-            </div>
+            <?php echo ('collapsed' === $filters_display) ? '</summary>' : '</div>'; ?>
             
             <div class="filters-checkboxes">
                 <?php foreach ($platform_counts as $platform => $count): ?>
@@ -4841,7 +4961,8 @@ function eg_social_timeline_shortcode($atts) {
                     </label>
                 <?php endforeach; ?>
             </div>
-        </div>
+        <?php echo ('collapsed' === $filters_display) ? '</details>' : '</div>'; ?>
+        <?php endif; ?>
         
         <?php foreach ($posts as $post): ?>
             <?php
@@ -5210,8 +5331,24 @@ function eg_social_timeline_scope_declarations($settings, $context) {
     $card_reference    = $card ? $card : $canvas;
     $filters_reference = $canvas ? $canvas : $card_reference;
 
-    $card_polarity    = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
-    $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
+    $card_polarity = $card_reference ? eg_social_timeline_surface_polarity($card_reference) : $context;
+
+    // Barra dei filtri. "neutral" resta il comportamento di prima: palette
+    // scelta dallo sfondo. "custom" si misura sul proprio colore, "auto"
+    // segue il browser, "none" guarda cio' che sta sotto: la timeline o,
+    // se e' trasparente anche lei, il tema, cioe' il contesto.
+    $filters_mode  = isset($settings['filters_bg']) ? $settings['filters_bg'] : 'neutral';
+    $filters_color = ('custom' === $filters_mode) ? $settings['filters_bg_color'] : null;
+
+    if ($filters_color) {
+        $filters_polarity = eg_social_timeline_surface_polarity($filters_color);
+    } elseif ('auto' === $filters_mode) {
+        $filters_polarity = $context;
+    } elseif ('none' === $filters_mode) {
+        $filters_polarity = $canvas ? eg_social_timeline_surface_polarity($canvas) : $context;
+    } else {
+        $filters_polarity = $filters_reference ? eg_social_timeline_surface_polarity($filters_reference) : $context;
+    }
 
     $icons = array('mono', 'mastodon', 'pleroma', 'gotosocial', 'friendica', 'lemmy', 'bluesky', 'forgejo', 'peertube', 'pixelfed', 'listenbrainz', 'rss');
     $declarations = array();
@@ -5255,6 +5392,13 @@ function eg_social_timeline_scope_declarations($settings, $context) {
     // ombra anche quando il gruppo scuro ne avrebbe impostata una.
     if (null !== $canvas) {
         $declarations['--egst-canvas'] = $canvas;
+    }
+
+    if ($filters_color) {
+        $declarations['--egst-filters-bg'] = $filters_color;
+    } elseif ('none' === $filters_mode) {
+        $declarations['--egst-filters-bg'] = 'transparent';
+        $declarations['--egst-filters-shadow'] = 'none';
     }
 
     if (null === $card) {

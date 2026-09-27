@@ -29,6 +29,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
 - **Statistiche Interazioni**: Mostra like, boost e commenti per ogni post
 - **Elenco o griglia**: elenco verticale di default, griglia dal pannello o pagina per pagina con `layout="grid"`
+- **Barra dei filtri**: visibile, a scomparsa o nascosta (`filters="collapsed"`, `filters="hidden"`), con uno sfondo suo
 - **Responsive**: Design ottimizzato per desktop, tablet e mobile
 - **Sfondi Configurabili**: Sfondo della timeline indipendente da quello delle schede, un colore per ciascuno
 - **Contrasto Derivato**: Testo, bordi e icone seguono il contrasto WCAG dello sfondo scelto, senza schemi da tenere allineati
@@ -118,6 +119,13 @@ Per una home o una pagina "cruscotto"; sostituisce il layout scelto nel pannello
 
 ```
 [eg_social_timeline layout="grid" limit="20"]
+```
+
+### Barra dei filtri a scomparsa o nascosta
+
+```
+[eg_social_timeline filters="collapsed"]
+[eg_social_timeline layout="grid" filters="hidden"]
 ```
 
 ### Esempio Completo
@@ -257,6 +265,10 @@ eg-social-timeline/
 
 #### Aggiunto
 - Layout a griglia (Impostazioni → Aspetto → Layout), colonne di almeno 280 px, una su telefono, immagini 16:9 ritagliate, schede di una riga alte uguali. L'attributo `layout` dello shortcode lo sostituisce pagina per pagina.
+- Riquadro Barra dei filtri: visualizzazione visibile / a scomparsa / nascosta (attributo `filters` dello shortcode), stile completo / compatto, sfondo neutro / trasparente / browser / colore personalizzato.
+
+#### Modificato
+- Una barra con colore personalizzato mostra quel colore; prima il colore sceglieva soltanto fra un grigio chiaro e uno scuro.
 
 ### [1.16.1] - 2026-09-27
 

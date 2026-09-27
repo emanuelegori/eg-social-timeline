@@ -29,6 +29,7 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Smart cache**: reduces API requests with a configurable cache
 - **Interaction stats**: shows likes, boosts and comments for each post
 - **List or grid**: vertical list by default, grid in the settings or page by page with `layout="grid"`
+- **Filter bar**: visible, collapsible or hidden (`filters="collapsed"`, `filters="hidden"`), with its own background
 - **Responsive**: design optimized for desktop, tablet and mobile
 - **Configurable backgrounds**: timeline background independent from the card background, one color each
 - **Derived contrast**: text, borders and icons follow the WCAG contrast of the background you pick, no color scheme to keep in sync
@@ -118,6 +119,13 @@ For a home page or a dashboard-like page; overrides the layout set in the settin
 
 ```
 [eg_social_timeline layout="grid" limit="20"]
+```
+
+### Filter bar folded away or hidden
+
+```
+[eg_social_timeline filters="collapsed"]
+[eg_social_timeline layout="grid" filters="hidden"]
 ```
 
 ### Full example
@@ -252,6 +260,10 @@ eg-social-timeline/
 
 #### Added
 - Grid layout (Settings → Appearance → Layout), columns of at least 280 px, one on phones, 16:9 cropped images, equal-height cards per row. The `layout` shortcode attribute overrides it per page.
+- Filter Bar section: display visible / collapsible / hidden (`filters` shortcode attribute), style full / compact, background neutral / transparent / browser / custom color.
+
+#### Changed
+- A custom-coloured filter bar shows that colour; before, the colour only chose between a light and a dark grey.
 
 ### [1.16.1] - 2026-09-27
 

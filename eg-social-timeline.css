@@ -623,6 +623,56 @@
    ============================================== */
 
 /* ==============================================
+   BARRA DEI FILTRI A SCOMPARSA
+   Un <details>: si apre senza JavaScript. Le checkbox stanno fuori, quindi
+   i filtri funzionano anche a barra chiusa (restano come li hai lasciati).
+   ============================================== */
+
+details.eg-timeline-filters > summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+details.eg-timeline-filters > summary::-webkit-details-marker {
+    display: none;
+}
+
+details.eg-timeline-filters > summary::after {
+    content: "";
+    margin-left: auto;
+    border-left: 6px solid var(--egst-filters-title);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    transition: transform 0.15s;
+}
+
+details.eg-timeline-filters[open] > summary::after {
+    transform: rotate(90deg);
+}
+
+details.eg-timeline-filters > summary:focus-visible {
+    outline: 2px solid var(--egst-chip-brand);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+details.eg-timeline-filters:not([open]) > summary {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Nello stile compatto la barra aperta resta un blocco: titolo sopra, icone
+   sotto. Un <details> come contenitore flex non e' affidabile ovunque. */
+.egst-filters-compact details.eg-timeline-filters {
+    display: block;
+}
+
+.egst-filters-compact details.eg-timeline-filters[open] > summary {
+    margin-bottom: 10px;
+}
+
+/* ==============================================
    LAYOUT A GRIGLIA
    Il contenitore stesso diventa la griglia: checkbox, barra dei filtri e
    schede sono fratelli, come vogliono i filtri CSS. Una scheda filtrata ha
