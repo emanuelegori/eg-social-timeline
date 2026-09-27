@@ -34,7 +34,11 @@ msgid ""
 "GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, "
 "ListenBrainz and any RSS or Atom feed. No API keys, no tracking, no "
 "JavaScript."
-msgstr "Riporta a casa i tuoi post: un'unica timeline sul tuo sito da Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz e qualsiasi feed RSS o Atom. Niente chiavi API, niente tracciamento, niente JavaScript."
+msgstr ""
+"Riporta a casa i tuoi post: un'unica timeline sul tuo sito da Mastodon, "
+"GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, "
+"ListenBrainz e qualsiasi feed RSS o Atom. Niente chiavi API, niente "
+"tracciamento, niente JavaScript."
 
 #. Author of the plugin
 #: eg-social-timeline.php
@@ -66,7 +70,7 @@ msgstr "URL istanza"
 #: eg-social-timeline.php:132 eg-social-timeline.php:152
 #: eg-social-timeline.php:162
 msgid "Username"
-msgstr "Username"
+msgstr "Nome utente"
 
 #: eg-social-timeline.php:83 eg-social-timeline.php:93
 #: eg-social-timeline.php:103 eg-social-timeline.php:113
@@ -83,8 +87,8 @@ msgid ""
 "Public RSS feed of the profile, off by default: turn it on in your account "
 "settings. Public posts only, no replies or boosts."
 msgstr ""
-"Feed RSS pubblico del profilo, spento di default: attivalo nelle "
-"impostazioni del tuo account. Solo post pubblici, senza risposte né "
+"Feed RSS pubblico del profilo, spento per impostazione predefinita: attivalo "
+"nelle impostazioni del tuo account. Solo post pubblici, senza risposte né "
 "condivisioni."
 
 #: eg-social-timeline.php:98 eg-social-timeline.php:5201
@@ -411,10 +415,10 @@ msgid ""
 "this on to see what the plugin sees for each platform and to use the "
 "\"Verify profiles\" button."
 msgstr ""
-"Spenta di default, per tenere corta la pagina. Un breve avviso compare "
-"comunque quando una piattaforma configurata non porta nulla, così un "
-"problema non resta mai muto. Accendila per vedere cosa vede il plugin per "
-"ogni piattaforma e per usare il pulsante \"Verifica profili\"."
+"Spenta per impostazione predefinita, per tenere corta la pagina. Un breve "
+"avviso compare comunque quando una piattaforma configurata non porta nulla, "
+"così un problema non resta mai muto. Accendila per vedere cosa vede il "
+"plugin per ogni piattaforma e per usare il pulsante \"Verifica profili\"."
 
 #: eg-social-timeline.php:1220
 msgid "Change it only if you run your own instance."
@@ -448,12 +452,13 @@ msgstr "Il tuo handle completo, senza la @ iniziale."
 #: eg-social-timeline.php:1294
 msgid "Maximum number of Bluesky posts to fetch (0 = unlimited). Default: 5"
 msgstr ""
-"Numero massimo di post Bluesky da recuperare (0 = illimitato). Default: 5"
+"Numero massimo di post Bluesky da recuperare (0 = illimitato). Predefinito: 5"
 
 #: eg-social-timeline.php:1311
 msgid "Maximum number of Mastodon posts to fetch (0 = unlimited). Default: 5"
 msgstr ""
-"Numero massimo di post Mastodon da recuperare (0 = illimitato). Default: 5"
+"Numero massimo di post Mastodon da recuperare (0 = illimitato). Predefinito: "
+"5"
 
 #: eg-social-timeline.php:1327
 msgid ""
@@ -461,18 +466,20 @@ msgid ""
 "Default: 5"
 msgstr ""
 "Numero massimo di post Lemmy inclusi nella timeline. 0 = nessun limite. "
-"Default: 5"
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1344
 msgid ""
 "Maximum total number of Forgejo commits to fetch (0 = unlimited). Default: 5"
 msgstr ""
-"Numero massimo di commit Forgejo da recuperare (0 = illimitato). Default: 5"
+"Numero massimo di commit Forgejo da recuperare (0 = illimitato). "
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1361
 msgid "Maximum number of PeerTube videos to fetch (0 = unlimited). Default: 5"
 msgstr ""
-"Numero massimo di video PeerTube da recuperare (0 = illimitato). Default: 5"
+"Numero massimo di video PeerTube da recuperare (0 = illimitato). "
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1377
 msgid ""
@@ -480,7 +487,7 @@ msgid ""
 "Default: 5"
 msgstr ""
 "Numero massimo di post Pixelfed inclusi nella timeline. 0 = nessun limite. "
-"Default: 5"
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1393
 msgid ""
@@ -488,7 +495,7 @@ msgid ""
 "carries the latest 20. 0 = no limit. Default: 5"
 msgstr ""
 "Numero massimo di post GoToSocial inclusi nella timeline. Il feed porta gli "
-"ultimi 20. 0 = nessun limite. Default: 5"
+"ultimi 20. 0 = nessun limite. Predefinito: 5"
 
 #: eg-social-timeline.php:1409
 msgid ""
@@ -496,14 +503,14 @@ msgid ""
 "Default: 5"
 msgstr ""
 "Numero massimo di post Friendica inclusi nella timeline. 0 = nessun limite. "
-"Default: 5"
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1425
 msgid ""
 "Maximum number of listens included in the timeline. 0 = no limit. Default: 5"
 msgstr ""
 "Numero massimo di ascolti inclusi nella timeline. 0 = nessun limite. "
-"Default: 5"
+"Predefinito: 5"
 
 #: eg-social-timeline.php:1441
 msgid ""
@@ -511,11 +518,12 @@ msgid ""
 "Default: 5"
 msgstr ""
 "Numero massimo di elementi del feed inclusi nella timeline. 0 = nessun "
-"limite. Default: 5"
+"limite. Predefinito: 5"
 
 #: eg-social-timeline.php:1458
 msgid "Maximum number of posts to show in the timeline (1–100). Default: 50"
-msgstr "Numero massimo di post da mostrare nella timeline (1-100). Default: 50"
+msgstr ""
+"Numero massimo di post da mostrare nella timeline (1-100). Predefinito: 50"
 
 #: eg-social-timeline.php:1469
 msgid "minutes"
@@ -536,7 +544,7 @@ msgid ""
 "minutes"
 msgstr ""
 "Durata della cache dei feed. Cache più lunga = meno richieste ai server. "
-"Default: 30 minuti"
+"Predefinito: 30 minuti"
 
 #: eg-social-timeline.php:1483
 msgid ""
@@ -559,8 +567,8 @@ msgid ""
 "below the 4.5:1 required by WCAG AA. Pick a clearly lighter or darker color."
 msgstr ""
 "Attenzione: con questo colore il testo raggiunge un rapporto di contrasto di "
-"solo %s:1, sotto il 4,5:1 richiesto da WCAG AA. Scegli un colore decisamente "
-"più chiaro o più scuro."
+"solo %s:1, sotto il 4,5:1 necessario per WCAG AA. Scegli un colore "
+"decisamente più chiaro o più scuro."
 
 #: eg-social-timeline.php:1679
 msgid "Transparent (theme background)"
@@ -589,8 +597,8 @@ msgid ""
 msgstr ""
 "Sfondo dietro le schede. Impostalo diverso dallo sfondo delle schede per "
 "farle risaltare. \"Segue il browser del visitatore\" usa un grigio chiaro o "
-"un grigio molto scuro secondo l'impostazione prefers-color-scheme. Default: "
-"Trasparente"
+"un grigio molto scuro secondo l'impostazione prefers-color-scheme. "
+"Predefinito: Trasparente"
 
 #: eg-social-timeline.php:1692 eg-social-timeline.php:1793
 msgid "The color above applies only with \"Custom color\"."
@@ -610,7 +618,7 @@ msgid ""
 "shadow, leaving only the border. Default: Neutral preset"
 msgstr ""
 "Sfondo di ogni scheda. \"Trasparente\" toglie la superficie della scheda e "
-"la sua ombra, lasciando solo il bordo. Default: Preset neutro"
+"la sua ombra, lasciando solo il bordo. Predefinito: Preset neutro"
 
 #: eg-social-timeline.php:1717
 msgid ""
@@ -695,7 +703,7 @@ msgid ""
 msgstr ""
 "La barra compatta tiene solo le icone: una piattaforma inclusa è a colori, "
 "una esclusa diventa grigia. Nome e conteggio passano nel tooltip e restano "
-"leggibili dagli screen reader. Default: Completa"
+"leggibili dagli screen reader. Predefinito: Completa"
 
 #: eg-social-timeline.php:1819
 msgid "Platform colors"
@@ -716,7 +724,7 @@ msgstr ""
 "foglio di stile a dipingerle. I colori delle piattaforme usano il colore "
 "ufficiale di ciascuna, schiarito quando la superficie è scura. Un solo "
 "colore segue il testo del post, quindi le icone diventano bianche su una "
-"scheda scura. Default: Colori delle piattaforme"
+"scheda scura. Predefinito: Colori delle piattaforme"
 
 #: eg-social-timeline.php:1878 eg-social-timeline.php:1900
 #: eg-social-timeline.php:1985
@@ -979,8 +987,8 @@ msgid ""
 "The RSS feed of \"%1$s\" is turned off. GoToSocial keeps it off by default: "
 "turn it on in the account settings (%2$s)."
 msgstr ""
-"Il feed RSS di \"%1$s\" è spento. GoToSocial lo tiene spento di default: "
-"attivalo nelle impostazioni dell'account (%2$s)."
+"Il feed RSS di \"%1$s\" è spento. GoToSocial lo tiene spento per "
+"impostazione predefinita: attivalo nelle impostazioni dell'account (%2$s)."
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
 #: eg-social-timeline.php:3772
@@ -1204,7 +1212,7 @@ msgstr "Controllo di sicurezza non superato."
 
 #: eg-social-timeline.php:4928
 msgid "EG Social Timeline — Configuration Required"
-msgstr "EG Social Timeline — Configurazione richiesta"
+msgstr "EG Social Timeline — Configurazione necessaria"
 
 #: eg-social-timeline.php:4929
 msgid "No social profile configured."
@@ -1258,7 +1266,7 @@ msgstr "Risposte"
 
 #: eg-social-timeline.php:5169
 msgid "View commit"
-msgstr "Vedi commit"
+msgstr "Visualizza il commit"
 
 #: eg-social-timeline.php:5171
 msgid "Watch video"
@@ -1266,11 +1274,11 @@ msgstr "Guarda il video"
 
 #: eg-social-timeline.php:5173
 msgid "View photo"
-msgstr "Vedi la foto"
+msgstr "Visualizza la foto"
 
 #: eg-social-timeline.php:5175
 msgid "View the recording"
-msgstr "Vedi la registrazione"
+msgstr "Visualizza la registrazione"
 
 #: eg-social-timeline.php:5177
 msgid "Read the post"
@@ -1278,7 +1286,7 @@ msgstr "Leggi il post"
 
 #: eg-social-timeline.php:5179
 msgid "View original post"
-msgstr "Vedi post originale"
+msgstr "Visualizza il post originale"
 
 #: eg-social-timeline.php:5194
 msgid "Mastodon"
