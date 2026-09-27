@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.16.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.17.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -28,6 +28,7 @@ WordPress plugin to display a unified chronological timeline of your social acti
 - **Modular icon system**: SVG icons loaded from files, easy to customize
 - **Smart cache**: reduces API requests with a configurable cache
 - **Interaction stats**: shows likes, boosts and comments for each post
+- **List or grid**: vertical list by default, grid in the settings or page by page with `layout="grid"`
 - **Responsive**: design optimized for desktop, tablet and mobile
 - **Configurable backgrounds**: timeline background independent from the card background, one color each
 - **Derived contrast**: text, borders and icons follow the WCAG contrast of the background you pick, no color scheme to keep in sync
@@ -109,6 +110,14 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 
 ```
 [eg_social_timeline limit="20"]
+```
+
+### As a grid
+
+For a home page or a dashboard-like page; overrides the layout set in the settings:
+
+```
+[eg_social_timeline layout="grid" limit="20"]
 ```
 
 ### Full example
@@ -238,6 +247,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.17.0] - 2026-09-27
+
+#### Added
+- Grid layout (Settings → Appearance → Layout), columns of at least 280 px, one on phones, 16:9 cropped images, equal-height cards per row. The `layout` shortcode attribute overrides it per page.
 
 ### [1.16.1] - 2026-09-27
 

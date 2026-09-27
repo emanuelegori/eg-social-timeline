@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.16.1
+Stable tag: 1.17.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ EG Social Timeline aggregates in chronological order your public posts from ten 
 - ListenBrainz (public API, no token: what you have been listening to)
 - Any RSS 2.0 or Atom feed: a blog, a newsletter, a podcast
 
-Every platform is configured the same way: the instance URL plus your username. Bluesky is the exception, because its public API lives at a single address for everyone.
+Every platform is configured the same way: the instance URL plus your username. There are two exceptions: Bluesky, because its public API lives at a single address for everyone, and the RSS or Atom source, which takes the address of the feed.
 
 = Key features =
 
@@ -39,8 +39,9 @@ Every platform is configured the same way: the instance URL plus your username. 
 - Configurable cache (30 minutes - 24 hours)
 - Timeline and card backgrounds configurable independently, each with its own color
 - Text, borders and icons derived from the contrast of the color you pick, so they stay readable
+- List or grid layout, set in the settings or page by page with the shortcode
 - Responsive design
-- Shortcode with optional limit parameter
+- Shortcode with optional limit and layout parameters
 - Modular and customizable SVG icons
 - Privacy-friendly: public data only, no trackers
 
@@ -53,6 +54,10 @@ Configure the profiles in the settings, then insert the shortcode:
 With a custom limit:
 
 `[eg_social_timeline limit="20"]`
+
+As a grid, for example on the home page:
+
+`[eg_social_timeline layout="grid" limit="20"]`
 
 = Privacy =
 
@@ -179,17 +184,16 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
-= 1.16.1 - 2026-09-27 =
-* Changed: the credit line in the settings footer now reads "Developed with ❤️ and maintained by", which says what a user needs to know: the plugin is looked after.
-
-= 1.16.0 - 2026-09-26 =
-* New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
-* New: on GoToSocial the RSS feed is off by default, and the settings page now says so and links the account settings, instead of reporting an empty source. When the account domain differs from the server, the plugin finds the server when you save.
-* New: entering a GoToSocial or Friendica instance in the Mastodon field points to the right section.
-* New: the platform boxes in the settings fold, with no JavaScript. Each one shows its state next to the title — the configured profile, "Not configured", or what needs attention — and they all start closed, except the ones with a problem: an incomplete profile, an error on save, a failed check or nothing on the last refresh.
-* Fixed: the FAQ said ListenBrainz cards link to MusicBrainz; they link to the recording on ListenBrainz.
+= 1.17.0 - 2026-09-27 =
+* New: grid layout. Settings → Appearance → Layout offers List (the default, one card under the other) or Grid (cards side by side). The grid fits as many columns as the space allows, at least 280 px each, and one column on phones; cards in a row share the same height, images are cropped to 16:9, and the newest post stays top left.
+* New: the shortcode takes a layout attribute that overrides the setting for one page, e.g. `[eg_social_timeline layout="grid" limit="20"]` on the home page and a plain list elsewhere.
+* The platform filters keep working in the grid, with no JavaScript: a filtered-out card leaves the grid and the others close the gap.
+* Readme: the RSS source is the second exception to "instance URL plus username", next to Bluesky.
 
 == Upgrade Notice ==
+
+= 1.17.0 =
+Adds a grid layout, in the settings or per page with [eg_social_timeline layout="grid"]. The default stays the vertical list, so nothing changes until you pick it.
 
 = 1.16.1 =
 Adds GoToSocial and Friendica, reading the public feed of the profile, and folding platform boxes in the settings. Also a reworded credit line in the settings footer.

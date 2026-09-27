@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.16.1
+ * Version: 1.17.0
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.16.1');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.17.0');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -294,6 +294,7 @@ function eg_social_timeline_register_settings() {
                 'truncate_length' => 300,
                 'icon_style' => 'brand',
                 'filters_style' => 'full',
+                'layout' => 'list',
                 'show_diagnostics' => false,
                 'canvas_bg' => 'none',
                 'canvas_bg_color' => '#f3f4f6',
@@ -404,6 +405,14 @@ function eg_social_timeline_register_settings() {
         __('Appearance', 'eg-social-timeline'),
         'eg_social_timeline_appearance_section_callback',
         'eg-social-timeline'
+    );
+
+    add_settings_field(
+        'eg_social_timeline_layout',
+        __('Layout', 'eg-social-timeline'),
+        'eg_social_timeline_layout_callback',
+        'eg-social-timeline',
+        'eg_social_timeline_appearance_section'
     );
 
     add_settings_field(
@@ -1529,6 +1538,12 @@ function eg_social_timeline_appearance_settings() {
         $filters_style = 'full';
     }
 
+    $layout = isset($options['layout']) ? $options['layout'] : 'list';
+
+    if (!in_array($layout, array('list', 'grid'), true)) {
+        $layout = 'list';
+    }
+
     return array(
         'canvas_bg'       => $canvas,
         'canvas_bg_color' => $canvas_color ? $canvas_color : '#f3f4f6',
@@ -1536,6 +1551,7 @@ function eg_social_timeline_appearance_settings() {
         'card_bg_color'   => $card_color ? $card_color : '#ffffff',
         'icon_style'      => $icon_style,
         'filters_style'   => $filters_style,
+        'layout'          => $layout,
     );
 }
 
@@ -1658,6 +1674,29 @@ function eg_social_timeline_card_bg_callback() {
     if ('custom' === $settings['card_bg']) {
         eg_social_timeline_contrast_notice($settings['card_bg_color']);
     }
+}
+
+function eg_social_timeline_layout_callback() {
+    $settings = eg_social_timeline_appearance_settings();
+
+    eg_social_timeline_select_field('layout', $settings['layout'], array(
+        'list' => __('List: one card under the other', 'eg-social-timeline'),
+        'grid' => __('Grid: cards side by side', 'eg-social-timeline'),
+    ));
+    ?>
+    <p class="description">
+        <?php
+        echo wp_kses(
+            sprintf(
+                /* translators: %s: esempio di shortcode con l'attributo layout */
+                __('The grid fits as many columns as the space allows, and one on phones; images are cropped to 16:9 and shorter texts read better. A single page can override this setting: %s. Default: List', 'eg-social-timeline'),
+                '<code>[eg_social_timeline layout="grid"]</code>'
+            ),
+            array('code' => array())
+        );
+        ?>
+    </p>
+    <?php
 }
 
 function eg_social_timeline_filters_style_callback() {
@@ -1933,6 +1972,9 @@ function eg_social_timeline_sanitize_options($input) {
 
     $filters_style = isset($input['filters_style']) ? sanitize_key($input['filters_style']) : 'full';
     $output['filters_style'] = in_array($filters_style, array('full', 'compact'), true) ? $filters_style : 'full';
+
+    $layout = isset($input['layout']) ? sanitize_key($input['layout']) : 'list';
+    $output['layout'] = in_array($layout, array('list', 'grid'), true) ? $layout : 'list';
 
     $output['show_diagnostics'] = isset($input['show_diagnostics']) ? true : false;
 
@@ -4682,15 +4724,19 @@ function eg_social_timeline_shortcode($atts) {
     }
     
     $atts = shortcode_atts(array(
-        'limit' => $options['post_limit']
+        'limit'  => $options['post_limit'],
+        // Vuoto: vale l'impostazione del pannello. "list" o "grid" la sostituiscono per questa pagina.
+        'layout' => '',
     ), $atts, 'eg_social_timeline');
+
+    $layout = sanitize_key($atts['layout']);
     
     $limit = intval($atts['limit']);
     
     $posts = eg_social_timeline_fetch_all_feeds();
     
     if (empty($posts)) {
-        return '<div class="' . esc_attr(eg_social_timeline_wrapper_classes()) . '">' .
+        return '<div class="' . esc_attr(eg_social_timeline_wrapper_classes($layout)) . '">' .
                '<div class="eg-social-timeline-empty">' .
                esc_html__('No posts available at the moment.', 'eg-social-timeline') .
                '</div></div>';
@@ -4701,7 +4747,7 @@ function eg_social_timeline_shortcode($atts) {
     
     ob_start();
     ?>
-    <div class="<?php echo esc_attr(eg_social_timeline_wrapper_classes()); ?>">
+    <div class="<?php echo esc_attr(eg_social_timeline_wrapper_classes($layout)); ?>">
         
         <?php
         // Count posts per platform for filters
@@ -5019,13 +5065,23 @@ function eg_social_timeline_truncate($text, $length = 200) {
 }
 
 /**
- * Classi del contenitore della timeline: stile icone e sfondo.
+ * Classi del contenitore della timeline: stile icone, sfondo e layout.
  *
+ * @param string $layout 'list' o 'grid' dall'attributo dello shortcode;
+ *                       vuoto usa l'impostazione del pannello.
  * @return string Elenco di classi CSS separate da spazio.
  */
-function eg_social_timeline_wrapper_classes() {
+function eg_social_timeline_wrapper_classes($layout = '') {
     $settings = eg_social_timeline_appearance_settings();
     $classes  = array('eg-social-timeline', 'egst-icons-' . $settings['icon_style']);
+
+    if (!in_array($layout, array('list', 'grid'), true)) {
+        $layout = $settings['layout'];
+    }
+
+    if ('grid' === $layout) {
+        $classes[] = 'egst-layout-grid';
+    }
 
     if ('compact' === $settings['filters_style']) {
         $classes[] = 'egst-filters-compact';

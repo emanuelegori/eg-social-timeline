@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.16.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.17.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -28,6 +28,7 @@ Plugin WordPress per mostrare una timeline cronologica unificata delle tue attiv
 - **Sistema Icone Modulare**: Icone SVG caricate da file, facilmente personalizzabili
 - **Cache Intelligente**: Riduce richieste API con cache configurabile
 - **Statistiche Interazioni**: Mostra like, boost e commenti per ogni post
+- **Elenco o griglia**: elenco verticale di default, griglia dal pannello o pagina per pagina con `layout="grid"`
 - **Responsive**: Design ottimizzato per desktop, tablet e mobile
 - **Sfondi Configurabili**: Sfondo della timeline indipendente da quello delle schede, un colore per ciascuno
 - **Contrasto Derivato**: Testo, bordi e icone seguono il contrasto WCAG dello sfondo scelto, senza schemi da tenere allineati
@@ -109,6 +110,14 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 
 ```
 [eg_social_timeline limit="20"]
+```
+
+### A griglia
+
+Per una home o una pagina "cruscotto"; sostituisce il layout scelto nel pannello:
+
+```
+[eg_social_timeline layout="grid" limit="20"]
 ```
 
 ### Esempio Completo
@@ -243,6 +252,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.17.0] - 2026-09-27
+
+#### Aggiunto
+- Layout a griglia (Impostazioni → Aspetto → Layout), colonne di almeno 280 px, una su telefono, immagini 16:9 ritagliate, schede di una riga alte uguali. L'attributo `layout` dello shortcode lo sostituisce pagina per pagina.
 
 ### [1.16.1] - 2026-09-27
 

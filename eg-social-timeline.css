@@ -429,7 +429,8 @@
 #filter-friendica:checked ~ .timeline-friendica,
 #filter-rss:checked ~ .timeline-rss,
 #filter-listenbrainz:checked ~ .timeline-listenbrainz {
-    display: block !important;
+    /* block nell'elenco; la griglia lo porta a flex per allineare il footer. */
+    display: var(--egst-item-display, block) !important;
 }
 
 /* ==============================================
@@ -620,6 +621,51 @@
 /* ==============================================
    RESPONSIVE - MOBILE
    ============================================== */
+
+/* ==============================================
+   LAYOUT A GRIGLIA
+   Il contenitore stesso diventa la griglia: checkbox, barra dei filtri e
+   schede sono fratelli, come vogliono i filtri CSS. Una scheda filtrata ha
+   display:none, esce dalla griglia e le altre si ricompattano da sole.
+   Ordine per righe: la piu' recente in alto a sinistra.
+   ============================================== */
+
+.eg-social-timeline.egst-layout-grid {
+    --egst-item-display: flex;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.egst-layout-grid .eg-timeline-filters,
+.egst-layout-grid .eg-social-timeline-empty {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+
+.egst-layout-grid .timeline-item {
+    flex-direction: column;
+    margin-bottom: 0;
+    min-width: 0;
+}
+
+.egst-layout-grid .timeline-content {
+    flex: 1 1 auto;
+}
+
+/* Il footer resta in fondo: le schede di una riga hanno la stessa altezza. */
+.egst-layout-grid .timeline-footer {
+    margin-top: auto;
+}
+
+/* Immagini 16:9 ritagliate, cosi' le righe restano ordinate anche con foto
+   verticali. Nell'elenco restano intere. */
+.egst-layout-grid .post-image img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
 
 @media (max-width: 768px) {
     .eg-social-timeline {

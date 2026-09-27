@@ -6,6 +6,28 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.17.0] - 2026-09-27
+
+### Added
+- **Layout a griglia.** *Impostazioni → Aspetto → Layout*: **Elenco** (predefinito, com'era) oppure **Griglia**. Utile per una home o una pagina "cruscotto" delle attività.
+- **Attributo `layout` dello shortcode**, che sostituisce l'impostazione per una sola pagina: `[eg_social_timeline layout="grid" limit="20"]` in home, l'elenco altrove. Un valore diverso da `list`/`grid` viene ignorato.
+
+### How it works
+- Il **contenitore stesso diventa la griglia** (`display: grid`, `repeat(auto-fill, minmax(min(100%, 280px), 1fr))`): checkbox, barra dei filtri e schede sono fratelli, come vogliono i filtri CSS, quindi l'HTML non cambia. La barra dei filtri occupa la prima riga intera; le checkbox, in `position: absolute`, non occupano celle.
+- **I filtri funzionano anche in griglia, senza JavaScript**: una scheda esclusa ha `display: none`, esce dalla griglia e le altre si ricompattano.
+- La regola che mostra le schede filtrate passa da `display: block !important` a `display: var(--egst-item-display, block) !important`: resta `block` nell'elenco, la griglia la porta a `flex` per tenere il footer in fondo alla scheda. Un solo punto toccato invece di duplicare le regole per piattaforma.
+- In griglia cade il `max-width: 800px` del contenitore: decide lo spazio che il tema dà allo shortcode (2 colonne nella colonna di testo, 3-4 a tutta larghezza).
+- **Ordine per righe**, la più recente in alto a sinistra. Scartata la "muratura": col CSS di oggi metterebbe l'ordine per colonne, confuso in una timeline.
+- Schede di una riga alte uguali, footer allineato in fondo, immagini **16:9 ritagliate** (`aspect-ratio` + `object-fit: cover`); nell'elenco restano intere.
+
+### Changed
+- `readme.txt`: la fonte RSS è la seconda eccezione a "istanza + nome utente", accanto a Bluesky (imprecisione emersa preparando la 1.16.1). Il changelog della linea 1.16 passa in `changelog.txt`.
+
+### Verified
+- Shortcode generato con il plugin 1.17.0 caricato al posto di quello installato, sulle impostazioni reali e in sola lettura: predefinito → elenco; `layout="grid" limit="20"` → classe `egst-layout-grid` e 20 schede; `layout="list"` vince sul pannello impostato a griglia; `layout="pippo"` ignorato.
+
+---
+
 ## [1.16.1] - 2026-09-27
 
 ### Changed
