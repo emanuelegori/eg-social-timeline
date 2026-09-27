@@ -192,22 +192,18 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 == Changelog ==
 
 = 1.17.2 - 2026-09-27 =
-* Changed: a clearer short description in the plugin directory, saying what the plugin is for and what it does not need: API keys, tracking, JavaScript.
-* Changed: the description in the plugins list of the admin opens the same way and names every source.
-* Changed: "fediverse" replaces "forgejo" among the directory tags, since it is the word people search for.
+* Changed: new description in the plugin directory and in the plugins list.
 
 = 1.17.1 - 2026-09-27 =
-* Faster saving: the settings no longer re-check every profile after each save. Only the profiles you added or changed are checked, so changing a colour or the layout makes no request at all. The "Verify profiles" button still checks them all.
-* Fixed: after changing a profile, the diagnostics table kept showing the result of the last refresh of the previous one — for example a message about the old account. That result is now cleared when the profile changes, until the timeline is rebuilt.
+* Changed: saving the settings is faster. Only the profiles you added or changed are checked, so changing a colour or the layout makes no request; the "Verify profiles" button still checks them all.
+* Fixed: after changing a profile, the diagnostics table no longer shows the last result of the previous one.
 
 = 1.17.0 - 2026-09-27 =
-* New: grid layout. Settings → Appearance → Layout offers List (the default, one card under the other) or Grid (cards side by side). The grid fits as many columns as the space allows, at least 280 px each, and one column on phones; cards in a row share the same height, images are cropped to 16:9, and the newest post stays top left.
-* New: the shortcode takes a layout attribute that overrides the setting for one page, e.g. `[eg_social_timeline layout="grid" limit="20"]` on the home page and a plain list elsewhere.
-* The platform filters keep working in the grid, with no JavaScript: a filtered-out card leaves the grid and the others close the gap.
-* New: a Filter Bar section in the settings. Display: Visible (the default), Collapsible — a small "Filter" button that opens the bar with a click — or Hidden, with every post shown. Style: full or compact, moved here from Appearance. Background: Neutral preset (as before), Transparent, Follow the visitor browser or a Custom color, with text and icons measured against it and a warning below the 4.5:1 contrast. The `filters` shortcode attribute overrides the display for one page.
-* Fixed: two timelines on the same page no longer share their filters. A click on a filter in the second one used to act on the first, because both used the same element IDs; each timeline now numbers its own, and the stylesheet works on classes.
-* Changed: a custom-coloured filter bar now shows that colour. Before, the bar only used the colour to choose between a very light and a very dark grey, so a light grey setting looked almost white.
-* Readme: the RSS source is the second exception to "instance URL plus username", next to Bluesky.
+* New: grid layout, in Settings → Appearance → Layout. Cards sit side by side in as many columns as fit, one column on phones; images are cropped to 16:9. The platform filters keep working.
+* New: the shortcode takes a `layout` attribute to choose list or grid page by page, e.g. `[eg_social_timeline layout="grid" limit="20"]`.
+* New: a Filter Bar section in the settings: the bar can be visible, collapsible or hidden, full or compact, with its own background. The `filters` shortcode attribute sets it page by page.
+* Fixed: two timelines on the same page no longer share their filters.
+* Fixed: a custom colour for the filter bar is now shown as chosen.
 
 == Upgrade Notice ==
 

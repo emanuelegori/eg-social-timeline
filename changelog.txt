@@ -8,7 +8,7 @@ kept here.
 Releases, tags and source: https://git.emanuelegori.uno/emanuelegori/eg-social-timeline/releases
 
 = 1.16.1 - 2026-09-27 =
-* Changed: the credit line in the settings footer now reads "Developed with ❤️ and maintained by", which says what a user needs to know: the plugin is looked after.
+* Changed: the credit line in the settings footer now reads "Developed with ❤️ and maintained by".
 
 = 1.16.0 - 2026-09-26 =
 * New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
