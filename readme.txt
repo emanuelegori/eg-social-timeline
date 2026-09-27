@@ -52,17 +52,19 @@ Configure the profiles in the settings, then insert the shortcode:
 
 `[eg_social_timeline]`
 
-With a custom limit:
+Optional attributes, each overriding its setting for that page only:
+
+* `limit` — 1 to 100, how many posts reach the page. Default: Timeline → Number of Posts to Show.
+* `layout` — `list` or `grid`. Default: Appearance → Layout.
+* `filters` — `visible`, `collapsed` or `hidden`. Default: Filter Bar → Display.
+
+Examples:
 
 `[eg_social_timeline limit="20"]`
 
-As a grid, for example on the home page:
+`[eg_social_timeline layout="grid" limit="20" filters="collapsed"]`
 
-`[eg_social_timeline layout="grid" limit="20"]`
-
-With the filter bar folded away, or without it:
-
-`[eg_social_timeline filters="collapsed"]` · `[eg_social_timeline filters="hidden"]`
+Several timelines can share a page, for example one in a widget and one in the content: each keeps its own filters.
 
 = Privacy =
 
@@ -194,6 +196,7 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 * New: the shortcode takes a layout attribute that overrides the setting for one page, e.g. `[eg_social_timeline layout="grid" limit="20"]` on the home page and a plain list elsewhere.
 * The platform filters keep working in the grid, with no JavaScript: a filtered-out card leaves the grid and the others close the gap.
 * New: a Filter Bar section in the settings. Display: Visible (the default), Collapsible — a small "Filter" button that opens the bar with a click — or Hidden, with every post shown. Style: full or compact, moved here from Appearance. Background: Neutral preset (as before), Transparent, Follow the visitor browser or a Custom color, with text and icons measured against it and a warning below the 4.5:1 contrast. The `filters` shortcode attribute overrides the display for one page.
+* Fixed: two timelines on the same page no longer share their filters. A click on a filter in the second one used to act on the first, because both used the same element IDs; each timeline now numbers its own, and the stylesheet works on classes.
 * Changed: a custom-coloured filter bar now shows that colour. Before, the bar only used the colour to choose between a very light and a very dark grey, so a light grey setting looked almost white.
 * Readme: the RSS source is the second exception to "instance URL plus username", next to Bluesky.
 

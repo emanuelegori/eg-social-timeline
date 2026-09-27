@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-27T11:40:45+00:00\n"
+"POT-Creation-Date: 2026-09-27T12:06:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: eg-social-timeline\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. Plugin URI of the plugin
 #. translators: indirizzo della pagina del progetto. Tradurre con la versione localizzata, se esiste; altrimenti lasciare invariato.
 #: eg-social-timeline.php
-#: eg-social-timeline.php:2387
+#: eg-social-timeline.php:2418
 msgid "https://emanuelegori.uno/en/plugins/eg-social-timeline/"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgid "Max posts"
 msgstr ""
 
 #: eg-social-timeline.php:88
-#: eg-social-timeline.php:5088
+#: eg-social-timeline.php:5127
 msgid "GoToSocial"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgid "Public RSS feed of the profile, off by default: turn it on in your accoun
 msgstr ""
 
 #: eg-social-timeline.php:98
-#: eg-social-timeline.php:5089
+#: eg-social-timeline.php:5128
 msgid "Friendica"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgid "Public Atom feed of the profile: posts without replies, no interaction co
 msgstr ""
 
 #: eg-social-timeline.php:108
-#: eg-social-timeline.php:5084
+#: eg-social-timeline.php:5123
 msgid "Bluesky"
 msgstr ""
 
@@ -116,7 +116,7 @@ msgid "Handle"
 msgstr ""
 
 #: eg-social-timeline.php:118
-#: eg-social-timeline.php:5083
+#: eg-social-timeline.php:5122
 msgid "Lemmy"
 msgstr ""
 
@@ -125,7 +125,7 @@ msgid "Public user feed, on the instance where your account is registered."
 msgstr ""
 
 #: eg-social-timeline.php:128
-#: eg-social-timeline.php:5087
+#: eg-social-timeline.php:5126
 msgid "Pixelfed"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgid "Public Atom feed: photos and captions, no interaction counts."
 msgstr ""
 
 #: eg-social-timeline.php:138
-#: eg-social-timeline.php:5086
+#: eg-social-timeline.php:5125
 msgid "PeerTube"
 msgstr ""
 
@@ -163,7 +163,7 @@ msgid "Max commits"
 msgstr ""
 
 #: eg-social-timeline.php:158
-#: eg-social-timeline.php:5090
+#: eg-social-timeline.php:5129
 msgid "ListenBrainz"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgid "The plugin is active but no social profile has been configured."
 msgstr ""
 
 #: eg-social-timeline.php:2173
-#: eg-social-timeline.php:4826
+#: eg-social-timeline.php:4857
 msgid "Configure now"
 msgstr ""
 
@@ -690,398 +690,434 @@ msgid "Insert in the article content:"
 msgstr ""
 
 #: eg-social-timeline.php:2332
-msgid "Optional: limit the number of posts:"
-msgstr ""
-
-#: eg-social-timeline.php:2335
-msgid "Flush Cache Manually"
+msgid "Optional attributes. Each one overrides the setting it names, for that page only:"
 msgstr ""
 
 #: eg-social-timeline.php:2336
+msgid "Attribute"
+msgstr ""
+
+#: eg-social-timeline.php:2337
+msgid "Values"
+msgstr ""
+
+#: eg-social-timeline.php:2338
+msgid "When omitted"
+msgstr ""
+
+#: eg-social-timeline.php:2344
+msgid "1 to 100: how many posts reach the page"
+msgstr ""
+
+#: eg-social-timeline.php:2345
+msgid "Timeline → Number of Posts to Show"
+msgstr ""
+
+#: eg-social-timeline.php:2350
+msgid "Appearance → Layout"
+msgstr ""
+
+#: eg-social-timeline.php:2355
+msgid "Filter Bar → Display"
+msgstr ""
+
+#: eg-social-timeline.php:2360
+msgid "Examples:"
+msgstr ""
+
+#: eg-social-timeline.php:2364
+msgid "Several timelines can share a page, for example one in a widget and one in the content: each keeps its own filters."
+msgstr ""
+
+#: eg-social-timeline.php:2366
+msgid "Flush Cache Manually"
+msgstr ""
+
+#: eg-social-timeline.php:2367
 msgid "To force an immediate feed refresh:"
 msgstr ""
 
-#: eg-social-timeline.php:2340
+#: eg-social-timeline.php:2371
 msgid "Flush Cache Now"
 msgstr ""
 
 #. translators: indirizzo del sito dell'autore. Tradurre con la versione localizzata della home, se esiste; altrimenti lasciare invariato.
-#: eg-social-timeline.php:2385
+#: eg-social-timeline.php:2416
 msgid "https://emanuelegori.uno/en/"
 msgstr ""
 
 #. translators: indirizzo della pagina per sostenere il progetto. Tradurre con la versione localizzata, se esiste; altrimenti lasciare invariato.
-#: eg-social-timeline.php:2389
+#: eg-social-timeline.php:2420
 msgid "https://emanuelegori.uno/en/donate/"
 msgstr ""
 
-#: eg-social-timeline.php:2417
-#: eg-social-timeline.php:5493
+#: eg-social-timeline.php:2448
+#: eg-social-timeline.php:5532
 msgid "Documentation"
 msgstr ""
 
-#: eg-social-timeline.php:2422
+#: eg-social-timeline.php:2453
 msgid "Repository"
 msgstr ""
 
-#: eg-social-timeline.php:2427
+#: eg-social-timeline.php:2458
 msgid "Support the project"
 msgstr ""
 
 #. translators: %s: link HTML al sito dello sviluppatore
-#: eg-social-timeline.php:2433
+#: eg-social-timeline.php:2464
 msgid "Developed with ❤️ and maintained by %s"
 msgstr ""
 
 #. translators: %s: numero versione plugin
-#: eg-social-timeline.php:2459
+#: eg-social-timeline.php:2490
 msgid "EG Social Timeline v%s"
 msgstr ""
 
-#: eg-social-timeline.php:2463
+#: eg-social-timeline.php:2494
 msgid "License GPL-2.0-or-later"
 msgstr ""
 
 #. translators: %d: numero di contenuti recuperati
-#: eg-social-timeline.php:2650
+#: eg-social-timeline.php:2681
 msgid "Cache flushed and rebuilt: %d item retrieved."
 msgid_plural "Cache flushed and rebuilt: %d items retrieved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:2732
+#: eg-social-timeline.php:2763
 msgid "The instance requires authentication for the accounts API."
 msgstr ""
 
 #. translators: 1: nome utente cercato, 2: codice di stato HTTP
-#: eg-social-timeline.php:2745
+#: eg-social-timeline.php:2776
 msgid "Account \"%1$s\" not found on that instance (HTTP %2$d)."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:2896
+#: eg-social-timeline.php:2927
 msgid "The instance did not return the feed of \"%1$s\" (HTTP %2$d). On Lemmy the user feed exists only on the instance where the account is registered."
 msgstr ""
 
 #. translators: 1: nome cercato, 2: host dell'istanza, 3: codice di stato HTTP
-#: eg-social-timeline.php:3330
+#: eg-social-timeline.php:3361
 msgid "Neither an account nor a channel named \"%1$s\" exists on %2$s (HTTP %3$d). On PeerTube videos usually live in a channel: from an address like /c/name@host use that name and the host it belongs to."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:3448
+#: eg-social-timeline.php:3479
 msgid "The instance did not return the Atom feed of \"%1$s\" (HTTP %2$d)."
 msgstr ""
 
-#: eg-social-timeline.php:3473
+#: eg-social-timeline.php:3504
 msgid "The Atom feed could not be read. The instance may have changed its format."
 msgstr ""
 
-#: eg-social-timeline.php:3612
+#: eg-social-timeline.php:3643
 msgid "The feed could not be read. The instance may have changed its format."
 msgstr ""
 
 #. translators: 1: nome utente, 2: indirizzo delle impostazioni dell'account
-#: eg-social-timeline.php:3696
+#: eg-social-timeline.php:3727
 msgid "The RSS feed of \"%1$s\" is turned off. GoToSocial keeps it off by default: turn it on in the account settings (%2$s)."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:3710
+#: eg-social-timeline.php:3741
 msgid "The instance did not return the feed of \"%1$s\" (HTTP %2$d). A 500 usually means the account does not exist on this instance."
 msgstr ""
 
 #. translators: 1: nickname, 2: codice di stato HTTP
-#: eg-social-timeline.php:3806
+#: eg-social-timeline.php:3837
 msgid "The instance did not return the feed of \"%1$s\" (HTTP %2$d). Check the nickname: it is the name in the profile address."
 msgstr ""
 
-#: eg-social-timeline.php:3902
+#: eg-social-timeline.php:3933
 msgid "The feed address cannot be used: it must be an HTTPS address of a public, resolvable host."
 msgstr ""
 
 #. translators: %d: codice di stato HTTP
-#: eg-social-timeline.php:3929
+#: eg-social-timeline.php:3960
 msgid "The feed did not answer (HTTP %d)."
 msgstr ""
 
-#: eg-social-timeline.php:3953
+#: eg-social-timeline.php:3984
 msgid "The feed could not be read: it is not valid RSS or Atom."
 msgstr ""
 
-#: eg-social-timeline.php:3965
+#: eg-social-timeline.php:3996
 msgid "The feed has no items: neither channel/item nor feed/entry found."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:4114
-#: eg-social-timeline.php:4546
+#: eg-social-timeline.php:4145
+#: eg-social-timeline.php:4577
 msgid "No listens returned for \"%1$s\" (HTTP %2$d)."
 msgstr ""
 
 #. translators: 1: artista e titolo del brano, 2: nome dell'album
-#: eg-social-timeline.php:4153
+#: eg-social-timeline.php:4184
 msgid "%1$s (from %2$s)"
 msgstr ""
 
-#: eg-social-timeline.php:4309
+#: eg-social-timeline.php:4340
 msgid "unknown software"
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:4318
-#: eg-social-timeline.php:4484
-#: eg-social-timeline.php:4521
+#: eg-social-timeline.php:4349
+#: eg-social-timeline.php:4515
+#: eg-social-timeline.php:4552
 msgid "Account \"%1$s\" not found (HTTP %2$d)."
 msgstr ""
 
 #. translators: %d: numero di elementi nel feed
-#: eg-social-timeline.php:4339
-#: eg-social-timeline.php:4470
-#: eg-social-timeline.php:4566
+#: eg-social-timeline.php:4370
+#: eg-social-timeline.php:4501
+#: eg-social-timeline.php:4597
 msgid "%d item in the feed"
 msgid_plural "%d items in the feed"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:4348
+#: eg-social-timeline.php:4379
 msgid "No feed for \"%1$s\" on this instance (HTTP %2$d). The Lemmy user feed exists only where the account is registered."
 msgstr ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:4368
+#: eg-social-timeline.php:4399
 msgid "User \"%1$s\" not found (HTTP %2$d)."
 msgstr ""
 
-#: eg-social-timeline.php:4408
+#: eg-social-timeline.php:4439
 msgid "channel"
 msgstr ""
 
-#: eg-social-timeline.php:4408
+#: eg-social-timeline.php:4439
 msgid "account"
 msgstr ""
 
 #. translators: %d: numero di video
-#: eg-social-timeline.php:4413
+#: eg-social-timeline.php:4444
 msgid "%d video"
 msgid_plural "%d videos"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome cercato, 2: codice di stato HTTP
-#: eg-social-timeline.php:4423
+#: eg-social-timeline.php:4454
 msgid "Neither an account nor a channel named \"%1$s\" (HTTP %2$d). On PeerTube videos usually live in a channel."
 msgstr ""
 
 #. translators: %d: numero di elementi nel feed
-#: eg-social-timeline.php:4444
-#: eg-social-timeline.php:4512
+#: eg-social-timeline.php:4475
+#: eg-social-timeline.php:4543
 msgid "%d item in the Atom feed"
 msgid_plural "%d items in the Atom feed"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
-#: eg-social-timeline.php:4453
+#: eg-social-timeline.php:4484
 msgid "No Atom feed for \"%1$s\" (HTTP %2$d)."
 msgstr ""
 
 #. translators: %s: indirizzo delle impostazioni dell'account
-#: eg-social-timeline.php:4478
+#: eg-social-timeline.php:4509
 msgid "The RSS feed of this account is turned off. Turn it on in the account settings (%s)."
 msgstr ""
 
-#: eg-social-timeline.php:4563
+#: eg-social-timeline.php:4594
 msgid "label from the feed"
 msgstr ""
 
 #. translators: %d: codice di stato HTTP
-#: eg-social-timeline.php:4575
+#: eg-social-timeline.php:4606
 msgid "No RSS or Atom items found at this address (HTTP %d)."
 msgstr ""
 
 #. translators: %d: codice di stato HTTP
-#: eg-social-timeline.php:4597
+#: eg-social-timeline.php:4628
 msgid "The public API did not return this handle (HTTP %d)."
 msgstr ""
 
-#: eg-social-timeline.php:4654
+#: eg-social-timeline.php:4685
 msgid "Incomplete: the instance URL is missing, so this platform is skipped."
 msgstr ""
 
-#: eg-social-timeline.php:4655
+#: eg-social-timeline.php:4686
 msgid "Incomplete: the username is missing, so this platform is skipped."
 msgstr ""
 
 #. translators: %s: elenco delle piattaforme che non hanno portato contenuti
-#: eg-social-timeline.php:4700
+#: eg-social-timeline.php:4731
 msgid "%s returned nothing on the last refresh. Turn on \"Show diagnostics\" in the profiles section below to see why."
 msgstr ""
 
-#: eg-social-timeline.php:4712
+#: eg-social-timeline.php:4743
 msgid "Configured profiles"
 msgstr ""
 
-#: eg-social-timeline.php:4716
+#: eg-social-timeline.php:4747
 msgid "Platform"
 msgstr ""
 
-#: eg-social-timeline.php:4717
+#: eg-social-timeline.php:4748
 msgid "What the plugin sees"
 msgstr ""
 
-#: eg-social-timeline.php:4718
+#: eg-social-timeline.php:4749
 msgid "Last fetch"
 msgstr ""
 
-#: eg-social-timeline.php:4733
+#: eg-social-timeline.php:4764
 msgid "Not verified yet."
 msgstr ""
 
-#: eg-social-timeline.php:4745
+#: eg-social-timeline.php:4776
 msgid "No fetch since the cache was emptied: open the page with the timeline, or use \"Flush Cache Now\" below."
 msgstr ""
 
 #. translators: %d: numero di contenuti recuperati
-#: eg-social-timeline.php:4750
+#: eg-social-timeline.php:4781
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:4756
+#: eg-social-timeline.php:4787
 msgid "No content retrieved."
 msgstr ""
 
 #. translators: %s: data e ora dell'ultima verifica
-#: eg-social-timeline.php:4769
+#: eg-social-timeline.php:4800
 msgid "Profiles verified on %s."
 msgstr ""
 
-#: eg-social-timeline.php:4773
+#: eg-social-timeline.php:4804
 msgid "Save the settings or use \"Verify profiles\" to run the checks."
 msgstr ""
 
-#: eg-social-timeline.php:4780
+#: eg-social-timeline.php:4811
 msgid "Verify profiles"
 msgstr ""
 
-#: eg-social-timeline.php:4801
+#: eg-social-timeline.php:4832
 msgid "Security check failed."
 msgstr ""
 
-#: eg-social-timeline.php:4824
+#: eg-social-timeline.php:4855
 msgid "EG Social Timeline — Configuration Required"
 msgstr ""
 
-#: eg-social-timeline.php:4825
+#: eg-social-timeline.php:4856
 msgid "No social profile configured."
 msgstr ""
 
-#: eg-social-timeline.php:4854
+#: eg-social-timeline.php:4885
 msgid "No posts available at the moment."
 msgstr ""
 
-#: eg-social-timeline.php:4918
+#: eg-social-timeline.php:4957
 msgid "Filter:"
 msgstr ""
 
-#: eg-social-timeline.php:4919
+#: eg-social-timeline.php:4958
 msgid "Filter by platform:"
 msgstr ""
 
-#: eg-social-timeline.php:4927
+#: eg-social-timeline.php:4966
 msgid "Show or hide the filters"
 msgstr ""
 
 #. translators: 1: nome della piattaforma, 2: numero di contenuti
-#: eg-social-timeline.php:4955
+#: eg-social-timeline.php:4994
 msgctxt "nome piattaforma e conteggio nel tooltip del filtro"
 msgid "%1$s (%2$d)"
 msgstr ""
 
-#: eg-social-timeline.php:5019
+#: eg-social-timeline.php:5058
 msgid "Attached image"
 msgstr ""
 
-#: eg-social-timeline.php:5029
+#: eg-social-timeline.php:5068
 msgid "Points"
 msgstr ""
 
-#: eg-social-timeline.php:5029
+#: eg-social-timeline.php:5068
 msgid "Favourites"
 msgstr ""
 
-#: eg-social-timeline.php:5036
+#: eg-social-timeline.php:5075
 msgid "Boost"
 msgstr ""
 
-#: eg-social-timeline.php:5043
+#: eg-social-timeline.php:5082
 msgid "Comments"
 msgstr ""
 
-#: eg-social-timeline.php:5043
+#: eg-social-timeline.php:5082
 msgid "Replies"
 msgstr ""
 
-#: eg-social-timeline.php:5057
+#: eg-social-timeline.php:5096
 msgid "View commit"
 msgstr ""
 
-#: eg-social-timeline.php:5059
+#: eg-social-timeline.php:5098
 msgid "Watch video"
 msgstr ""
 
-#: eg-social-timeline.php:5061
+#: eg-social-timeline.php:5100
 msgid "View photo"
 msgstr ""
 
-#: eg-social-timeline.php:5063
+#: eg-social-timeline.php:5102
 msgid "View the recording"
 msgstr ""
 
-#: eg-social-timeline.php:5065
+#: eg-social-timeline.php:5104
 msgid "Read the post"
 msgstr ""
 
-#: eg-social-timeline.php:5067
+#: eg-social-timeline.php:5106
 msgid "View original post"
 msgstr ""
 
-#: eg-social-timeline.php:5082
+#: eg-social-timeline.php:5121
 msgid "Mastodon"
 msgstr ""
 
-#: eg-social-timeline.php:5085
+#: eg-social-timeline.php:5124
 msgid "Forgejo"
 msgstr ""
 
-#: eg-social-timeline.php:5091
+#: eg-social-timeline.php:5130
 msgid "Feed"
 msgstr ""
 
 #. translators: %s: numero di minuti
-#: eg-social-timeline.php:5164
+#: eg-social-timeline.php:5203
 msgid "%s minute ago"
 msgid_plural "%s minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di ore
-#: eg-social-timeline.php:5168
+#: eg-social-timeline.php:5207
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: numero di giorni
-#: eg-social-timeline.php:5172
+#: eg-social-timeline.php:5211
 msgid "%s day ago"
 msgid_plural "%s days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: eg-social-timeline.php:5492
+#: eg-social-timeline.php:5531
 msgid "Settings"
 msgstr ""

@@ -269,32 +269,32 @@
 }
 
 /* Quando unchecked, nascondi check */
-#filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"]::before,
-#filter-lemmy:not(:checked) ~ * label[for="filter-lemmy"]::before,
-#filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"]::before,
-#filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"]::before,
-#filter-peertube:not(:checked) ~ * label[for="filter-peertube"]::before,
-#filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"]::before,
-#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"]::before,
-#filter-friendica:not(:checked) ~ * label[for="filter-friendica"]::before,
-#filter-rss:not(:checked) ~ * label[for="filter-rss"]::before,
-#filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"]::before {
+.egst-filter-mastodon:not(:checked) ~ * .egst-label-mastodon::before,
+.egst-filter-lemmy:not(:checked) ~ * .egst-label-lemmy::before,
+.egst-filter-bluesky:not(:checked) ~ * .egst-label-bluesky::before,
+.egst-filter-forgejo:not(:checked) ~ * .egst-label-forgejo::before,
+.egst-filter-peertube:not(:checked) ~ * .egst-label-peertube::before,
+.egst-filter-pixelfed:not(:checked) ~ * .egst-label-pixelfed::before,
+.egst-filter-gotosocial:not(:checked) ~ * .egst-label-gotosocial::before,
+.egst-filter-friendica:not(:checked) ~ * .egst-label-friendica::before,
+.egst-filter-rss:not(:checked) ~ * .egst-label-rss::before,
+.egst-filter-listenbrainz:not(:checked) ~ * .egst-label-listenbrainz::before {
     background: var(--egst-chip-bg);
     color: transparent;
     border-color: var(--egst-chip-border);
 }
 
 /* Label unchecked styling */
-#filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"],
-#filter-lemmy:not(:checked) ~ * label[for="filter-lemmy"],
-#filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"],
-#filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"],
-#filter-peertube:not(:checked) ~ * label[for="filter-peertube"],
-#filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"],
-#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"],
-#filter-friendica:not(:checked) ~ * label[for="filter-friendica"],
-#filter-rss:not(:checked) ~ * label[for="filter-rss"],
-#filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"] {
+.egst-filter-mastodon:not(:checked) ~ * .egst-label-mastodon,
+.egst-filter-lemmy:not(:checked) ~ * .egst-label-lemmy,
+.egst-filter-bluesky:not(:checked) ~ * .egst-label-bluesky,
+.egst-filter-forgejo:not(:checked) ~ * .egst-label-forgejo,
+.egst-filter-peertube:not(:checked) ~ * .egst-label-peertube,
+.egst-filter-pixelfed:not(:checked) ~ * .egst-label-pixelfed,
+.egst-filter-gotosocial:not(:checked) ~ * .egst-label-gotosocial,
+.egst-filter-friendica:not(:checked) ~ * .egst-label-friendica,
+.egst-filter-rss:not(:checked) ~ * .egst-label-rss,
+.egst-filter-listenbrainz:not(:checked) ~ * .egst-label-listenbrainz {
     opacity: 0.6;
     background: var(--egst-chip-bg-off);
 }
@@ -305,16 +305,16 @@
 }
 
 /* Piattaforma esclusa: icona in grigio, non solo piu' pallida. */
-#filter-mastodon:not(:checked) ~ * label[for="filter-mastodon"] .platform-icon-small svg,
-#filter-lemmy:not(:checked) ~ * label[for="filter-lemmy"] .platform-icon-small svg,
-#filter-bluesky:not(:checked) ~ * label[for="filter-bluesky"] .platform-icon-small svg,
-#filter-forgejo:not(:checked) ~ * label[for="filter-forgejo"] .platform-icon-small svg,
-#filter-peertube:not(:checked) ~ * label[for="filter-peertube"] .platform-icon-small svg,
-#filter-pixelfed:not(:checked) ~ * label[for="filter-pixelfed"] .platform-icon-small svg,
-#filter-gotosocial:not(:checked) ~ * label[for="filter-gotosocial"] .platform-icon-small svg,
-#filter-friendica:not(:checked) ~ * label[for="filter-friendica"] .platform-icon-small svg,
-#filter-listenbrainz:not(:checked) ~ * label[for="filter-listenbrainz"] .platform-icon-small svg,
-#filter-rss:not(:checked) ~ * label[for="filter-rss"] .platform-icon-small svg {
+.egst-filter-mastodon:not(:checked) ~ * .egst-label-mastodon .platform-icon-small svg,
+.egst-filter-lemmy:not(:checked) ~ * .egst-label-lemmy .platform-icon-small svg,
+.egst-filter-bluesky:not(:checked) ~ * .egst-label-bluesky .platform-icon-small svg,
+.egst-filter-forgejo:not(:checked) ~ * .egst-label-forgejo .platform-icon-small svg,
+.egst-filter-peertube:not(:checked) ~ * .egst-label-peertube .platform-icon-small svg,
+.egst-filter-pixelfed:not(:checked) ~ * .egst-label-pixelfed .platform-icon-small svg,
+.egst-filter-gotosocial:not(:checked) ~ * .egst-label-gotosocial .platform-icon-small svg,
+.egst-filter-friendica:not(:checked) ~ * .egst-label-friendica .platform-icon-small svg,
+.egst-filter-listenbrainz:not(:checked) ~ * .egst-label-listenbrainz .platform-icon-small svg,
+.egst-filter-rss:not(:checked) ~ * .egst-label-rss .platform-icon-small svg {
     filter: grayscale(1);
 }
 
@@ -419,16 +419,16 @@
 }
 
 /* Mostra SOLO quando checked */
-#filter-mastodon:checked ~ .timeline-mastodon,
-#filter-lemmy:checked ~ .timeline-lemmy,
-#filter-bluesky:checked ~ .timeline-bluesky,
-#filter-forgejo:checked ~ .timeline-forgejo,
-#filter-peertube:checked ~ .timeline-peertube,
-#filter-pixelfed:checked ~ .timeline-pixelfed,
-#filter-gotosocial:checked ~ .timeline-gotosocial,
-#filter-friendica:checked ~ .timeline-friendica,
-#filter-rss:checked ~ .timeline-rss,
-#filter-listenbrainz:checked ~ .timeline-listenbrainz {
+.egst-filter-mastodon:checked ~ .timeline-mastodon,
+.egst-filter-lemmy:checked ~ .timeline-lemmy,
+.egst-filter-bluesky:checked ~ .timeline-bluesky,
+.egst-filter-forgejo:checked ~ .timeline-forgejo,
+.egst-filter-peertube:checked ~ .timeline-peertube,
+.egst-filter-pixelfed:checked ~ .timeline-pixelfed,
+.egst-filter-gotosocial:checked ~ .timeline-gotosocial,
+.egst-filter-friendica:checked ~ .timeline-friendica,
+.egst-filter-rss:checked ~ .timeline-rss,
+.egst-filter-listenbrainz:checked ~ .timeline-listenbrainz {
     /* block nell'elenco; la griglia lo porta a flex per allineare il footer. */
     display: var(--egst-item-display, block) !important;
 }
@@ -579,25 +579,25 @@
 
 /* Stile "colori delle piattaforme": selettori per slug, come i filtri. */
 .egst-icons-brand .platform-mastodon .platform-icon svg { color: var(--egst-icon-mastodon); }
-.egst-icons-brand label[for="filter-mastodon"] .platform-icon-small svg { color: var(--egst-chip-icon-mastodon); }
+.egst-icons-brand .egst-label-mastodon .platform-icon-small svg { color: var(--egst-chip-icon-mastodon); }
 .egst-icons-brand .platform-lemmy .platform-icon svg { color: var(--egst-icon-lemmy); }
-.egst-icons-brand label[for="filter-lemmy"] .platform-icon-small svg { color: var(--egst-chip-icon-lemmy); }
+.egst-icons-brand .egst-label-lemmy .platform-icon-small svg { color: var(--egst-chip-icon-lemmy); }
 .egst-icons-brand .platform-bluesky .platform-icon svg { color: var(--egst-icon-bluesky); }
-.egst-icons-brand label[for="filter-bluesky"] .platform-icon-small svg { color: var(--egst-chip-icon-bluesky); }
+.egst-icons-brand .egst-label-bluesky .platform-icon-small svg { color: var(--egst-chip-icon-bluesky); }
 .egst-icons-brand .platform-forgejo .platform-icon svg { color: var(--egst-icon-forgejo); }
-.egst-icons-brand label[for="filter-forgejo"] .platform-icon-small svg { color: var(--egst-chip-icon-forgejo); }
+.egst-icons-brand .egst-label-forgejo .platform-icon-small svg { color: var(--egst-chip-icon-forgejo); }
 .egst-icons-brand .platform-peertube .platform-icon svg { color: var(--egst-icon-peertube); }
-.egst-icons-brand label[for="filter-peertube"] .platform-icon-small svg { color: var(--egst-chip-icon-peertube); }
+.egst-icons-brand .egst-label-peertube .platform-icon-small svg { color: var(--egst-chip-icon-peertube); }
 .egst-icons-brand .platform-pixelfed .platform-icon svg { color: var(--egst-icon-pixelfed); }
-.egst-icons-brand label[for="filter-pixelfed"] .platform-icon-small svg { color: var(--egst-chip-icon-pixelfed); }
+.egst-icons-brand .egst-label-pixelfed .platform-icon-small svg { color: var(--egst-chip-icon-pixelfed); }
 .egst-icons-brand .platform-gotosocial .platform-icon svg { color: var(--egst-icon-gotosocial); }
-.egst-icons-brand label[for="filter-gotosocial"] .platform-icon-small svg { color: var(--egst-chip-icon-gotosocial); }
+.egst-icons-brand .egst-label-gotosocial .platform-icon-small svg { color: var(--egst-chip-icon-gotosocial); }
 .egst-icons-brand .platform-friendica .platform-icon svg { color: var(--egst-icon-friendica); }
-.egst-icons-brand label[for="filter-friendica"] .platform-icon-small svg { color: var(--egst-chip-icon-friendica); }
+.egst-icons-brand .egst-label-friendica .platform-icon-small svg { color: var(--egst-chip-icon-friendica); }
 .egst-icons-brand .platform-rss .platform-icon svg { color: var(--egst-icon-rss); }
-.egst-icons-brand label[for="filter-rss"] .platform-icon-small svg { color: var(--egst-chip-icon-rss); }
+.egst-icons-brand .egst-label-rss .platform-icon-small svg { color: var(--egst-chip-icon-rss); }
 .egst-icons-brand .platform-listenbrainz .platform-icon svg { color: var(--egst-icon-listenbrainz); }
-.egst-icons-brand label[for="filter-listenbrainz"] .platform-icon-small svg { color: var(--egst-chip-icon-listenbrainz); }
+.egst-icons-brand .egst-label-listenbrainz .platform-icon-small svg { color: var(--egst-chip-icon-listenbrainz); }
 
 /* Software rilevato via nodeinfo: la piattaforma resta "mastodon" per i
    filtri, ma Pleroma e Akkoma hanno icona e colore propri. Stessa

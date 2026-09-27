@@ -113,6 +113,16 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 [eg_social_timeline limit="20"]
 ```
 
+### Attributi
+
+| Attributo | Valori | Se omesso |
+|---|---|---|
+| `limit` | 1–100 | Timeline → Numero di post da mostrare |
+| `layout` | `list` · `grid` | Aspetto → Layout |
+| `filters` | `visible` · `collapsed` · `hidden` | Barra dei filtri → Visualizzazione |
+
+Più timeline possono stare nella stessa pagina (un widget e il contenuto, per esempio): ognuna tiene i propri filtri.
+
 ### A griglia
 
 Per una home o una pagina "cruscotto"; sostituisce il layout scelto nel pannello:
@@ -266,6 +276,9 @@ eg-social-timeline/
 #### Aggiunto
 - Layout a griglia (Impostazioni → Aspetto → Layout), colonne di almeno 280 px, una su telefono, immagini 16:9 ritagliate, schede di una riga alte uguali. L'attributo `layout` dello shortcode lo sostituisce pagina per pagina.
 - Riquadro Barra dei filtri: visualizzazione visibile / a scomparsa / nascosta (attributo `filters` dello shortcode), stile completo / compatto, sfondo neutro / trasparente / browser / colore personalizzato.
+
+#### Corretto
+- Due timeline nella stessa pagina non condividono più i filtri: gli id sono numerati per timeline e il foglio di stile lavora sulle classi.
 
 #### Modificato
 - Una barra con colore personalizzato mostra quel colore; prima il colore sceglieva soltanto fra un grigio chiaro e uno scuro.

@@ -113,6 +113,16 @@ git clone https://git.emanuelegori.uno/emanuelegori/eg-social-timeline.git
 [eg_social_timeline limit="20"]
 ```
 
+### Attributes
+
+| Attribute | Values | When omitted |
+|---|---|---|
+| `limit` | 1–100 | Timeline → Number of Posts to Show |
+| `layout` | `list` · `grid` | Appearance → Layout |
+| `filters` | `visible` · `collapsed` · `hidden` | Filter Bar → Display |
+
+Several timelines can share a page (a widget and the content, say): each keeps its own filters.
+
 ### As a grid
 
 For a home page or a dashboard-like page; overrides the layout set in the settings:
@@ -261,6 +271,9 @@ eg-social-timeline/
 #### Added
 - Grid layout (Settings → Appearance → Layout), columns of at least 280 px, one on phones, 16:9 cropped images, equal-height cards per row. The `layout` shortcode attribute overrides it per page.
 - Filter Bar section: display visible / collapsible / hidden (`filters` shortcode attribute), style full / compact, background neutral / transparent / browser / custom color.
+
+#### Fixed
+- Two timelines on the same page no longer share their filters: element IDs are numbered per timeline and the stylesheet works on classes.
 
 #### Changed
 - A custom-coloured filter bar shows that colour; before, the colour only chose between a light and a dark grey.

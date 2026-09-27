@@ -18,6 +18,10 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
   - **Sfondo**: *Neutro* (predefinito, identico a prima), *Trasparente*, *Segui il browser*, *Colore personalizzato*, con l'avviso sotto il contrasto 4,5:1 come per timeline e schede.
 - "Nascosta" era stata scartata il 20 settembre temendo una timeline vuota. Il timore non era fondato: le checkbox stanno **fuori** dalla barra, partono spuntate e restano anche quando la barra non c'è. Verificato: 3 checkbox, 0 etichette, tutte le schede visibili.
 
+### Fixed
+- **Più timeline nella stessa pagina non condividono più i filtri.** Le checkbox avevano id fissi (`filter-mastodon`…): con due shortcode in pagina c'erano due `filter-mastodon`, e un clic su un'etichetta della seconda timeline agiva sulla prima. Ora la funzione dello shortcode numera le proprie istanze durante la richiesta (`filter-mastodon-1`, `-2`…, e `egst-filters-toggle-1`…), e le 80 regole CSS che usavano `#filter-{slug}` e `label[for="filter-{slug}"]` passano alle classi `.egst-filter-{slug}` ed `.egst-label-{slug}`. Il CSS non conosce i numeri: il selettore `~` confina ogni regola al proprio contenitore. Verificato con tre timeline in pagina: 10 id, nessun duplicato, ogni etichetta punta a una casella della propria timeline.
+- La sezione *Shortcode* del pannello elenca tutti gli attributi (`limit`, `layout`, `filters`) con valori e impostazione che sostituiscono, come il readme e i README.
+
 ### Changed
 - **La barra con colore personalizzato mostra quel colore.** Prima la barra non aveva una superficie propria: il colore della timeline serviva solo a scegliere fra la palette chiara (`#F8F9FF`, quasi bianco) e quella scura (`#2A2A2A`), e un grigio chiaro sembrava bianco. Ora *Colore personalizzato* dipinge la barra e i chip si misurano su quel colore; *Neutro* conserva il comportamento di prima, quindi chi aggiorna non vede differenze.
 

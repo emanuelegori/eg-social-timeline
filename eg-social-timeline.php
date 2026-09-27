@@ -2329,8 +2329,39 @@ function eg_social_timeline_settings_page() {
         <p><?php esc_html_e('Insert in the article content:', 'eg-social-timeline'); ?></p>
         <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline]</code></pre>
         
-        <p><?php esc_html_e('Optional: limit the number of posts:', 'eg-social-timeline'); ?></p>
+        <p><?php esc_html_e('Optional attributes. Each one overrides the setting it names, for that page only:', 'eg-social-timeline'); ?></p>
+        <table class="widefat striped" style="max-width: 900px;">
+            <thead>
+                <tr>
+                    <th><?php esc_html_e('Attribute', 'eg-social-timeline'); ?></th>
+                    <th><?php esc_html_e('Values', 'eg-social-timeline'); ?></th>
+                    <th><?php esc_html_e('When omitted', 'eg-social-timeline'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>limit</code></td>
+                    <td><?php esc_html_e('1 to 100: how many posts reach the page', 'eg-social-timeline'); ?></td>
+                    <td><?php esc_html_e('Timeline → Number of Posts to Show', 'eg-social-timeline'); ?></td>
+                </tr>
+                <tr>
+                    <td><code>layout</code></td>
+                    <td><code>list</code> · <code>grid</code></td>
+                    <td><?php esc_html_e('Appearance → Layout', 'eg-social-timeline'); ?></td>
+                </tr>
+                <tr>
+                    <td><code>filters</code></td>
+                    <td><code>visible</code> · <code>collapsed</code> · <code>hidden</code></td>
+                    <td><?php esc_html_e('Filter Bar → Display', 'eg-social-timeline'); ?></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><?php esc_html_e('Examples:', 'eg-social-timeline'); ?></p>
         <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline limit="20"]</code></pre>
+        <pre style="background: #f5f5f5; padding: 10px; border-left: 4px solid #6364FF;"><code>[eg_social_timeline layout="grid" limit="20" filters="collapsed"]</code></pre>
+
+        <p class="description"><?php esc_html_e('Several timelines can share a page, for example one in a widget and one in the content: each keeps its own filters.', 'eg-social-timeline'); ?></p>
         
         <h3><?php esc_html_e('Flush Cache Manually', 'eg-social-timeline'); ?></h3>
         <p><?php esc_html_e('To force an immediate feed refresh:', 'eg-social-timeline'); ?></p>
@@ -4905,11 +4936,19 @@ function eg_social_timeline_shortcode($atts) {
         }
         ?>
         
+        <?php
+        // Numero della timeline nella pagina: rende unici gli id, cosi' due
+        // shortcode nella stessa pagina non si rubano le etichette. Il CSS non
+        // lo usa: lavora sulle classi, e il selettore ~ lo confina da solo a
+        // questo contenitore.
+        static $egst_instance = 0;
+        $egst_instance++;
+        ?>
         <!-- Checkbox FUORI dal container (siblings degli article) -->
         <?php foreach ($platform_counts as $platform => $count): ?>
             <input type="checkbox" 
-                   id="filter-<?php echo esc_attr($platform); ?>" 
-                   class="filter-checkbox-input"
+                   id="<?php echo esc_attr('filter-' . $platform . '-' . $egst_instance); ?>"
+                   class="<?php echo esc_attr('filter-checkbox-input egst-filter-' . $platform); ?>"
                    checked>
         <?php endforeach; ?>
 
@@ -4922,7 +4961,7 @@ function eg_social_timeline_shortcode($atts) {
         <?php if ('collapsed' === $filters_display): ?>
             <?php // A scomparsa: una checkbox come quelle dei filtri, fuori dalla barra. Un <details> andrebbe a capo, perche' il browser ne racchiude il contenuto in un blocco. ?>
             <input type="checkbox"
-                   id="egst-filters-toggle"
+                   id="<?php echo esc_attr('egst-filters-toggle-' . $egst_instance); ?>"
                    class="filter-checkbox-input egst-filters-toggle"
                    aria-label="<?php esc_attr_e('Show or hide the filters', 'eg-social-timeline'); ?>">
         <?php endif; ?>
@@ -4932,7 +4971,7 @@ function eg_social_timeline_shortcode($atts) {
         <div class="<?php echo esc_attr('eg-timeline-filters' . ('collapsed' === $filters_display ? ' egst-filters-collapsible' : '')); ?>">
             <div class="filters-header">
                 <?php if ('collapsed' === $filters_display): ?>
-                    <label for="egst-filters-toggle" class="egst-filters-toggle-label">
+                    <label for="<?php echo esc_attr('egst-filters-toggle-' . $egst_instance); ?>" class="egst-filters-toggle-label">
                         <span class="filters-icon">🔍</span>
                         <span class="egst-filters-heading"><?php echo esc_html($filters_title); ?></span>
                     </label>
@@ -4957,8 +4996,8 @@ function eg_social_timeline_shortcode($atts) {
                         intval($count)
                     );
                     ?>
-                    <label for="filter-<?php echo esc_attr($platform); ?>"
-                           class="<?php echo esc_attr('filter-checkbox-label' . ($software ? ' egst-sw-' . $software : '')); ?>"
+                    <label for="<?php echo esc_attr('filter-' . $platform . '-' . $egst_instance); ?>"
+                           class="<?php echo esc_attr('filter-checkbox-label egst-label-' . $platform . ($software ? ' egst-sw-' . $software : '')); ?>"
                            title="<?php echo esc_attr($tooltip); ?>">
                         <span class="platform-icon-small">
                             <?php echo eg_social_timeline_get_icon($platform, $software); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitizzato internamente dalla funzione ?>
