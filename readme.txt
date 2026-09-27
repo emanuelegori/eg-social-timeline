@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.16.0
+Stable tag: 1.16.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.16.1 - 2026-09-27 =
+* Changed: the credit line in the settings footer now reads "Developed with ❤️ and maintained by", which says what a user needs to know: the plugin is looked after.
+
 = 1.16.0 - 2026-09-26 =
 * New: GoToSocial and Friendica have their own sections. Their Mastodon-compatible API is closed to visitors, so the plugin reads the public feed of the profile: the RSS feed on GoToSocial, the Atom feed on Friendica. Posts carry their own icon and name, and images when the feed has them.
 * New: on GoToSocial the RSS feed is off by default, and the settings page now says so and links the account settings, instead of reporting an empty source. When the account domain differs from the server, the plugin finds the server when you save.
@@ -187,6 +190,9 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 * Fixed: the FAQ said ListenBrainz cards link to MusicBrainz; they link to the recording on ListenBrainz.
 
 == Upgrade Notice ==
+
+= 1.16.1 =
+Adds GoToSocial and Friendica, reading the public feed of the profile, and folding platform boxes in the settings. Also a reworded credit line in the settings footer.
 
 = 1.16.0 =
 GoToSocial and Friendica get their own sections, reading the public feed of the profile. The platform boxes now fold and open by themselves only when something needs attention.

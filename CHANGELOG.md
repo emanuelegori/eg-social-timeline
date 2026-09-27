@@ -6,6 +6,16 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.16.1] - 2026-09-27
+
+### Changed
+- Credito nel footer del pannello: da *"Developed with ❤️ and a lot of spare time by"* a **"Developed with ❤️ and maintained by"** (in italiano *"Sviluppato con ❤️ e mantenuto da"*). "Molto tempo libero" si leggeva come un passatempo, e non aiutava la fiducia di chi installa; "mantenuto" dice invece la cosa che conta, cioè che il plugin non è abbandonato. Il volontariato resta raccontato dove il contesto lo rende un pregio: la pagina del plugin e l'articolo di lancio.
+
+### Why
+- La 1.16.0 ha già tag e Release su Forgejo, quindi la correzione diventa una versione nuova invece di riscrivere un tag pubblicato. In SVN va direttamente la 1.16.1: chi è alla 1.15.9 non vedrà mai la 1.16.0, e l'Upgrade Notice della 1.16.1 riassume anche le novità di quella.
+
+---
+
 ## [1.16.0] - 2026-09-26
 
 ### Added

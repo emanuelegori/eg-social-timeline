@@ -3,10 +3,10 @@
 # This file is distributed under the same license as the EG Social Timeline plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EG Social Timeline 1.16.0\n"
+"Project-Id-Version: EG Social Timeline 1.16.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-09-26T21:19:14+00:00\n"
+"POT-Creation-Date: 2026-09-27T08:26:03+00:00\n"
 "PO-Revision-Date: 2026-09-17\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -790,8 +790,8 @@ msgstr "Sostieni il progetto"
 
 #. translators: %s: link HTML al sito dello sviluppatore
 #: eg-social-timeline.php:2285
-msgid "Developed with ❤️ and a lot of spare time by %s"
-msgstr "Sviluppato con ❤️ e molto tempo libero da %s"
+msgid "Developed with ❤️ and maintained by %s"
+msgstr "Sviluppato con ❤️ e mantenuto da %s"
 
 #. translators: %s: numero versione plugin
 #: eg-social-timeline.php:2311

@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Version](https://img.shields.io/badge/Version-1.16.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Version](https://img.shields.io/badge/Version-1.16.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](LICENSE.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -238,6 +238,11 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.16.1] - 2026-09-27
+
+#### Changed
+- Settings footer credit reworded: "Developed with ❤️ and maintained by".
 
 ### [1.16.0] - 2026-09-26
 
