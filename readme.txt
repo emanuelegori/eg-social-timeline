@@ -1,15 +1,15 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
 Donate link: https://emanuelegori.uno/en/donate/
-Tags: mastodon, bluesky, lemmy, forgejo, timeline
+Tags: mastodon, bluesky, lemmy, fediverse, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.17.1
+Stable tag: 1.17.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Chronological timeline of your public activity across the fediverse, Bluesky, ListenBrainz and any RSS feed. Zero JavaScript, zero tracking.
+Bring your Mastodon, GoToSocial, Bluesky and fediverse posts home: one timeline on your own site. No API keys, no tracking, no JavaScript.
 
 == Description ==
 
@@ -191,6 +191,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.17.2 - 2026-09-27 =
+* Changed: a clearer short description in the plugin directory, saying what the plugin is for and what it does not need: API keys, tracking, JavaScript.
+* Changed: the description in the plugins list of the admin opens the same way and names every source.
+* Changed: "fediverse" replaces "forgejo" among the directory tags, since it is the word people search for.
+
 = 1.17.1 - 2026-09-27 =
 * Faster saving: the settings no longer re-check every profile after each save. Only the profiles you added or changed are checked, so changing a colour or the layout makes no request at all. The "Verify profiles" button still checks them all.
 * Fixed: after changing a profile, the diagnostics table kept showing the result of the last refresh of the previous one — for example a message about the old account. That result is now cleared when the profile changes, until the timeline is rebuilt.
@@ -206,32 +211,11 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Upgrade Notice ==
 
+= 1.17.2 =
+New wording for the plugin directory listing and for the plugins list in the admin. No functional change.
+
 = 1.17.1 =
 Grid layout and a Filter Bar section (visible, collapsible or hidden, with its own background); several timelines per page; faster saving of the settings.
-
-= 1.17.0 =
-Grid layout, and a Filter Bar section: visible, collapsible or hidden, with its own background. The defaults keep today's look.
-
-= 1.16.1 =
-Adds GoToSocial and Friendica, reading the public feed of the profile, and folding platform boxes in the settings. Also a reworded credit line in the settings footer.
-
-= 1.16.0 =
-GoToSocial and Friendica get their own sections, reading the public feed of the profile. The platform boxes now fold and open by themselves only when something needs attention.
-
-= 1.15.9 =
-Corrects the "tested up to" header, which must carry the major version only. No functional change.
-
-= 1.15.8 =
-Three cache keys now carry the plugin's full prefix, and the bundled Italian translation moves to translate.wordpress.org. No setting is affected.
-
-= 1.15.7 =
-Fixes a real default: on a fresh install, boosts and image previews were switched off although they are documented as on. Existing installs are not affected.
-
-= 1.15.6 =
-Documentation only: dead and placeholder links in the readme have been corrected, and the plugin is now tested up to WordPress 7.1.2.
-
-= 1.15.5 =
-The compatibility header now declares the current WordPress release, so the "not tested with your version" warning goes away. No functional change.
 
 == External services ==
 

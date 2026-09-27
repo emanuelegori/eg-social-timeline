@@ -6,6 +6,16 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.17.2] - 2026-09-27
+
+### Changed
+- **Descrizione breve riscritta per la directory.** Era *"Chronological timeline of your public activity across the fediverse, Bluesky, ListenBrainz and any RSS feed. Zero JavaScript, zero tracking."*: diceva cosa fa, non perché servirebbe, e taceva la cosa che distingue il plugin da quasi tutti i "social feed" della directory, che chiedono token e collegamenti di account. Ora è *"Bring your Mastodon, GoToSocial, Bluesky and fediverse posts home: one timeline on your own site. No API keys, no tracking, no JavaScript."* (138 caratteri su 150). Niente "all fediverse": Misskey e Sharkey non sono supportati, e la FAQ lo dice. GoToSocial nominato perché chi lo cerca trova pochissimi plugin.
+- **Header del plugin allineato**: stessa apertura, ma con tutte le fonti, visto che nell'elenco plugin di wp-admin il limite dei 150 caratteri non c'è.
+- **Tag: `fediverse` al posto di `forgejo`**, che pesa nella ricerca quanto la descrizione breve ed è la parola con cui si cerca questo tipo di plugin.
+- **Upgrade Notice riportato a due voci**, come previsto dalla 1.15.3: erano tre.
+
+---
+
 ## [1.17.1] - 2026-09-27
 
 ### Fixed

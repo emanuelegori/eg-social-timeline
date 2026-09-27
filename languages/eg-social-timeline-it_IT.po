@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: EG Social Timeline 1.17.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eg-social-"
 "timeline\n"
-"POT-Creation-Date: 2026-09-27T13:32:45+00:00\n"
+"POT-Creation-Date: 2026-09-27T15:45:40+00:00\n"
 "PO-Revision-Date: 2026-09-17\n"
 "Last-Translator: Emanuele Gori\n"
 "Language-Team: Italian\n"
@@ -30,13 +30,11 @@ msgstr "https://emanuelegori.uno/plugin/eg-social-timeline/"
 #. Description of the plugin
 #: eg-social-timeline.php
 msgid ""
-"Unified chronological timeline of your public activity from Mastodon, "
+"Bring your posts home: one timeline on your own site from Mastodon, "
 "GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, "
-"ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking."
-msgstr ""
-"Timeline cronologica unificata delle tue attività pubbliche da Mastodon, "
-"GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, "
-"ListenBrainz e qualsiasi feed RSS o Atom. Zero JavaScript, zero tracciamento."
+"ListenBrainz and any RSS or Atom feed. No API keys, no tracking, no "
+"JavaScript."
+msgstr "Riporta a casa i tuoi post: un'unica timeline sul tuo sito da Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz e qualsiasi feed RSS o Atom. Niente chiavi API, niente tracciamento, niente JavaScript."
 
 #. Author of the plugin
 #: eg-social-timeline.php
@@ -1318,16 +1316,3 @@ msgstr[1] "%s giorni fa"
 #: eg-social-timeline.php:5604
 msgid "Settings"
 msgstr "Impostazioni"
-
-#~ msgid "Optional: limit the number of posts:"
-#~ msgstr "Opzionale: limita il numero di post:"
-
-#~ msgid ""
-#~ "GoToSocial requires authentication for the accounts API, so a public "
-#~ "timeline cannot be read."
-#~ msgstr ""
-#~ "GoToSocial richiede l'autenticazione per l'API degli account, quindi non "
-#~ "è possibile leggere una timeline pubblica."
-
-#~ msgid "Friendica requires a login for the Mastodon-compatible API."
-#~ msgstr "Friendica richiede il login per l'API compatibile con Mastodon."
