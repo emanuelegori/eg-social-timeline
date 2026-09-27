@@ -6,6 +6,21 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [1.17.1] - 2026-09-27
+
+### Fixed
+- **Salvataggio lento.** Dopo ogni salvataggio, anche di un solo colore, `eg_social_timeline_handle_verify()` rifaceva la verifica di **tutti** i profili: circa 9 richieste in fila con 7 piattaforme, fino a 10 secondi di timeout ciascuna. Ora la sanitizzazione confronta le **firme** dei profili (istanza + nome, l'indirizzo per il feed, l'handle per Bluesky, `eg_social_timeline_profile_signatures()`) e la verifica dopo il salvataggio (`eg_social_timeline_verify_profiles(true)`) guarda soltanto i profili senza esito, cioè nuovi o cambiati. Anche la webfinger di GoToSocial parte solo se GoToSocial è cambiato. Il pulsante *Verify profiles* verifica ancora tutto.
+- **Esito di un profilo che non c'è più.** Cambiando account (sullo stage: GoToSocial da `kim` a `patpro`), la tabella mostrava la verifica nuova accanto all'esito dell'ultimo recupero del profilo vecchio ("il feed di kim è spento"), perché il salvataggio svuotava la cache ma non quell'esito. Ora, per i profili cambiati, esito del recupero e della verifica vengono tolti: la tabella dice il vero ("nessun recupero da quando la cache è stata svuotata") fino alla prossima costruzione della timeline.
+
+### Why
+- Scartate le richieste in parallelo: la libreria di WordPress per le richieste multiple non applica `reject_unsafe_urls`, la protezione dai redirect verso la rete interna aggiunta nella 1.12.2.
+- La 1.17.0 ha già tag e Release su Forgejo: in SVN va direttamente la 1.17.1, e l'Upgrade Notice riassume anche la 1.17.0.
+
+### Verified
+- Sulla configurazione reale della produzione (7 piattaforme), con scritture e richieste HTTP intercettate: cambio del solo colore di sfondo → 0 richieste, nessun esito toccato; cambio del nome utente Lemmy → esiti tolti solo per Lemmy, 1 richiesta (diggita.com).
+
+---
+
 ## [1.17.0] - 2026-09-27
 
 ### Added

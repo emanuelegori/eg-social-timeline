@@ -3,7 +3,7 @@
  * Plugin Name: EG Social Timeline
  * Plugin URI: https://emanuelegori.uno/en/plugins/eg-social-timeline/
  * Description: Unified chronological timeline of your public activity from Mastodon, GoToSocial, Friendica, Bluesky, Pixelfed, PeerTube, Forgejo, Lemmy, ListenBrainz and any RSS or Atom feed. Zero JavaScript, zero tracking.
- * Version: 1.17.0
+ * Version: 1.17.1
  * Author: Emanuele Gori
  * Author URI: https://emanuelegori.uno
  * License: GPL-2.0-or-later
@@ -38,7 +38,7 @@ https://www.gnu.org/licenses/gpl-2.0.html
 if (!defined('ABSPATH')) exit;
 
 // Constants
-define('EG_SOCIAL_TIMELINE_VERSION', '1.17.0');
+define('EG_SOCIAL_TIMELINE_VERSION', '1.17.1');
 define('EG_SOCIAL_TIMELINE_DIR', plugin_dir_path(__FILE__));
 define('EG_SOCIAL_TIMELINE_URL', plugin_dir_url(__FILE__));
 define('EG_SOCIAL_TIMELINE_DEBUG', false);
@@ -1919,7 +1919,13 @@ function eg_social_timeline_sanitize_options($input) {
 
     // GoToSocial: il dominio dell'account puo' non essere il server, e il feed
     // esiste solo sul server. Una richiesta al salvataggio, non a ogni recupero.
-    if ('' !== $output['gotosocial_instance'] && '' !== $output['gotosocial_username']) {
+    $previous_options = get_option('eg_social_timeline_options');
+    $previous_options = is_array($previous_options) ? $previous_options : array();
+    $gotosocial_changed = !isset($previous_options['gotosocial_instance'], $previous_options['gotosocial_username'])
+        || $previous_options['gotosocial_instance'] !== $output['gotosocial_instance']
+        || $previous_options['gotosocial_username'] !== $output['gotosocial_username'];
+
+    if ($gotosocial_changed && '' !== $output['gotosocial_instance'] && '' !== $output['gotosocial_username']) {
         $server = eg_social_timeline_resolve_gotosocial_host($output['gotosocial_instance'], $output['gotosocial_username']);
 
         if ('' !== $server && $server !== $output['gotosocial_instance']) {
@@ -2095,6 +2101,31 @@ function eg_social_timeline_sanitize_options($input) {
     }
 
     delete_transient('eg_social_timeline_cache');
+
+    // Profili cambiati: l'esito dell'ultimo recupero e della verifica parlava
+    // del profilo di prima. Si tolgono, cosi' la tabella non mostra messaggi
+    // di un account che non c'e' piu' e dopo il salvataggio si verificano
+    // soltanto questi.
+    $old_signatures = eg_social_timeline_profile_signatures(get_option('eg_social_timeline_options'));
+    $new_signatures = eg_social_timeline_profile_signatures($output);
+    $changed = array();
+
+    foreach ($new_signatures as $slug => $signature) {
+        if (!isset($old_signatures[$slug]) || $old_signatures[$slug] !== $signature) {
+            $changed[] = $slug;
+        }
+    }
+
+    if (!empty($changed)) {
+        foreach (array('eg_social_timeline_status', 'eg_social_timeline_diagnostics') as $option) {
+            $stored = get_option($option);
+
+            if (is_array($stored) && isset($stored['platforms']) && is_array($stored['platforms'])) {
+                $stored['platforms'] = array_diff_key($stored['platforms'], array_flip($changed));
+                update_option($option, $stored, false);
+            }
+        }
+    }
     
     add_settings_error(
         'eg_social_timeline_options',
@@ -4292,6 +4323,35 @@ function eg_social_timeline_fetch_all_feeds() {
 }
 
 /**
+ * Firma di ogni profilo configurato, per capire al salvataggio cosa e'
+ * cambiato davvero: istanza e nome, l'indirizzo per il feed, l'handle per
+ * Bluesky. Una piattaforma vuota ha firma vuota.
+ *
+ * @param array $options Opzioni del plugin (salvate o appena sanitizzate).
+ * @return array Coppie slug => firma.
+ */
+function eg_social_timeline_profile_signatures($options) {
+    $options = is_array($options) ? $options : array();
+    $value = function ($key) use ($options) {
+        return isset($options[$key]) ? strtolower(trim((string) $options[$key])) : '';
+    };
+    $signatures = array();
+
+    foreach (array_keys(eg_social_timeline_platforms()) as $slug) {
+        if ('rss' === $slug) {
+            $signatures[$slug] = $value('rss_url');
+        } elseif ('bluesky' === $slug) {
+            $signatures[$slug] = $value('bluesky_handle');
+        } else {
+            $username = $value($slug . '_username');
+            $signatures[$slug] = ('' === $username) ? '' : $value($slug . '_instance') . '|' . $username;
+        }
+    }
+
+    return $signatures;
+}
+
+/**
  * Verifica i profili configurati interrogando le istanze.
  *
  * Una richiesta leggera per piattaforma, il cui esito viene salvato: la
@@ -4301,9 +4361,18 @@ function eg_social_timeline_fetch_all_feeds() {
  *
  * @return array Esito per piattaforma.
  */
-function eg_social_timeline_verify_profiles() {
+function eg_social_timeline_verify_profiles($only_unverified = false) {
     $profiles = eg_social_timeline_profiles();
     $report = array('time' => time(), 'platforms' => array());
+
+    // Dopo un salvataggio si verificano soltanto i profili senza un esito,
+    // cioe' quelli nuovi o appena cambiati: la sanitizzazione ha tolto il
+    // loro esito vecchio. Cambiare un colore non costa nessuna richiesta.
+    $previous = get_option('eg_social_timeline_diagnostics');
+    $previous = (is_array($previous) && isset($previous['platforms']) && is_array($previous['platforms'])) ? $previous['platforms'] : array();
+    $want = function ($slug) use ($only_unverified, $previous) {
+        return !$only_unverified || !isset($previous[$slug]);
+    };
 
     $get = function ($url) {
         $response = wp_remote_get($url, array('timeout' => 10, 'sslverify' => true, 'reject_unsafe_urls' => true));
@@ -4322,7 +4391,7 @@ function eg_social_timeline_verify_profiles() {
     // Famiglia Mastodon: software dell'istanza e account.
     $profile = $profiles['mastodon'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('mastodon') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $software = eg_social_timeline_detect_software($profile['instance']);
         $unsupported = eg_social_timeline_unsupported_software();
         $result = $get($profile['instance'] . '/api/v1/accounts/lookup?acct=' . rawurlencode($profile['username']));
@@ -4357,7 +4426,7 @@ function eg_social_timeline_verify_profiles() {
     // Lemmy: feed RSS dell'utente.
     $profile = $profiles['lemmy'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('lemmy') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/feeds/u/' . rawurlencode($profile['username']) . '.xml');
         $items = ('' !== $result['body']) ? substr_count($result['body'], '<item>') : 0;
 
@@ -4386,7 +4455,7 @@ function eg_social_timeline_verify_profiles() {
     // Forgejo/Gitea: esistenza dell'utente.
     $profile = $profiles['forgejo'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('forgejo') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/api/v1/users/' . rawurlencode($profile['username']));
 
         $report['platforms']['forgejo'] = (200 === $result['code'])
@@ -4406,7 +4475,7 @@ function eg_social_timeline_verify_profiles() {
     // PeerTube: account oppure canale.
     $profile = $profiles['peertube'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('peertube') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $kinds = array(
             'account' => '/api/v1/accounts/',
             'channel' => '/api/v1/video-channels/',
@@ -4462,7 +4531,7 @@ function eg_social_timeline_verify_profiles() {
     // Pixelfed: feed Atom.
     $profile = $profiles['pixelfed'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('pixelfed') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/users/' . rawurlencode($profile['username']) . '.atom');
         $entries = ('' !== $result['body']) ? substr_count($result['body'], '<entry>') : 0;
 
@@ -4491,7 +4560,7 @@ function eg_social_timeline_verify_profiles() {
     // GoToSocial: feed RSS, spento finche' l'utente non lo accende.
     $profile = $profiles['gotosocial'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('gotosocial') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/@' . rawurlencode($profile['username']) . '/feed.rss');
         $items = ('' !== $result['body']) ? substr_count($result['body'], '<item>') : 0;
 
@@ -4530,7 +4599,7 @@ function eg_social_timeline_verify_profiles() {
     // Friendica: feed Atom del profilo.
     $profile = $profiles['friendica'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('friendica') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/feed/' . rawurlencode($profile['username']) . '/');
         $entries = ('' !== $result['body']) ? preg_match_all('~<entry[\s>]~', $result['body']) : 0;
 
@@ -4559,7 +4628,7 @@ function eg_social_timeline_verify_profiles() {
     // ListenBrainz: ascolti pubblici.
     $profile = $profiles['listenbrainz'];
 
-    if ('' !== $profile['username'] && '' !== $profile['instance']) {
+    if ($want('listenbrainz') && '' !== $profile['username'] && '' !== $profile['instance']) {
         $result = $get($profile['instance'] . '/1/user/' . rawurlencode($profile['username']) . '/listens?count=1');
         $data = json_decode($result['body'], true);
 
@@ -4584,7 +4653,7 @@ function eg_social_timeline_verify_profiles() {
     // Feed esterno.
     $profile = $profiles['rss'];
 
-    if ('' !== $profile['url']) {
+    if ($want('rss') && '' !== $profile['url']) {
         $result = $get($profile['url']);
         $items = ('' !== $result['body']) ? (substr_count($result['body'], '<item>') + substr_count($result['body'], '<entry>')) : 0;
 
@@ -4612,7 +4681,7 @@ function eg_social_timeline_verify_profiles() {
     // Bluesky: feed pubblico dell'autore.
     $profile = $profiles['bluesky'];
 
-    if ('' !== $profile['username']) {
+    if ($want('bluesky') && '' !== $profile['username']) {
         $result = $get(EG_SOCIAL_TIMELINE_BLUESKY_SERVICE . '/xrpc/app.bsky.feed.getAuthorFeed?' . http_build_query(array(
             'actor' => $profile['username'],
             'limit' => 1,
@@ -4629,6 +4698,10 @@ function eg_social_timeline_verify_profiles() {
                     $result['code']
                 ),
             );
+    }
+
+    if ($only_unverified) {
+        $report['platforms'] = array_merge($previous, $report['platforms']);
     }
 
     update_option('eg_social_timeline_diagnostics', $report, false);
@@ -4837,9 +4910,9 @@ function eg_social_timeline_handle_verify() {
         return;
     }
 
-    // Dopo un salvataggio riuscito, una volta.
+    // Dopo un salvataggio riuscito: solo i profili nuovi o cambiati.
     if ($screen_is_settings && isset($_GET['settings-updated'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- parametro aggiunto da options.php, nessuna azione distruttiva
-        eg_social_timeline_verify_profiles();
+        eg_social_timeline_verify_profiles(true);
     }
 }
 

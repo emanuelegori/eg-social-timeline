@@ -1,6 +1,6 @@
 # EG Social Timeline
 
-[![Versione](https://img.shields.io/badge/Versione-1.17.0-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
+[![Versione](https://img.shields.io/badge/Versione-1.17.1-green)](https://git.emanuelegori.uno/emanuelegori/eg-social-timeline)
 [![Licenza](https://img.shields.io/badge/Licenza-GPL--2.0--or--later-blue.svg)](LICENSE.IT.md)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0+-orange.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://php.net)
@@ -270,6 +270,12 @@ eg-social-timeline/
 ---
 
 ## Changelog
+
+### [1.17.1] - 2026-09-27
+
+#### Corretto
+- Il salvataggio non riverifica più tutti i profili: solo quelli aggiunti o cambiati, quindi cambiare un colore non fa richieste.
+- Dopo il cambio di un profilo, la tabella diagnostica non mostra più l'esito dell'ultimo recupero del profilo precedente.
 
 ### [1.17.0] - 2026-09-27
 

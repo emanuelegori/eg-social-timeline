@@ -5,7 +5,7 @@ Tags: mastodon, bluesky, lemmy, forgejo, timeline
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.17.0
+Stable tag: 1.17.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -191,6 +191,10 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 
 == Changelog ==
 
+= 1.17.1 - 2026-09-27 =
+* Faster saving: the settings no longer re-check every profile after each save. Only the profiles you added or changed are checked, so changing a colour or the layout makes no request at all. The "Verify profiles" button still checks them all.
+* Fixed: after changing a profile, the diagnostics table kept showing the result of the last refresh of the previous one — for example a message about the old account. That result is now cleared when the profile changes, until the timeline is rebuilt.
+
 = 1.17.0 - 2026-09-27 =
 * New: grid layout. Settings → Appearance → Layout offers List (the default, one card under the other) or Grid (cards side by side). The grid fits as many columns as the space allows, at least 280 px each, and one column on phones; cards in a row share the same height, images are cropped to 16:9, and the newest post stays top left.
 * New: the shortcode takes a layout attribute that overrides the setting for one page, e.g. `[eg_social_timeline layout="grid" limit="20"]` on the home page and a plain list elsewhere.
@@ -201,6 +205,9 @@ Yes. Settings → EG Social Timeline → Appearance covers the two backgrounds a
 * Readme: the RSS source is the second exception to "instance URL plus username", next to Bluesky.
 
 == Upgrade Notice ==
+
+= 1.17.1 =
+Grid layout and a Filter Bar section (visible, collapsible or hidden, with its own background); several timelines per page; faster saving of the settings.
 
 = 1.17.0 =
 Grid layout, and a Filter Bar section: visible, collapsible or hidden, with its own background. The defaults keep today's look.
