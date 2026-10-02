@@ -223,7 +223,7 @@ msgstr "Timeline"
 
 #: eg-social-timeline.php:388
 msgid "Number of Posts to Show"
-msgstr "Numero post da mostrare"
+msgstr "Numero di post da mostrare"
 
 #: eg-social-timeline.php:396
 msgid "Cache Duration"
@@ -296,8 +296,8 @@ msgid ""
 "how long they stay cached. What each source shows — boosts, statistics, "
 "previews, text length — is set inside its own box above."
 msgstr ""
-"Come viene composta la timeline: quanti elementi arrivano in pagina in tutto "
-"e per quanto restano in cache. Cosa mostra ciascuna fonte — boost, "
+"Come si compone la timeline: quanti elementi arrivano in pagina in tutto e "
+"per quanto restano in cache. Cosa mostra ciascuna fonte — boost, "
 "statistiche, anteprime, lunghezza del testo — si imposta nel suo riquadro "
 "qui sopra."
 
@@ -553,7 +553,7 @@ msgid ""
 "measuring its contrast, so they stay readable on any surface."
 msgstr ""
 "Colori della timeline. Scegli uno sfondo per la timeline e uno per le "
-"schede: testo, bordi e icone vengono derivati dal colore che scegli, "
+"schede: il plugin ricava testo, bordi e icone dal colore che scegli, "
 "misurandone il contrasto, così restano leggibili su qualsiasi superficie."
 
 #: eg-social-timeline.php:1614
@@ -1028,8 +1028,7 @@ msgstr "Non è stato possibile leggere il feed: non è RSS o Atom valido."
 #: eg-social-timeline.php:4027
 msgid "The feed has no items: neither channel/item nor feed/entry found."
 msgstr ""
-"Il feed non contiene elementi: non sono stati trovati né channel/item né "
-"feed/entry."
+"Il feed non contiene elementi: mancano sia channel/item sia feed/entry."
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
 #: eg-social-timeline.php:4176 eg-social-timeline.php:4646
@@ -1135,13 +1134,13 @@ msgstr "L'API pubblica non ha restituito questo handle (HTTP %d)."
 #: eg-social-timeline.php:4758
 msgid "Incomplete: the instance URL is missing, so this platform is skipped."
 msgstr ""
-"Incompleto: manca l'URL dell'istanza, quindi questa piattaforma viene "
-"saltata."
+"Incompleto: manca l'URL dell'istanza, quindi il plugin salta questa "
+"piattaforma."
 
 #: eg-social-timeline.php:4759
 msgid "Incomplete: the username is missing, so this platform is skipped."
 msgstr ""
-"Incompleto: manca il nome utente, quindi questa piattaforma viene saltata."
+"Incompleto: manca il nome utente, quindi il plugin salta questa piattaforma."
 
 #. translators: %s: elenco delle piattaforme che non hanno portato contenuti
 #: eg-social-timeline.php:4804
