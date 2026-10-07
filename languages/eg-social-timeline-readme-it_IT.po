@@ -34,7 +34,7 @@ msgstr "Attributi facoltativi, ciascuno sostituisce la propria impostazione solo
 
 #. Found in description paragraph.
 msgid "Every platform is configured the same way: the instance URL plus your username. There are two exceptions: Bluesky, because its public API lives at a single address for everyone, and the RSS or Atom source, which takes the address of the feed."
-msgstr "Ogni piattaforma si configura allo stesso modo: l'URL dell'istanza più il tuo nome utente. Le eccezioni sono due: Bluesky, perché la sua API pubblica vive a un unico indirizzo per tutti, e la fonte RSS o Atom, che richiede l'indirizzo del feed."
+msgstr "Ogni piattaforma si configura allo stesso modo: l'URL dell'istanza più il tuo nome utente. Le eccezioni sono due: Bluesky, perché la sua API pubblica risponde a un unico indirizzo per tutti, e la fonte RSS o Atom, che richiede l'indirizzo del feed."
 
 #. Found in description list item.
 msgid "<code>filters</code> — <code>visible</code>, <code>collapsed</code> or <code>hidden</code>. Default: Filter Bar → Display."
@@ -258,7 +258,7 @@ msgstr "Il codice sorgente sta su https://git.emanuelegori.uno/emanuelegori/eg-s
 
 #. Found in installation list item.
 msgid "Text, borders, badges, links and icons are not configured: they are derived from the contrast of the background you choose, and switch to their light variants on a dark surface"
-msgstr "Testo, bordi, badge, link e icone non si impostano: il plugin li ricava dal contrasto dello sfondo che scegli e passa alle loro varianti chiare su una superficie scura"
+msgstr "Testo, bordi, badge, link e icone non si impostano: il plugin li ricava dal contrasto dello sfondo che scegli e su una superficie scura usa le loro varianti chiare"
 
 #. Found in installation list item.
 msgid "Per-source display options: boosts, statistics, image previews and text length are set inside each platform's own box, and only where they have an effect"

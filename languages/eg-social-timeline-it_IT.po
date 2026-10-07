@@ -87,9 +87,9 @@ msgid ""
 "Public RSS feed of the profile, off by default: turn it on in your account "
 "settings. Public posts only, no replies or boosts."
 msgstr ""
-"Feed RSS pubblico del profilo, spento per impostazione predefinita: attivalo "
-"nelle impostazioni del tuo account. Solo post pubblici, senza risposte né "
-"condivisioni."
+"Feed RSS pubblico del profilo, disattivato per impostazione predefinita: "
+"attivalo nelle impostazioni del tuo account. Solo post pubblici, senza "
+"risposte né boost."
 
 #: eg-social-timeline.php:98 eg-social-timeline.php:5201
 msgid "Friendica"
@@ -339,7 +339,7 @@ msgid ""
 "the login page."
 msgstr ""
 "Pixelfed risponde alla ricerca dell'account ma reindirizza l'endpoint degli "
-"stati alla pagina di login."
+"stati alla pagina di accesso."
 
 #: eg-social-timeline.php:979
 msgid "This is a Lemmy instance: use the Lemmy fields instead."
@@ -415,10 +415,11 @@ msgid ""
 "this on to see what the plugin sees for each platform and to use the "
 "\"Verify profiles\" button."
 msgstr ""
-"Spenta per impostazione predefinita, per tenere corta la pagina. Un breve "
-"avviso compare comunque quando una piattaforma configurata non porta nulla, "
-"così un problema non resta mai muto. Accendila per vedere cosa vede il "
-"plugin per ogni piattaforma e per usare il pulsante \"Verifica profili\"."
+"Disattivata per impostazione predefinita, per tenere corta la pagina. Un "
+"breve avviso compare comunque quando una piattaforma configurata non "
+"restituisce nulla, così un problema non passa mai inosservato. Attivala per "
+"vedere cosa vede il plugin per ogni piattaforma e per usare il pulsante "
+"\"Verifica profili\"."
 
 #: eg-social-timeline.php:1220
 msgid "Change it only if you run your own instance."
@@ -647,7 +648,7 @@ msgid ""
 msgstr ""
 "La griglia usa tutte le colonne che lo spazio consente, e una sola sui "
 "telefoni; le immagini sono ritagliate a 16:9 e i testi brevi si leggono "
-"meglio. Una singola pagina può sostituire questa impostazione: %s. "
+"meglio. Una singola pagina può ignorare questa impostazione: %s. "
 "Predefinito: Elenco"
 
 #: eg-social-timeline.php:1749
@@ -674,7 +675,7 @@ msgstr "Nascosta: si vedono tutti i post"
 #: eg-social-timeline.php:1766
 msgid "A single page can override this setting: %s. Default: Visible"
 msgstr ""
-"Una singola pagina può sostituire questa impostazione: %s. Predefinito: "
+"Una singola pagina può ignorare questa impostazione: %s. Predefinito: "
 "Visibile"
 
 #: eg-social-timeline.php:1787
@@ -987,7 +988,7 @@ msgid ""
 "The RSS feed of \"%1$s\" is turned off. GoToSocial keeps it off by default: "
 "turn it on in the account settings (%2$s)."
 msgstr ""
-"Il feed RSS di \"%1$s\" è spento. GoToSocial lo tiene spento per "
+"Il feed RSS di \"%1$s\" è disattivato. GoToSocial lo tiene disattivato per "
 "impostazione predefinita: attivalo nelle impostazioni dell'account (%2$s)."
 
 #. translators: 1: nome utente, 2: codice di stato HTTP
@@ -1114,7 +1115,7 @@ msgid ""
 "The RSS feed of this account is turned off. Turn it on in the account "
 "settings (%s)."
 msgstr ""
-"Il feed RSS di questo account è spento. Attivalo nelle impostazioni "
+"Il feed RSS di questo account è disattivato. Attivalo nelle impostazioni "
 "dell'account (%s)."
 
 #: eg-social-timeline.php:4663
@@ -1148,7 +1149,7 @@ msgid ""
 "%s returned nothing on the last refresh. Turn on \"Show diagnostics\" in the "
 "profiles section below to see why."
 msgstr ""
-"%s non ha portato nulla all'ultimo aggiornamento. Accendi \"Mostra "
+"%s non ha restituito nulla all'ultimo aggiornamento. Attiva \"Mostra "
 "diagnostica\" nella sezione dei profili qui sotto per vedere perché."
 
 #: eg-social-timeline.php:4816
