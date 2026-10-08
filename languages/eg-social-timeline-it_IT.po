@@ -1178,7 +1178,7 @@ msgid ""
 "use \"Flush Cache Now\" below."
 msgstr ""
 "Nessun recupero da quando la cache è stata svuotata: apri la pagina con la "
-"timeline, oppure usa \"Svuota cache adesso\" qui sotto."
+"timeline, oppure usa \"Svuota cache ora\" qui sotto."
 
 #. translators: %d: numero di contenuti recuperati
 #: eg-social-timeline.php:4854
