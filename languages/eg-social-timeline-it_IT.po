@@ -890,7 +890,7 @@ msgstr "Per forzare l'aggiornamento immediato dei feed:"
 
 #: eg-social-timeline.php:2402
 msgid "Flush Cache Now"
-msgstr "Svuota cache"
+msgstr "Svuota la cache"
 
 #. translators: indirizzo del sito dell'autore. Tradurre con la versione localizzata della home, se esiste; altrimenti lasciare invariato.
 #: eg-social-timeline.php:2447
@@ -1178,7 +1178,7 @@ msgid ""
 "use \"Flush Cache Now\" below."
 msgstr ""
 "Nessun recupero da quando la cache è stata svuotata: apri la pagina con la "
-"timeline, oppure usa \"Svuota cache\" qui sotto."
+"timeline, oppure usa \"Svuota la cache\" qui sotto."
 
 #. translators: %d: numero di contenuti recuperati
 #: eg-social-timeline.php:4854
