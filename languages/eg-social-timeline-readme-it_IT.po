@@ -13,8 +13,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. Short description.
-msgid "Bring your Mastodon, GoToSocial, Bluesky and fediverse posts home: one timeline on your own site. No API keys, no tracking, no JavaScript."
-msgstr "Riporta a casa i post di Mastodon, GoToSocial, Bluesky e del fediverso: una timeline sul tuo sito. Senza chiavi API, tracciamento né JavaScript."
+msgid "A social timeline on your own site: Mastodon, Bluesky, GoToSocial and fediverse posts in one place. No API keys, no tracking, no JavaScript."
+msgstr "Una timeline social sul tuo sito: i post di Mastodon, Bluesky, GoToSocial e del fediverso insieme. Senza chiavi API, tracciamento né JavaScript."
 
 #. Plugin name.
 msgid "EG Social Timeline"

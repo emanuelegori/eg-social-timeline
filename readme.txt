@@ -1,7 +1,7 @@
 === EG Social Timeline ===
 Contributors: emanuelegori
 Donate link: https://emanuelegori.uno/en/donate/
-Tags: mastodon, bluesky, lemmy, fediverse, timeline
+Tags: mastodon, bluesky, fediverse, timeline, social feed
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -9,7 +9,7 @@ Stable tag: 1.17.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Bring your Mastodon, GoToSocial, Bluesky and fediverse posts home: one timeline on your own site. No API keys, no tracking, no JavaScript.
+A social timeline on your own site: Mastodon, Bluesky, GoToSocial and fediverse posts in one place. No API keys, no tracking, no JavaScript.
 
 == Description ==
 

@@ -6,6 +6,13 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/it/1.0.0/)
 
 ---
 
+## [Prossima versione] - da rinominare al bump
+
+### Changed
+- **Descrizione breve e tag per la ricerca della directory.** Con "social timeline" il plugin finiva verso l'80° posto: la ricerca di WordPress.org (`class-plugin-search.php`) moltiplica il punteggio del testo per log10(2 + 0,375 × installazioni attive), quindi con meno di 10 installazioni parte da 0,30 contro 2,5–5,6 dei plugin affermati. Le installazioni non si toccano dal readme; si può solo far corrispondere meglio il testo. La descrizione breve ora apre con *"A social timeline on your own site"* (140/150); prima la parola "social" stava solo nel titolo. Tag: `social feed` al posto di `lemmy`, che aveva un solo plugin (il nostro). Traduzione it_IT della descrizione breve aggiornata nel `.po` del readme, da importare su GlotPress dopo il commit SVN. L'header `Description:` del `.php` resta com'è: la directory non lo usa e cambiarlo rifarebbe il msgid tradotto.
+
+---
+
 ## [1.17.2] - 2026-09-27
 
 ### Changed
